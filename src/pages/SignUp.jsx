@@ -5,6 +5,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig.js'; 
 import { useNavigate } from 'react-router-dom';
 import '../App.css'
+import "./LogSig.css";
 
 export default function Register({auth}) {
   const [email, setEmail] = useState('');
@@ -34,6 +35,7 @@ export default function Register({auth}) {
   };
 
   return (
+    <body className='log'>
     <div className='signup' style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
       <Typography variant="h4" gutterBottom>
         <h4>Register</h4> 
@@ -97,5 +99,7 @@ export default function Register({auth}) {
       </Button>
     </div>
     
+      
+    </body>
   );
 }

@@ -1,0 +1,7 @@
+.log{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #12232e, #1c1e41);
+}

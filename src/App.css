@@ -1,4 +1,5 @@
 .app {
+
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -23,6 +24,7 @@
 }
 
 .login {
+  
   text-align: center;
   display: flex; gap: 15px; flex-direction: column;
   width: 100%;

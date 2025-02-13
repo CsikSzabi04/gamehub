@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, TextField } from '@mui/material'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
+import "./LogSig.css";
 
 export default function Login({ auth, setUser }) {
 
@@ -26,6 +27,7 @@ export default function Login({ auth, setUser }) {
   }
 
   return (
+    <body className='log'>
     <div className='login'>
       <h1>Login</h1>
       <TextField
@@ -57,6 +59,8 @@ export default function Login({ auth, setUser }) {
       </Link>
       </p>
 
-    </div>
+    </div>      
+    </body>
+
   )
 }
