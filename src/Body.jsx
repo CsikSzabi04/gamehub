@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import './body.css'
 
+
 export default function Notfound() {
   return (
     <div>
           <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
       <div className="flex items-center space-x-4">
-          <h1 className="text-3xl font-bold text-white cursor-pointer" onclick="Refresh()">Game Data Hub
+          <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={() => Refresh()}>Game Data Hub
           </h1>
           <div className="navbar flex flex-wrap justify-center space-x-4">
               <button className="nav-button text-white px-4 py-2 rounded-lg" id="stores-button">
@@ -21,7 +22,7 @@ export default function Notfound() {
                   Favourites
               </button>
               <button className="nav-button text-white px-4 py-2 rounded-lg"><span id="email"></span></button>
-              <Link to="/login"><button className="nav-button text-white px-4 py-2 rounded-lg" onclick="openProfilePage()">Profile</button></Link>
+              <Link to="/login"><button className="nav-button text-white px-4 py-2 rounded-lg">Profile</button></Link>
               
           </div>
       </div>

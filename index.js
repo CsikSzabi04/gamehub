@@ -513,10 +513,6 @@ async function fetchStores() {
     });
 }
 
-function openProfilePage() {
-    window.location.href = "https://csikszabi04githublogin.netlify.app/";
-}
-
 
 
 fetchStores();
