@@ -165,7 +165,6 @@ body {
   }
   
   .modal-content {
-    margin-top: 2%;
     background-color: #333;
     padding: 20px;
     border-radius: 12px;
@@ -459,3 +458,113 @@ body {
   .nav-button:hover .dropdown {
     display: block;
   }
+
+  /*-----------*/
+
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 800px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+
+
+.close:hover {
+  color: #e60000;
+}
+
+/* Collapsible Content */
+.collapsible {
+  margin-top: 15px;
+}
+
+.collapsible-header {
+
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+.collapsible-content {
+  padding: 10px;
+  list-style: none;
+  margin: 0;
+  display: none;
+}
+
+.collapsible-content li {
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.collapsible-content.hidden {
+  display: none;
+}
+
+.collapsible-content.scrollable-requirements {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .game-card {
+      flex: 1 0 48%;
+      margin-bottom: 20px;
+  }
+
+  .modal-content {
+      width: 95%;
+      padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-card {
+      flex: 1 0 100%;
+  }
+
+  .modal-content {
+      width: 100%;
+      padding: 10px;
+  }
+}
