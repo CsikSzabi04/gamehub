@@ -11,7 +11,7 @@ export default function Notfound() {
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
-                const response = await fetch('http://localhost:88/fetch-games');
+                const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
                 const data = await response.json();
 
                 if (data.games && Array.isArray(data.games)) {
