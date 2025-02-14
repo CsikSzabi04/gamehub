@@ -9,6 +9,8 @@ body {
   h1:hover {
     cursor: pointer;
   }
+
+  .allSections{width: 80%; margin: 0px auto;}
   
   header {
     display: flex;
