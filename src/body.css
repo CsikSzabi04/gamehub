@@ -10,7 +10,7 @@ body {
     cursor: pointer;
   }
 
-  .allSections{width: 80%; margin: 0px auto;}
+  .allSections{width: 85%; padding-right: 1%; margin: 0px auto;}
   
   header {
     display: flex;
