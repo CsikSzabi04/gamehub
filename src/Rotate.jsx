@@ -1,47 +1,33 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
+import React, { useEffect, useRef, useState } from "react";
 import './body.css';
 
 export default function Carousel({ games, showGameDetails }) {
-    const carouselRef = useRef(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const itemWidth = 300;
 
     useEffect(() => {
-        if (!carouselRef.current || games.length === 0) return;
-
-        const carousel = carouselRef.current;
-        let currentIndex = 0;
         const totalItems = games.length;
-        const intervalTime = 3000; // Rotate every 3 seconds
+        const intervalTime = 3000;
 
         const interval = setInterval(() => {
-            currentIndex = (currentIndex + 1) % totalItems;
-            gsap.to(carousel, {
-                x: -currentIndex * 240,
-                duration: 1.5,
-                ease: "power2.inOut",
-                overwrite: true,
-            });
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % totalItems);
         }, intervalTime);
 
-        return () => clearInterval(interval); // Cleanup interval on unmount
+        return () => clearInterval(interval);
     }, [games]);
 
     return (
         <div className="carousel-container overflow-hidden relative">
-            <div
-                ref={carouselRef}
-                className="carousel flex space-x-4 transition-transform"
-                style={{ width: `${games.length * 8}%` }} // Ensure dynamic width
-            >
-                {games.map((game) => (
-                   <div key={game.id} className="game-card carousel-item" onClick={() => showGameDetails(game)}>
-                   <img src={game.background_image} alt={game.name} className="game-image" />
-                   <div className="game-details">
-                       <h3 className="text-lg font-bold mb-2">{game.name}</h3>
-                       <p className="text-sm text-gray-400">Released: {game.released || "N/A"}</p>
-                       <p className="text-sm text-gray-400">Rating: {game.rating || "N/A"}/5</p>
-                   </div>
-               </div>
+            <div  className="carousel flex transition-transform" style={{ transform: `translateX(-${currentIndex * itemWidth}px)`, transition: "transform 1s ease", }} >
+                {games.map((x) => (
+                    <div key={x.id} className="game-card carousel-item" onClick={() => showGameDetails(x)}>
+                        <img src={x.background_image} alt={x.name}  className="game-image"  />
+                        <div className="game-details">
+                            <h3 className="text-lg font-bold mb-2">{x.name}</h3>
+                            <p className="text-sm text-gray-400"> Released: {x.released || "N/A"} </p>
+                            <p className="text-sm text-gray-400"> Rating: {x.rating || "N/A"}/5 </p>
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>

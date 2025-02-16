@@ -7,10 +7,11 @@ export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
     const [multiplayerGames, setMultiplayerGames] = useState([]);
     const [actionGames, setActionGames] = useState([]);
-    const [ps5Games, setPs5Games] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null); // New state for selected game
-    const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
-
+    const [scifi, setScifi] = useState([]);
+    const [rating, setRatings] = useState([]);
+    const [selectedGame, setSelectedGame] = useState(null); 
+    const [modalVisible, setModalVisible] = useState(false); 
+    
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
@@ -37,26 +38,15 @@ export default function Notfound() {
         }
     }, [allGames]);
 
-    async function fetchPS5Games() {
-        try {
-            const response = await fetch(`https://api.rawg.io/api/games?key=984255fceb114b05b5e746dc24a8520a&page_size=8&platforms=18`);
-            if (!response.ok) throw new Error("Failed to fetch PS5 games");
-
-            const data = await response.json();
-            setPs5Games(data.results);
-        } catch (error) {
-            console.error("Error fetching PS5 games:", error);
-        }
-    }
 
     function categorizeGames() {
         setMultiplayerGames(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("multiplayer"))));
         setActionGames(allGames.filter(game => game.genres?.some(genre => genre.name.toLowerCase().includes("action"))));
-
-        fetchPS5Games();
+        setScifi(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("sci-fi"))));
+        //setRatings(allGames.filter(game => game.platforms?.some(platform => platform.name.toLowerCase().includes("pc"))));
     }
 
-    // Updated showGameDetails function
+
     function showGameDetails(game) {
         const requirements = game.platforms && game.platforms.length > 0
             ? game.platforms.map(platform => {
@@ -65,10 +55,10 @@ export default function Notfound() {
             }).filter(Boolean).join(", ") : "N/A";
 
         setSelectedGame({ ...game, requirements, });
-        setModalVisible(true); // Show the modal
+        setModalVisible(true); 
     }
 
-    // Close the modal
+
     function closeModal() {
         setModalVisible(false);
         setSelectedGame(null);
@@ -132,43 +122,32 @@ export default function Notfound() {
                         <h2 className="text-2xl font-semibold mb-4">Action Games</h2>
                         <div className="carousel-container overflow-hidden">
                             <div className="carousel flex space-x-4">
-                                {actionGames.map((game) => (
-                                    <div key={game.id} className="game-card carousel-item" onClick={() => showGameDetails(game)}>
-                                        <img src={game.background_image} alt={game.name} className="game-image" />
-                                        <div className="game-details">
-                                            <h3 className="text-lg font-bold mb-2">{game.name}</h3>
-                                            <p className="text-sm text-gray-400">Released: {game.released || "N/A"}</p>
-                                            <p className="text-sm text-gray-400">Rating: {game.rating || "N/A"}/5</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                <Rotate games={actionGames} showGameDetails={showGameDetails}/>
                             </div>
                         </div>
                     </section>
 
                     <section id="ps5-games" className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">PlayStation 5 Games</h2>
+                        <h2 className="text-2xl font-semibold mb-4">Sci-fi Games</h2>
                         <div className="carousel-container overflow-hidden">
                             <div className="carousel flex space-x-4">
-                                {ps5Games.map((game) => (
-                                    <div key={game.id} className="game-card carousel-item" onClick={() => showGameDetails(game)}>
-                                        <img src={game.background_image} alt={game.name} className="game-image" />
-                                        <div className="game-details">
-                                            <h3 className="text-lg font-bold mb-2">{game.name}</h3>
-                                            <p className="text-sm text-gray-400">Released: {game.released || "N/A"}</p>
-                                            <p className="text-sm text-gray-400">Rating: {game.rating || "N/A"}/5</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                    <Rotate games={scifi} showGameDetails={showGameDetails}/>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="ps5-games" className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4">Recommended</h2>
+                        <div className="carousel-container overflow-hidden">
+                            <div className="carousel flex space-x-4">
+                                    <Rotate games={rating} showGameDetails={showGameDetails}/>
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
 
-            {/* Modal for Game Details */}
             {modalVisible && selectedGame && (
-
                 <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
                     <div className="modal-content bg-gray-900 p-6 rounded-lg max-w-md w-full">
                         <span className="close-button" onClick={closeModal}>&times;</span>
