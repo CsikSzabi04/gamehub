@@ -11,6 +11,8 @@ export default function Notfound() {
     const [rating, setRatings] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null); 
     const [modalVisible, setModalVisible] = useState(false); 
+    const [store,setStore] = useState([])
+    const [modalStoreVisible,setStoreVisible] = useState(false)
     
     useEffect(() => {
         async function fetchFeaturedGames() {
@@ -63,14 +65,29 @@ export default function Notfound() {
         setModalVisible(false);
         setSelectedGame(null);
     }
-
+    useEffect(()=>{
+        async function getStores() {
+            try{
+                const resp = await fetch("https://www.cheapshark.com/api/1.0/stores");
+                const data = await resp.json();
+                setStore(data)
+            }catch(error){console.log({"Fetch error: ":error})}
+        }
+        getStores()
+    },[])
+    function stores(){
+        setStoreVisible(true)
+        //console.log(store)
+    }
+    function closeStore(){setStoreVisible(false)}
+    
     return (
         <div>
             <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
                 <div className="flex items-center space-x-4">
                     <h1 className="text-3xl font-bold text-white cursor-pointer">Game Data Hub</h1>
                     <div className="navbar flex flex-wrap justify-center space-x-4">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg">Stores</button>
+                        <button className="nav-button text-white px-4 py-2 rounded-lg" onClick={stores}>Stores</button>
                         <button className="nav-button text-white px-4 py-2 rounded-lg">Favourites</button>
                         <Link to="/login">
                             <button className="nav-button text-white px-4 py-2 rounded-lg">Profile</button>
@@ -153,7 +170,7 @@ export default function Notfound() {
                         <span className="close-button" onClick={closeModal}>&times;</span>
                         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 w-full object-cover" />
                         <h2 className="text-3xl font-bold mb-4">{selectedGame.name}</h2>
-                        <p>Release Date:{selectedGame.released || "N/A"}</p>
+                        <p>Release Date: {selectedGame.released || "N/A"}</p>
                         <p>Rating: {selectedGame.rating || "N/A"}/5</p>
                         <p>Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "N/A"}</p>
                         <p>Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "N/A"}</p>
@@ -170,6 +187,16 @@ export default function Notfound() {
                         </div>
                     </div>
                 </div>
+            )}
+            { modalStoreVisible && (
+                <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
+                <div className="modal-content bg-gray-900 p-6 rounded-lg max-w-md w-full">
+                    <span className="close-button" onClick={closeStore}>&times;</span>
+                    <div className='store'>
+                    {store.map((x,i)=> <div> {/*<img className='store-pic' src={x.image.logo}/>*/} <p  className='store-row' key={x.storeID}>{x.storeName} </p></div>)}
+                    </div>
+                </div>
+            </div>
             )}
             
         </div>

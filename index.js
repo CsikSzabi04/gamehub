@@ -304,11 +304,11 @@ function deleteFromWishlist(index) {
 function toggleStar(event, gameName) {
     event.stopPropagation();
     const starElement = event.target;
-    const isFilled = starElement.innerHTML === "&#9733;"; // Check if the star is filled
+    const isFilled = starElement.innerHTML == "&#9733;"; // Check if the star is filled
 
     if (isFilled) {
         starElement.innerHTML = "&#9734;"; // Empty star
-        wishlist = wishlist.filter(game => game !== gameName); // Remove from wishlist
+        wishlist = wishlist.filter(game => game != gameName); // Remove from wishlist
     } else {
         starElement.innerHTML = "&#9733;"; // Filled star
         if (!wishlist.includes(gameName)) {

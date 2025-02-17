@@ -544,6 +544,24 @@ body {
   max-height: 200px;
   overflow-y: auto;
 }
+.store{
+  padding: 5px;
+  margin: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.store-row{
+ padding: 5px;
+ margin: 5px;
+ border:1px solid #555;
+ border-radius: 5px;
+ background-color: #555;
+ cursor: pointer;
+}
+.store-pic{
+  max-width: 16px;max-height: 16px;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
