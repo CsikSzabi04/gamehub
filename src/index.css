@@ -1,6 +1,4 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-  color: #fff;
-
-}
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;color: #fff; overflow-x: hidden;  scroll-behavior: smooth; }
+::-webkit-scrollbar {display: none;}
+::-webkit-scrollbar-thumb {background: rgba(85, 23, 23, 0.26);border-radius: 6px;}
+::-webkit-scrollbar-track { background: #1c1c1c;border-radius: 6px;}

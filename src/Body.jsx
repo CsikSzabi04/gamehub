@@ -7,6 +7,7 @@ import ShowCards from './ShowCards.jsx';
 import FeaturedGames from './FeaturedGames.jsx';
 import Search from './Search.jsx';
 import SearchFind from './SearchFind.jsx';
+import MainSection from './MainSection.jsx';
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
@@ -91,6 +92,7 @@ export default function Notfound() {
             <div className="main-content">
                 <div className='rights bg-gray-900'> <SearchFind games={games} setGames={setGames} /> </div>
                 <div className='allSections'>
+                    <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                     <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                     <Rotate games={multiplayerGames} showGameDetails={showGameDetails} />
                     <Rotate games={actionGames} showGameDetails={showGameDetails} />
