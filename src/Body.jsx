@@ -76,11 +76,15 @@ export default function Notfound() {
         setSelectedGame(null);
     }
 
+    function ref(){
+        window.location.reload(); 
+    }
+
     return (
         <div>
             <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
                 <div className="head flex items-center space-x-4">
-                    <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={() => Refresh()}>Game Data Hub</h1>
+                    <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={ref}>Game Data Hub</h1>
                     <div className="navbar flex flex-wrap justify-center space-x-4">
                         <button className="nav-button text-white px-4 py-2 rounded-lg" id="stores-button">
                             Stores
