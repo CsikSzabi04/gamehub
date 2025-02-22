@@ -17,19 +17,29 @@ export default function Carousel({ games, showGameDetails }) {
     }, [games]);
 
     return (
-        <div className="carousel-container overflow-hidden relative">
-            <div  className="carousel flex transition-transform" style={{ transform: `translateX(-${currentIndex * itemWidth}px)`, transition: "transform 1s ease", }} >
-                {games.map((x) => (
-                    <div key={x.id} className="game-card carousel-item" onClick={() => showGameDetails(x)}>
-                        <img src={x.background_image} alt={x.name}  className="game-image"  />
-                        <div className="game-details">
-                            <h3 className="text-lg font-bold mb-2">{x.name}</h3>
-                            <p className="text-sm text-gray-400"> Released: {x.released || "N/A"} </p>
-                            <p className="text-sm text-gray-400"> Rating: {x.rating || "N/A"}/5 </p>
+
+        <section id="multiplayer-games" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Multiplayer Games</h2>
+            <div className="carousel-container overflow-hidden">
+                <div className="carousel flex space-x-4">
+                    <div className="carousel-container overflow-hidden relative">
+                        <div className="carousel flex transition-transform" style={{ transform: `translateX(-${currentIndex * itemWidth}px)`, transition: "transform 1s ease", }} >
+                            {games.map((x) => (
+                                <div key={x.id} className="game-card carousel-item" onClick={() => showGameDetails(x)}>
+                                    <img src={x.background_image} alt={x.name} className="game-image" />
+                                    <div className="game-details">
+                                        <h3 className="text-lg font-bold mb-2">{x.name}</h3>
+                                        <p className="text-sm text-gray-400"> Released: {x.released || "N/A"} </p>
+                                        <p className="text-sm text-gray-400"> Rating: {x.rating || "N/A"}/5 </p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                ))}
+                </div>
             </div>
-        </div>
+        </section>
+
+
     );
 }

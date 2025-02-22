@@ -1,5 +1,6 @@
-import './App.css'
-import './body.css'
+import './App.css';
+import './body.css';
+
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
