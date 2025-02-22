@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import './body.css';
 
-export default function Carousel({ games, showGameDetails, name }) {
+export default function Rotate({ games, showGameDetails, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemWidth = 300;
 

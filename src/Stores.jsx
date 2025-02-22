@@ -6,7 +6,7 @@ export default function Stores({ modalStoreVisible}) {
     useEffect(() => {
         async function getStores() {
             try {
-                const response = await fetch('https://www.cheapshark.com/api/1.0/stores');
+                const response = await fetch('https://gamehub-backend-zekj.onrender.com/stores');
                 const stores = await response.json();
 
                 const dropdown = document.getElementById('stores-dropdown');

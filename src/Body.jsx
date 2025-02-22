@@ -8,12 +8,15 @@ import FeaturedGames from './FeaturedGames.jsx';
 import Search from './Search.jsx';
 import SearchFind from './SearchFind.jsx';
 import MainSection from './MainSection.jsx';
+import StoresFooter from './StoresFooter.jsx';
+import FreeGames from './FreeGames.jsx';
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
     const [multiplayerGames, setMultiplayerGames] = useState([]);
     const [actionGames, setActionGames] = useState([]);
     const [scifi, setScifi] = useState([]);
+    const [exploration, setExplore] = useState([]);
     const [rating, setRatings] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -41,6 +44,7 @@ export default function Notfound() {
         fetchFeaturedGames();
     }, []);
 
+
     useEffect(() => {
         if (allGames.length > 0) {
             categorizeGames();
@@ -52,6 +56,7 @@ export default function Notfound() {
         setMultiplayerGames(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("multiplayer"))));
         setActionGames(allGames.filter(game => game.genres?.some(genre => genre.name.toLowerCase().includes("action"))));
         setScifi(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("sci-fi"))));
+        setExplore(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("exploration"))));
     }
 
 
@@ -75,7 +80,7 @@ export default function Notfound() {
         <div>
             <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
                 <div className="head flex items-center space-x-4">
-                    <h1 className="text-3xl font-bold text-white cursor-pointer">Game Data Hub</h1>
+                    <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={() => Refresh()}>Game Data Hub</h1>
                     <div className="navbar flex flex-wrap justify-center space-x-4">
                         <button className="nav-button text-white px-4 py-2 rounded-lg" id="stores-button">
                             Stores
@@ -85,7 +90,6 @@ export default function Notfound() {
                             <button className="nav-button text-white px-4 py-2 rounded-lg">Profile</button>
                         </Link>
                     </div>
-
                 </div>
                 <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} /> </div>
             </header>
@@ -97,8 +101,13 @@ export default function Notfound() {
                     <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                     <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"}/>
                     <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}/>
+                    <FreeGames />
                     <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}/>
+                    <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"}/>
+                
+                     <StoresFooter />
                 </div>
+               
             </div>
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
             <Stores modalStoreVisible={modalStoreVisible} />
