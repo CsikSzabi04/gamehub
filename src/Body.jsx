@@ -94,7 +94,8 @@ export default function Notfound() {
                 <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} /> </div>
             </header>
 
-            <div className="main-content">
+            <div className="main-content flex h-screen">
+                
                 <div className='rights bg-gray-900'> <SearchFind games={games} setGames={setGames} /> </div>
                 <div className='allSections'>
                     <MainSection allGames={allGames} showGameDetails={showGameDetails} />
