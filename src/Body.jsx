@@ -18,7 +18,8 @@ export default function Notfound() {
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [games, setGames] = useState([]);
-    const [modalStoreVisible, setStoreVisible] = useState(false)
+    const [modalStoreVisible, setStoreVisible] = useState(false);
+    const name = "";
 
     useEffect(() => {
         async function fetchFeaturedGames() {
@@ -94,9 +95,9 @@ export default function Notfound() {
                 <div className='allSections'>
                     <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                     <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
-                    <Rotate games={multiplayerGames} showGameDetails={showGameDetails} />
-                    <Rotate games={actionGames} showGameDetails={showGameDetails} />
-                    <Rotate games={scifi} showGameDetails={showGameDetails} />
+                    <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"}/>
+                    <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}/>
+                    <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}/>
                 </div>
             </div>
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />

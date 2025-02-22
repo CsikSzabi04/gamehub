@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import './body.css';
 
-export default function Carousel({ games, showGameDetails }) {
+export default function Carousel({ games, showGameDetails, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemWidth = 300;
 
@@ -19,7 +19,7 @@ export default function Carousel({ games, showGameDetails }) {
     return (
 
         <section id="multiplayer-games" className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Multiplayer Games</h2>
+            <h2 className="text-2xl font-semibold mb-4">{name}</h2>
             <div className="carousel-container overflow-hidden">
                 <div className="carousel flex space-x-4">
                     <div className="carousel-container overflow-hidden relative">
