@@ -20,8 +20,8 @@ export default function MainSection({ allGames, showGameDetails }) {
                             <div key={randomGames[0].id} className="`game-card md:col-span-2 md:row-span-1 hover:shadow-lg mr-5 transition transform cursor-pointer bg-[url(${randomGames[0].background_image})]`" onClick={() => showGameDetails(randomGames[0])}>
                                 <img src={randomGames[0].background_image} alt={randomGames[0].name} className="w-10% h-10% max-h-100 object-cover rounded-md" />
                                 <h3 className="text-md font-bold truncate">{randomGames[0].name}</h3>
-                                <p className="text-xs text-gray-400">Released: {randomGames[0].released || 'N/A'}</p>
-                                <p className="text-xs text-gray-400">Rating: {randomGames[0].rating || 'N/A'}/5</p>
+                                <p className="text-xs text-gray-400">Released: {randomGames[0].released }</p>
+                                <p className="text-xs text-gray-400">Rating: {randomGames[0].rating }/5</p>
                             </div>
                             <div className="md:col-span-1 flex flex-col gap-2">
                                 {randomGames.slice(1).map((game) => (
@@ -29,8 +29,8 @@ export default function MainSection({ allGames, showGameDetails }) {
                                         <img src={game.background_image} alt={game.name} className="w-full h-24 object-cover rounded-md" />
                                         <div className="game-details p-1">
                                             <h3 className="text-sm font-bold truncate">{game.name}</h3>
-                                            <p className="text-xs text-gray-400">Released: {game.released || 'N/A'}</p>
-                                            <p className="text-xs text-gray-400">Rating: {game.rating || 'N/A'}/5</p>
+                                            <p className="text-xs text-gray-400">Released: {game.released }</p>
+                                            <p className="text-xs text-gray-400">Rating: {game.rating }/5</p>
                                         </div>
                                     </div>
                                 ))}

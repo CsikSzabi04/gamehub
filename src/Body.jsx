@@ -9,7 +9,8 @@ import Search from './Search.jsx';
 import SearchFind from './SearchFind.jsx';
 import MainSection from './MainSection.jsx';
 import StoresFooter from './StoresFooter.jsx';
-import FreeGames from './FreeGames.jsx';
+import Free from './Free.jsx';
+import Discounted from './Discounted.jsx';
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
@@ -104,12 +105,12 @@ export default function Notfound() {
                 <div className='allSections'>
                     <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                     <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+                    <Free />
                     <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"}/>
                     <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}/>
-                    <FreeGames />
+                    <Discounted />
                     <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}/>
                     <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"}/>
-                
                      <StoresFooter />
                 </div>
                
