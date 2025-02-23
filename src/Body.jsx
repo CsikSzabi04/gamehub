@@ -12,6 +12,7 @@ import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
 import News from './News.jsx';
 import Discounted from './Discounted.jsx';
+import "tailwindcss";
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);

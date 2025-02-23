@@ -28,8 +28,8 @@ export default function Search({setGames, games}) {
     return (
         <div className="flex flex-col items-center">
             <div className="flex flex-wrap space-x-4  w-full ">
-                <input className="p-2 mb-4 rounded-lg text-black w-full sm:w-64"  type="text"  placeholder="Search games..."  value={query}  onChange={(e) => setQuery(e.target.value)} />
-                <input className="p-2 mb-4 rounded-lg text-black w-full sm:w-32 "  type="number"   placeholder="Max Price"  value={maxPrice === 500 ? "" : maxPrice}  onChange={(e) => setMaxPrice(e.target.value || Infinity)} />
+                <input className="p-2 mb-4 rounded-lg text-black w-full sm:w-64 bg-white"  type="text"  placeholder="Search games..."  value={query}  onChange={(e) => setQuery(e.target.value)} />
+                <input className="p-2 mb-4 rounded-lg text-black w-full sm:w-32 bg-white"  type="number"   placeholder="Max Price"  value={maxPrice === 500 ? "" : maxPrice}  onChange={(e) => setMaxPrice(e.target.value || Infinity)} />
                 <button className="p-2 bg-blue-500 text-white rounded-lg button"onClick={searchGames} > Search</button>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "tailwindcss";
 
 export default function News() {
   const [newsItems, setNewsItems] = useState([]);
