@@ -11,7 +11,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
 
     return (
         <section id="free-games" className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">{name}</h2>
+        <h2 className="text-2xl font-semibold mb-4">{name} 💸</h2>
         <div className="carousel-container overflow-hidden">
             <div className="carousel flex space-x-4">
                 <div className="carousel-container overflow-hidden relative">

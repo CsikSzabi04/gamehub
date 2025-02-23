@@ -30,7 +30,7 @@ export default function StoresFooter() {
     return (
         <div className="container mx-auto p-4">
             <section id="stores-section" className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Main Game Stores: </h2>
+                <h2 className="text-2xl font-semibold mb-4">Main Game Stores </h2>
                 <div id="stores-grid" className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {stores.map(store => (
                         <div key={store.storeID} className="store-card">

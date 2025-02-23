@@ -87,12 +87,13 @@ export default function Notfound() {
                             Stores
                             <div className="dropdown hidden absolute bg-white text-black mt-2 rounded-lg shadow-lg" id="stores-dropdown"> </div> </button>
                         <button className="nav-button text-white px-4 py-2 rounded-lg">Favourites</button>
-                        <Link to="/login">
-                            <button className="nav-button text-white px-4 py-2 rounded-lg">Login/Sign-Up</button>
-                        </Link>
                         <Link to="/discover">
                             <button className="nav-button text-white px-4 py-2 rounded-lg">Discover</button>
                         </Link>
+                        <Link to="/login">
+                            <button className="nav-button text-white px-4 py-2 rounded-lg">Login/Sign-Up</button>
+                        </Link>
+
                     </div>
                 </div>
                 <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} /> </div>
