@@ -10,6 +10,7 @@ import SearchFind from './SearchFind.jsx';
 import MainSection from './MainSection.jsx';
 import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
+import News from './News.jsx';
 import Discounted from './Discounted.jsx';
 
 export default function Notfound() {
@@ -30,16 +31,9 @@ export default function Notfound() {
             try {
                 const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
                 const data = await response.json();
-
-                if (data.games && Array.isArray(data.games)) {
-                    setAllGames(data.games); // Access games
-                } else {
-                    console.error("Wrong data:", data);
-                    setAllGames([]);
-                }
+                setAllGames(data.games); // Access games 
             } catch (error) {
-                console.error("Error fetching featured games:", error);
-                setAllGames([]);
+                console.error("Error:", error);
             }
         }
         fetchFeaturedGames();
@@ -66,15 +60,15 @@ export default function Notfound() {
         setSelectedGame({ ...game, requirements });
         setModalVisible(true);
     }
-    
+
 
     function closeModal() {
         setModalVisible(false);
         setSelectedGame(null);
     }
 
-    function ref(){
-        window.location.reload(); 
+    function ref() {
+        window.location.reload();
     }
 
     return (
@@ -100,20 +94,19 @@ export default function Notfound() {
             </header>
 
             <div className="main-content flex h-screen">
-                
                 <div className='rights bg-gray-900'> <SearchFind games={games} setGames={setGames} /> </div>
                 <div className='allSections'>
                     <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                     <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                     <Free />
-                    <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"}/>
-                    <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}/>
+                    <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
+                    <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
                     <Discounted />
-                    <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}/>
-                    <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"}/>
-                     <StoresFooter />
+                    <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                    <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
+                    <News />
+                    <StoresFooter />
                 </div>
-               
             </div>
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
             <Stores modalStoreVisible={modalStoreVisible} />
