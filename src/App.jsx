@@ -1,9 +1,6 @@
 import './App.css';
 import './body.css';
-
-
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
 import Login from './pages/Login.jsx'
 import Body from './Body.jsx'
 import Notfound from './pages/Notfound.jsx'
@@ -14,6 +11,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect } from 'react'
 import SignUp from './pages/SignUp.jsx'
+import Discover from './Dicvover.jsx';
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -35,6 +33,7 @@ export default function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Body /> },
     { path: "/login", element: <Login auth={auth} setUser={setUser} /> },
+    { path: "/discover", element: <Discover /> },
     { path: "/signup", element: <SignUp auth={auth} /> },
     { path: "*", element: <Notfound /> }
   ]);

@@ -62,15 +62,11 @@ export default function Notfound() {
 
 
     function showGameDetails(game) {
-        const requirements = game.platforms && game.platforms.length > 0
-            ? game.platforms.map(platform => {
-                const req = platform.requirements_en || {};
-                return req.minimum ? `${platform.platform.name}: ${req.minimum}` : null;
-            }).filter(Boolean).join(", ") : "N/A";
-
-        setSelectedGame({ ...game, requirements, });
+        const requirements = game.platforms?.map(p => p.requirements_en?.minimum).join(", ");
+        setSelectedGame({ ...game, requirements });
         setModalVisible(true);
     }
+    
 
     function closeModal() {
         setModalVisible(false);
@@ -92,7 +88,10 @@ export default function Notfound() {
                             <div className="dropdown hidden absolute bg-white text-black mt-2 rounded-lg shadow-lg" id="stores-dropdown"> </div> </button>
                         <button className="nav-button text-white px-4 py-2 rounded-lg">Favourites</button>
                         <Link to="/login">
-                            <button className="nav-button text-white px-4 py-2 rounded-lg">Profile</button>
+                            <button className="nav-button text-white px-4 py-2 rounded-lg">Login/Sign-Up</button>
+                        </Link>
+                        <Link to="/discover">
+                            <button className="nav-button text-white px-4 py-2 rounded-lg">Discover</button>
                         </Link>
                     </div>
                 </div>
