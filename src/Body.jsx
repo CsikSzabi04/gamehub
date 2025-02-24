@@ -13,7 +13,7 @@ import News from './News.jsx';
 import Discounted from './Discounted.jsx';
 import "tailwindcss";
 
-export default function Notfound() {
+export default function Body() {
     const [allGames, setAllGames] = useState([]);
     const [multiplayerGames, setMultiplayerGames] = useState([]);
     const [actionGames, setActionGames] = useState([]);
@@ -150,17 +150,15 @@ export default function Notfound() {
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
 
             {modalStoreVisible && (
-    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-        <div className="modal-content bg-gray-900 text-white p-6 rounded-lg max-w-md w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl">
-            <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
-            <div className="store space-y-4 overflow-y-auto max-h-96">
-                {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)}  className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName}  className="store-pic" /></p></div>)}
-            </div>
-        </div>
-    </div>
-)}
-
-
+                <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                    <div className="modal-content text-white p-6 rounded-lg">
+                        <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
+                        <div className="store space-y-4 overflow-y-auto max-h-96">
+                            {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)} className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" /></p></div>)}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
