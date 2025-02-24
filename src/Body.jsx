@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './body.css';
 import Rotate from "./Rotate.jsx"
-import Stores from './Stores.jsx';
 import ShowCards from './ShowCards.jsx';
 import FeaturedGames from './FeaturedGames.jsx';
 import Search from './Search.jsx';
@@ -12,9 +11,7 @@ import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
 import News from './News.jsx';
 import Discounted from './Discounted.jsx';
-import ShowFavourite from './ShowFavourite.jsx';
 import "tailwindcss";
-
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
@@ -26,8 +23,8 @@ export default function Notfound() {
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [games, setGames] = useState([]);
-    const [fav, setFav] = useState([]);
-    const [modalStoreVisible, setStoreVisible] = useState(false);
+    const [store, setStore] = useState([])
+    const [modalStoreVisible, setStoreVisible] = useState(false)
     const name = "";
 
     useEffect(() => {
@@ -47,7 +44,7 @@ export default function Notfound() {
     useEffect(() => {
         if (allGames.length > 0) {
             categorizeGames();
-        }
+        } setStoreVisible(false)
     }, [allGames]);
 
 
@@ -71,11 +68,49 @@ export default function Notfound() {
         setSelectedGame(null);
     }
 
-
-
     function ref() {
         window.location.reload();
     }
+    useEffect(() => {
+        async function getStores() {
+            try {
+                const resp = await fetch('https://gamehub-backend-zekj.onrender.com/stores');
+                const data = await resp.json();
+                setStore(data)
+            } catch (error) { console.log({ "Fetch error: ": error }) }
+        }
+        getStores()
+    }, [])
+    function stores() {
+        setStoreVisible(true)
+        //console.log(store)
+    }
+    function closeStore() { setStoreVisible(false) }
+
+    function openStoreUrl(name) {
+        console.log(name);
+
+        let url = "";
+
+        if (name.toLowerCase() == 'steam') {
+            url = 'store.steampowered.com/';
+        } else if (name.toLowerCase() == 'getgamez') {
+            url = 'getgamez.net/';
+        } else if (name.toLowerCase() == 'playfield') {
+            url = 'www.playitstore.hu/';
+        } else if (name.toLowerCase() == 'imperial games') {
+            url = 'imperial.games/';
+        } else if (name.toLowerCase() == 'funstockdigital') {
+            url = 'funstock.eu';
+        } else if (name.toLowerCase() == 'razer game store') {
+            url = 'www.razer.com/eu-en/store';
+        } else {
+            url = `${name.toLowerCase().replace(/\s+/g, '')}.com`; //itt Bence te a store.storeName.toLowerCase-t tetted... XDD
+        }
+
+        window.open(`https://${url}`, '_blank');
+    }
+
 
     return (
         <div>
@@ -83,9 +118,7 @@ export default function Notfound() {
                 <div className="head flex items-center space-x-4">
                     <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={ref}>Game Data Hub</h1>
                     <div className="navbar flex flex-wrap justify-center space-x-4">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg" id="stores-button">
-                            Stores
-                            <div className="dropdown hidden absolute bg-white text-black mt-2 rounded-lg shadow-lg" id="stores-dropdown"> </div> </button>
+                        <button className="nav-button text-white px-4 py-2 rounded-lg" onClick={stores}>Stores</button>
                         <button className="nav-button text-white px-4 py-2 rounded-lg">Favourites</button>
                         <Link to="/discover">
                             <button className="nav-button text-white px-4 py-2 rounded-lg">Discover</button>
@@ -115,8 +148,19 @@ export default function Notfound() {
                 </div>
             </div>
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
-            <Stores modalStoreVisible={modalStoreVisible} />
-            <ShowFavourite modalStoreVisible={modalStoreVisible} />
+
+            {modalStoreVisible && (
+    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+        <div className="modal-content bg-gray-900 text-white p-6 rounded-lg max-w-md w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+            <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
+            <div className="store space-y-4 overflow-y-auto max-h-96">
+                {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)}  className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName}  className="store-pic" /></p></div>)}
+            </div>
+        </div>
+    </div>
+)}
+
+
         </div>
     );
 }
