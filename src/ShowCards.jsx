@@ -21,13 +21,13 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible}) {
 
     return (
     <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
-        <div className="modal-content bg-gray-900 p-6 rounded-lg max-w-md w-full">
+        <div className="modal-content rounded-lg ">
             <span className="close-button" onClick={closeModal}>&times;</span>
             <span className="add-button" onClick={addFav}>AddToFav</span>
-            <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 w-full object-cover" />
+            <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 object-cover" />
             <h2 className="text-3xl font-bold mb-4">{selectedGame.name}</h2>
             <p>Release Date: {selectedGame.released || "?"}</p>
-            <p>Rating: {selectedGame.rating || "N/A"}/5</p>
+            <p>Rating: {selectedGame.rating || "?"}/5</p>
             <p>Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
             <p>Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
             <div className="row">
