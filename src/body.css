@@ -184,6 +184,17 @@ footer {
   margin-bottom: 10px;
 }
 
+.add-button {
+  background-color: #3be535;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float: left;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
 .close-button:hover {
   background-color: #c62828;
 }

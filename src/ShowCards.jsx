@@ -1,5 +1,21 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 export default function ShowCards({ selectedGame, closeModal, modalVisible}) {
+    const [refresh, setRefresh] = useState(false);
+    const [name, setName] = useState('');
+
+    async function addFav() {
+        setName(selectedGame.name)
+        const fav = { name };
+        const resp = await fetch("https://gamehub-backend-zekj.onrender.com/addfav", {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(fav),
+        });
+        setRefresh(!refresh);
+        setName('');
+      }
 
     if (!selectedGame) return null;
 
@@ -7,6 +23,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible}) {
     <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
         <div className="modal-content bg-gray-900 p-6 rounded-lg max-w-md w-full">
             <span className="close-button" onClick={closeModal}>&times;</span>
+            <span className="add-button" onClick={addFav}>AddToFav</span>
             <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 w-full object-cover" />
             <h2 className="text-3xl font-bold mb-4">{selectedGame.name}</h2>
             <p>Release Date: {selectedGame.released || "?"}</p>

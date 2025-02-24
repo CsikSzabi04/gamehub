@@ -12,7 +12,9 @@ import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
 import News from './News.jsx';
 import Discounted from './Discounted.jsx';
+import ShowFavourite from './ShowFavourite.jsx';
 import "tailwindcss";
+
 
 export default function Notfound() {
     const [allGames, setAllGames] = useState([]);
@@ -24,6 +26,7 @@ export default function Notfound() {
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [games, setGames] = useState([]);
+    const [fav, setFav] = useState([]);
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const name = "";
 
@@ -68,6 +71,8 @@ export default function Notfound() {
         setSelectedGame(null);
     }
 
+
+
     function ref() {
         window.location.reload();
     }
@@ -111,6 +116,7 @@ export default function Notfound() {
             </div>
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
             <Stores modalStoreVisible={modalStoreVisible} />
+            <ShowFavourite modalStoreVisible={modalStoreVisible} />
         </div>
     );
 }
