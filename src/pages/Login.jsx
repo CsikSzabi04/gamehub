@@ -18,7 +18,7 @@ export default function Login({ auth, setUser }) {
       setEmail(); setPassword("");
       setLoginError(false);
 
-      window.location.href = "https://csikszabi04.github.io/stats";
+      window.location.href = "/";
 
     } catch (error) {
       console.log("Login error: ", error.code);
