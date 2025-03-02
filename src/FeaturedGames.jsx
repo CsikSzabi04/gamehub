@@ -4,7 +4,7 @@ export default function FeaturedGames({ allGames, showGameDetails}) {
     return (
         <div className="container mx-auto p-4">
             <section id="featured-games" className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>
+                <h2 className="text-2xl font-semibold mb-4">Featured Game</h2>
                 <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {Array.isArray(allGames) && allGames.length > 0 ? (
                         allGames.map((game) => (
