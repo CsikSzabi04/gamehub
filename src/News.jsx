@@ -28,7 +28,7 @@ export default function News() {
 
   return (
     <section id="news" className="mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Latest Steam New</h2>
+      <h2 className="text-2xl font-semibold mb-4">Latest Steam News</h2>
       <div className="carousel-container overflow-hidden">
         <div className="carousel flex" style={{ transform: `translateX(-${currentIndex * 100}%)`, transition: "transform 1s ease-in-out", }} >
           {newsItems.map((news, index) => (
