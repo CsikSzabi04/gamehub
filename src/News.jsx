@@ -9,7 +9,7 @@ export default function News() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const response = await axios.get("http://localhost:88/news");
+        const response = await axios.get("https://gamehub-backend-zekj.onrender.com/news");
         setNewsItems(response.data);
       } catch (err) {
         console.error("Error fetching news:", err);
