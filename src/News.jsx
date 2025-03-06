@@ -21,7 +21,7 @@ export default function News() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-    }, 10000);
+    }, 20000);
 
     return () => clearInterval(interval);
   }, [newsItems]);

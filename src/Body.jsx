@@ -10,10 +10,11 @@ import MainSection from './MainSection.jsx';
 import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
 import News from './News.jsx';
+import Live from './Live.jsx';
 import Discounted from './Discounted.jsx';
 import "tailwindcss";
 import { UserContext } from './UserContext.jsx';
-import { auth } from '../firebaseConfig'; 
+import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 
 export default function Body() {
@@ -28,6 +29,7 @@ export default function Body() {
     const [games, setGames] = useState([]);
     const [store, setStore] = useState([])
     const [modalStoreVisible, setStoreVisible] = useState(false)
+    const [searchTrue, setSearchTrue] = useState(false)
     const name = "";
 
     useEffect(() => {
@@ -149,7 +151,7 @@ export default function Body() {
         }
     }, [user]);
 
-    function handleLogout(){
+    function handleLogout() {
         signOut(auth);
         async function getFavorites() {
             try {
@@ -166,7 +168,7 @@ export default function Body() {
 
 
     return (
-        <div>
+        <div className=''>
             <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
                 <div className="head flex items-center space-x-4">
                     <h1 className="text-3xl font-bold text-white cursor-pointer" onClick={ref}>Game Data Hub</h1>
@@ -185,24 +187,29 @@ export default function Body() {
 
                     </div>
                 </div>
-                <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} /> </div>
+                <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} /> </div>
             </header>
 
-            <div className="main-content flex h-screen">
-                <div className='rights bg-gray-900'> <SearchFind games={games} setGames={setGames} /> </div>
-                <div className='allSections'>
-                    <MainSection allGames={allGames} showGameDetails={showGameDetails} />
-                    <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
-                    <Free />
-                    <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
-                    <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
-                    <Discounted />
-                    <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
-                    <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
-                    <News />
-                    <StoresFooter />
+            {searchTrue == false ? (
+                <div className="main-content flex h-screen ">
+
+                    <div className='allSections'>
+                        <MainSection allGames={allGames} showGameDetails={showGameDetails} />
+                        <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+                        <Free />
+                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
+                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
+                        <Discounted />
+                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
+                        <News />
+                        <Live />
+                        <StoresFooter />
+                    </div>
                 </div>
-            </div>
+            ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
+
+
             <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
 
             {modalStoreVisible && (
@@ -221,7 +228,7 @@ export default function Body() {
                 <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
                     <div className="modal-content text-white p-6 rounded-lg">
                         <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeFavModal}>&times;</span>
-                        {favorites.length === 0 ? (
+                        {favorites.length == 0 ? (
                             <p className="text-white">You don't have any favorite games yet.</p>
                         ) : (
                             <div className="store space-y-4 overflow-y-auto max-h-96">

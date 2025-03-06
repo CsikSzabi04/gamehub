@@ -6,6 +6,13 @@ body {
   padding: 0;
 }
 
+.back{
+  
+  background-position: center;
+  background-repeat:no-repeat;
+  background-size: cover;
+}
+
 h1:hover {
   cursor: pointer;
 }
