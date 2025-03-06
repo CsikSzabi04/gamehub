@@ -9,7 +9,7 @@ export default function EsportsMatches() {
   useEffect(() => {
     async function fetchMatches() {
       try {
-        const response = await axios.get("http://localhost:88/getlive");
+        const response = await axios.get("https://gamehub-backend-zekj.onrender.com/getlive");
         setMatches(response.data.events);
       } catch (err) {
         console.error("Error fetching matches:", err);
