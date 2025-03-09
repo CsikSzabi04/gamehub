@@ -34,7 +34,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   return (
     <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
-      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 p-6 sm:p-8 bg-white">
+      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 p-6 sm:p-8">
         <span className="close-button text-2xl font-bold text-white absolute top-3 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
         <span className="add-button bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer" onClick={addFav}>Add to Fav</span><br />
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>} 
