@@ -9,6 +9,7 @@ import SearchFind from './SearchFind.jsx';
 import MainSection from './MainSection.jsx';
 import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
+import Loot from './Loot.jsx';
 import News from './News.jsx';
 import Live from './Live.jsx';
 import StartUp from './StartUp.jsx';
@@ -208,6 +209,7 @@ export default function Body() {
                                 <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
                                 <News />
                                 <Mobile />
+                                <Loot />
                                 <Live />
                                 <StoresFooter />
                             </div>
