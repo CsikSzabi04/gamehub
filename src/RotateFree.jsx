@@ -16,7 +16,7 @@ export default function RotateFree({ games, showGameDetails, name }) {
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 320}px)`, }}>
                         {games.map((game) => (
-                            <div key={game.id} className="game-card flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mr-6"  onClick={() => showGameDetails(game)} >
+                            <div key={game.id} className="game-card flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mr-6"  onClick={() => showGameDetails(game)} >
                                 <img  src={game.thumbnail}  alt={game.title}  className="object-cover rounded-md mb-4" />
                                 <div className="game-details">
                                     <h3 className="text-lg font-bold">{game.title}</h3>
