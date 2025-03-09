@@ -28,24 +28,43 @@ export default function News() {
 
   return (
     <section id="news" className="mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Latest Steam News</h2>
-      <div className="carousel-container overflow-hidden ">
-        <div className="carousel flex " style={{ transform: `translateX(-${currentIndex * 100}%)`, transition: "transform 1s ease-in-out",}}>
+      <h2 className="text-2xl font-semibold mb-4 ">Latest Steam News</h2>
+      <div className="carousel-container overflow-hidden">
+        <div
+          className="carousel flex transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
           {newsItems.map((news) => (
-            <div key={news.id} className="game-card carousel-item flex-none border-cyan-950">
+            <div
+              key={news.id}
+              className="game-card carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+            >
               <div className="p-4 rounded-md shadow-md min-h-[20%] max-h-[80%] flex flex-col justify-between h-full">
                 <div className="relative mb-4">
-                  {news.thumbnail && (  <img src={news.thumbnail}alt={news.title}className="h-48 object-cover rounded-md" /> )}
+                  {news.thumbnail && (
+                    <img
+                      src={news.thumbnail}
+                      alt={news.title}
+                      className="h-48 w-full object-cover rounded-md"
+                    />
+                  )}
                 </div>
                 <h3 className="text-lg font-bold mb-2">{news.title}</h3>
                 <p className="text-sm text-gray-400">{news.short_description}</p>
                 <div className="flex-grow mt-10"></div>
               </div>
               <div className="float-start">
-                  <p className="text-xs text-gray-500 mt-2"> {`Publisher: ${news.publisher}`}</p>
-                  <p className="text-xs text-gray-500 mt-3"> {`Release Date: ${news.release_date}`}</p>
-                  <a href={news.game_url} target="_blank" rel="noopener noreferrer"  className="text-blue-500 text-sm mt-3 block mt-auto" > Read More</a>
-                </div>
+                <p className="text-xs text-gray-500 mt-2">{`Publisher: ${news.publisher}`}</p>
+                <p className="text-xs text-gray-500 mt-3">{`Release Date: ${news.release_date}`}</p>
+                <a
+                  href={news.game_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 text-sm mt-3 block mt-auto"
+                >
+                  Read More
+                </a>
+              </div>
             </div>
           ))}
         </div>
