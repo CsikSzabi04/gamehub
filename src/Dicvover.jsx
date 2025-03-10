@@ -5,6 +5,8 @@ import SearchFind from "./SearchFind.jsx";
 import Stores from "./Stores.jsx";
 import Pagination from '@mui/material/Pagination';
 import './body.css';
+import { useContext } from "react";
+import { UserContext } from './UserContext.jsx';
 
 export default function Discover() {
     const [allGames, setAllGames] = useState([]);
@@ -61,73 +63,117 @@ export default function Discover() {
     const currentGames = gamesFree.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
     const pageCount = Math.ceil(gamesFree.length / gamesPerPage);
 
+    function ref() {
+        window.location.reload();
+    }
+    const [menuOpen, setMenuOpen] = useState(false);
+    function stores() {
+        setStoreVisible(true)
+        //console.log(store)
+    }
+
+
+    function openFavModal() {
+        console.log('Opening favorites modal');
+        setIsFavModalOpen(true);
+    };
+
+    function closeFavModal() {
+        console.log('Closing favorites modal');
+        setIsFavModalOpen(false);
+    };
+    const [favorites, setFavorites] = useState([]);
+    const { user } = useContext(UserContext);
+
+    function handleLogout() {
+        signOut(auth);
+        async function getFavorites() {
+            try {
+                const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav`);
+                const data = await resp.json();
+                setFavorites(data);
+            } catch (error) {
+                setError("Error fetching favorites");
+                console.error("Error fetching favorites:", error);
+            }
+        }
+        getFavorites();
+    };
+    const [searchTrue, setSearchTrue] = useState(false);
     return (
         <div>
             <Stores modalStoreVisible={modalStoreVisible} />
-            <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
-                <div className="head flex items-center space-x-4">
-                    <Link to="/"><h1 className="text-3xl font-bold text-white cursor-pointer">Game Data Hub</h1></Link>
-                    <div className="navbar flex flex-wrap justify-center space-x-4">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg">Stores</button>
-                        <button className="nav-button text-white px-4 py-2 rounded-lg">Favourites</button>
-                        <Link to="/login">
-                            <button className="nav-button text-white px-4 py-2 rounded-lg">Login/Sign-Up</button>
-                        </Link>
-                        <Link to="/discover">
-                            <button className="nav-button text-white px-4 py-2 rounded-lg">Discover</button>
-                        </Link>
-                    </div>
-                </div>
-                <div className='float-right bg-gray-800'> <Search games={games} setGames={setGames} /> </div>
-            </header>
-            <div className='rights bg-gray-900'> <SearchFind games={games} setGames={setGames} /> </div>
-
-            <div className=" bg-gray-900">
-                <div className=" mx-auto p-4">
-                    <section id="featured-games" className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>
-                        <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {Array.isArray(allGames) && allGames.length > 0 ? (
-                                allGames.map((game) => (
-                                    <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                                        <img src={game.background_image} alt={game.name} className="game-image" />
-                                        <div className="game-details">
-                                            <h3 className="text-lg font-bold mb-2 ">{game.name}</h3>
-                                            <div className="flex-grow"></div>
-                                            <div className="float-start"><p className="text-sm text-gray-400">Rating: {game.rating}/5</p></div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (<p className="text-white">No games found. :(</p>)}
+            <header className="p-4 bg-gray-800 flex flex-wrap justify-between items-center">
+                <div className="head flex items-center justify-between w-full md:w-auto">
+                    <Link to="/"><h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" > Game Data Hub</h1></Link>
+                    <button className="md:hidden text-white text-2xl" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
+                    <nav className={`w-full md:flex md:items-center md:space-x-4 ${menuOpen ? "block" : "hidden"}`}>
+                        <div className="flex flex-col md:flex-row md:space-x-4">
+                            <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={stores}> Stores</button>
+                            <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={openFavModal}>   Favourites </button>
+                            <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Discover </button>  </Link>
+                            {user ? (<button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto text-lime-600"> <p className='text-lime-600'>LogOut</p> </button>
+                            ) : (
+                                <Link to="/login"> <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Login/Sign-Up  </button></Link>
+                            )}
                         </div>
-                    </section>
+                    </nav>
                 </div>
-            </div>
+                <div className="w-full md:w-auto mt-4 md:mt-0 flex justify-center md:justify-end">
+                    <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
+                </div>
+            </header>
 
-            <div className="p-4 bg-gray-900">
-                <section id="featured-games" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-white">All Free Games</h2>
-                    <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                        {currentGames.length > 0 ? (
-                            currentGames.map((game) => (
-                                <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                                    <img src={game.thumbnail} alt={game.title} className="game-image" />
-                                    <div className="game-details">
-                                        <h3 className="text-lg font-bold text-white">{game.title}</h3>
-                                        <div className="platforms text-sm text-gray-600">
-                                            <div className="flex-grow"></div>
-                                            <div className="float-start">
-                                                <span className="font-semibold">Platform:</span> {game.platform}
+
+
+            {searchTrue == false ? (
+                <div>
+                    <div className=" bg-gray-900">
+                        <div className=" mx-auto p-4">
+                            <section id="featured-games" className="mb-8">
+                                <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>
+                                <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                                    {Array.isArray(allGames) && allGames.length > 0 ? (
+                                        allGames.map((game) => (
+                                            <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                                                <img src={game.background_image} alt={game.name} className="game-image" />
+                                                <div className="game-details">
+                                                    <h3 className="text-lg font-bold mb-2 ">{game.name}</h3>
+                                                    <div className="flex-grow"></div>
+                                                    <div className="float-start"><p className="text-sm text-gray-400">Rating: {game.rating}/5</p></div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (<p className="text-white">No games found. :(</p>)}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-gray-900">
+                        <section id="featured-games" className="mb-8">
+                            <h2 className="text-2xl font-semibold mb-4 text-white">All Free Games</h2>
+                            <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                                {currentGames.length > 0 ? (
+                                    currentGames.map((game) => (
+                                        <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                                            <img src={game.thumbnail} alt={game.title} className="game-image" />
+                                            <div className="game-details">
+                                                <h3 className="text-lg font-bold text-white">{game.title}</h3>
+                                                <div className="platforms text-sm text-gray-600">
+                                                    <div className="flex-grow"></div>
+                                                    <div className="float-start">
+                                                        <span className="font-semibold">Platform:</span> {game.platform}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (<p className="text-white">No games found.</p>)}
+                                    ))
+                                ) : (<p className="text-white">No games found.</p>)}
+                            </div>
+                        </section>
                     </div>
-                </section>
-            </div>
-
+           
             <div className="p-4 bg-gray-900 text-white">
                 <div className="flex justify-center bg-gray-800 text-white ">
                     <Pagination
@@ -140,8 +186,10 @@ export default function Discover() {
                     />
                 </div>
             </div>
+            </div>
+            ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
 
-         
         </div>
+        
     );
 }
