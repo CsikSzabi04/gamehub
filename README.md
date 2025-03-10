@@ -1,8 +1,7 @@
-https://gamhub.netlify.app/
-
 # Game Data Hub
 
 **Game Data Hub** is a web application that allows users to discover and explore video games, view detailed game information, and purchase games from various online stores. The platform also includes user authentication, allowing users to log in, manage their favorite games, and get personalized recommendations.
+You can visit it here with this link --> https://gamhub.netlify.app/
 
 ## Features
 
