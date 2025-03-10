@@ -19,6 +19,7 @@ import { UserContext } from './UserContext.jsx';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import Mobile from './Mobile.jsx';
+import Footer from './Footer.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -205,13 +206,16 @@ export default function Body() {
                                 <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
                                 <Discounted />
                                 <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                                <Mobile />
                                 <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
                                 <News />
-                                <Mobile />
+                                
                                 <Loot />
                               
                                 <StoresFooter />
+                                
                             </div>
+                            <Footer />
                         </div>
                     ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
 
@@ -246,7 +250,9 @@ export default function Body() {
                             </div>
                         </div>
                     )}
+                  
                 </div>
+                
             {/*)}*/}
         </>
     );
