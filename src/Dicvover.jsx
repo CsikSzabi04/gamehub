@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search.jsx";
 import SearchFind from "./SearchFind.jsx";
-
+import Stores from "./Stores.jsx";
 import Pagination from '@mui/material/Pagination';
 import './body.css';
 
@@ -63,7 +63,7 @@ export default function Discover() {
 
     return (
         <div>
-            
+            <Stores modalStoreVisible={modalStoreVisible} />
             <header className="p-4 bg-gray-800 flex justify-between items-center flex-wrap">
                 <div className="head flex items-center space-x-4">
                     <Link to="/"><h1 className="text-3xl font-bold text-white cursor-pointer">Game Data Hub</h1></Link>

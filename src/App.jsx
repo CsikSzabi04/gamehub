@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Body from './Body.jsx'
 import Notfound from './pages/Notfound.jsx'
-
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebaseConfig.js";
 import { getFirestore } from "firebase/firestore";
@@ -32,13 +31,14 @@ export default function App() {
 
   const router = createBrowserRouter([
     { path: "/", element: <Body /> },
-    { path: "/login", element: <Login auth={auth} setUser={setUser} /> },
+    { path: "/login", element: <Login auth={auth} setUser={setUser} component={Login} /> },
     { path: "/discover", element: <Discover /> },
     { path: "/signup", element: <SignUp auth={auth} /> },
     { path: "*", element: <Notfound /> }
   ]);
   
   return (
+    
     <div className='app'> 
       <RouterProvider router={router} />
     </div>
