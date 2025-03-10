@@ -210,7 +210,7 @@ export default function Body() {
                                 <News />
                                 <Mobile />
                                 <Loot />
-                                <Live />
+                                 {/*  <Live />  */}
                                 <StoresFooter />
                             </div>
                         </div>
