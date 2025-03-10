@@ -147,7 +147,6 @@ export default function Body() {
                 console.error("Error fetching favorites:", error);
             }
         }
-
         if (user) {
             getFavorites();
             const intervalId = setInterval(getFavorites, 1000);
@@ -176,7 +175,7 @@ export default function Body() {
            {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
                 <div className=''>
                     <header className="p-4 bg-gray-800 flex flex-wrap justify-between items-center">
-                        <div className=" head flex items-center justify-between w-full md:w-auto">
+                        <div className="head flex items-center justify-between w-full md:w-auto">
                             <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" onClick={ref}> Game Data Hub</h1>
                             <button className="md:hidden text-white text-2xl" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
                         <nav className={`w-full md:flex md:items-center md:space-x-4 ${menuOpen ? "block" : "hidden"}`}>
@@ -210,7 +209,7 @@ export default function Body() {
                                 <News />
                                 <Mobile />
                                 <Loot />
-                                 {/*  <Live />  */}
+                              
                                 <StoresFooter />
                             </div>
                         </div>
@@ -222,7 +221,7 @@ export default function Body() {
                         <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
                             <div className="modal-content text-white p-6 rounded-lg">
                                 <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
-                                <div className="store space-y-4 overflow-y-auto max-h-96">
+                                <div className="store overflow-y-auto max-h-96">
                                     {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)} className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" /></p></div>)}
                                 </div>
                             </div>
@@ -236,7 +235,7 @@ export default function Body() {
                                 {favorites.length == 0 ? (
                                     <p className="text-white">You don't have any favorite games yet.</p>
                                 ) : (
-                                    <div className="store space-y-4 overflow-y-auto max-h-96">
+                                    <div className="store overflow-y-auto max-h-96">
                                         {favorites.map((fav, i) => (
                                             <div key={i} className="store-row fav-card bg-gray-800 p-4 rounded-md mb-4">
                                                 <p className="storename text-white mt-2">{fav.name}</p>
