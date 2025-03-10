@@ -20,6 +20,7 @@ import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import Mobile from './Mobile.jsx';
 import Footer from './Footer.jsx';
+import { CiLogin } from "react-icons/ci";
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -186,7 +187,7 @@ export default function Body() {
                                 <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Discover </button>  </Link>
                                 {user ? ( <button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto text-lime-600"> <p className='text-lime-600'>LogOut</p> </button>
                                 ) : (
-                                    <Link to="/login"> <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Login/Sign-Up  </button></Link>
+                                    <Link to="/login"> <button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full md:w-auto">Login <span className='mt-2 mb-1 ml-1'><CiLogin /></span> </button></Link>
                                 )}
                             </div>
                         </nav>
