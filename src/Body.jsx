@@ -70,7 +70,7 @@ export default function Body() {
     return (
         <div className='bg-gray-900'>
             {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
-            <Header />
+            <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
                     <div className='allSections'>

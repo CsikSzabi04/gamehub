@@ -168,7 +168,7 @@ export default function Discover() {
     return (
         <div>
             <Stores modalStoreVisible={modalStoreVisible} />
-              <Header />
+            <Header />
 
             {searchTrue == false ? (
                 <div>

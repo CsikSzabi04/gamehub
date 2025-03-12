@@ -10,7 +10,7 @@ import Footer from './Footer.jsx';
 import { CiLogin } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 
-export default function Header() {
+export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
     const [allGames, setAllGames] = useState([]);
     const [multiplayerGames, setMultiplayerGames] = useState([]);
     const [actionGames, setActionGames] = useState([]);
@@ -19,10 +19,10 @@ export default function Header() {
     const [rating, setRatings] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [games, setGames] = useState([]);
+    
     const [store, setStore] = useState([])
     const [modalStoreVisible, setStoreVisible] = useState(false);
-    const [searchTrue, setSearchTrue] = useState(false);
+  
     const [isLoaded, setIsLoaded] = useState(false);
     const name = "";
 
