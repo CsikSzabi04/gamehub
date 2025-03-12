@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './body.css';
-import Rotate from "./Rotate.jsx"
+import Rotate from "./Rotate/Rotate.jsx"
 import ShowCards from './ShowCards.jsx';
-import FeaturedGames from './FeaturedGames.jsx';
+import FeaturedGames from './FeaturedGames.jsx'; 
 import SearchFind from './SearchFind.jsx';
 import MainSection from './MainSection.jsx';
-import StoresFooter from './StoresFooter.jsx';
-import Free from './Free.jsx';
+import StoresFooter from './Stores/StoresFooter.jsx';
+import Free from './Free.jsx'; 
 import Loot from './Loot.jsx';
 import News from './News.jsx';
 import Discounted from './Discounted.jsx';
@@ -86,13 +86,11 @@ export default function Body() {
                         <div id='news'><News /></div>
                         <Loot />
                         <StoresFooter />
+                        <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
                     </div>
                     <Footer />
                 </div>
             ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
-            
-            <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
-           
             {/*)}*/}
         </div>
     );

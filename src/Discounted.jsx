@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import RotateFree from "./RotateFree.jsx";
-import RotateDiscounted from "./RotateDiscounted.jsx";
+import RotateFree from "./Rotate/RotateFree.jsx";
+import RotateDiscounted from "./Rotate/RotateDiscounted.jsx";
 
 export default function Discounted() {
     const [freeGames, setFreeGames] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RotateFree from "./RotateFree.jsx";
+import RotateFree from "./Rotate/RotateFree.jsx";
 
 export default function Free() {
     const [games, setGames] = useState([]);

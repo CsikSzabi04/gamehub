@@ -38,7 +38,7 @@ export default function Footer() {
                             <a href="https://www.instagram.com/cs_szabj04/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-lime-600">
                                 <FaSquareInstagram size={24} className="sm:text-3xl md:text-4xl" />
                             </a>
-                            <a href="https://mail.google.com/mail/u/0/?fs=1&to=alexszabi04@gmail.com&su=Collaboration+Opportunity+/+Egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+Lehet%C5%91s%C3%A9g&body=Dear+Cs%C3%ADk+Szabolcs+Alex,%0A%0AI+would+like+to+discuss+a+collaboration+opportunity+with+you.%0A%0ABest+regards,%0A%0A%5BYour+Name%5D%0A%0A---%0A%0AKedves+Cs%C3%ADk+Szabolcs+Alex,%0A%0ASzeretn%C3%A9k+egy+egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+lehet%C5%91s%C3%A9gr%C5%91l+besz%C3%A9lni+veled.%0A%0A%C3%9Cdv%C3%B6zlettel,%0A%0A%5BNeved%5D&tf=cm" target="_blank" rel="noopener noreferrer" className="text-white hover:text-lime-600">
+                            <a href="https://mail.google.com/mail/u/0/?fs=1&to=helpdesk.gamehub@gmail.com.com&su=Collaboration+Opportunity+/+Egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+Lehet%C5%91s%C3%A9g&body=Dear+Cs%C3%ADk+Szabolcs+Alex,%0A%0AI+would+like+to+discuss+a+collaboration+opportunity+with+you.%0A%0ABest+regards,%0A%0A%5BYour+Name%5D%0A%0A---%0A%0AKedves+Cs%C3%ADk+Szabolcs+Alex,%0A%0ASzeretn%C3%A9k+egy+egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+lehet%C5%91s%C3%A9gr%C5%91l+besz%C3%A9lni+veled.%0A%0A%C3%9Cdv%C3%B6zlettel,%0A%0A%5BNeved%5D&tf=cm" target="_blank" rel="noopener noreferrer" className="text-white hover:text-lime-600">
                                 <SiGmail size={24} className="sm:text-3xl md:text-4xl" />
                             </a>
                         </div>

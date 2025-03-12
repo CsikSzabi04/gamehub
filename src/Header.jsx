@@ -6,9 +6,9 @@ import "tailwindcss";
 import { UserContext } from './UserContext.jsx';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
-import Footer from './Footer.jsx';
 import { CiLogin } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
+import Profile from './pages/Profile.jsx';
 
 export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
     const [allGames, setAllGames] = useState([]);
@@ -23,9 +23,6 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
     const [store, setStore] = useState([])
     const [modalStoreVisible, setStoreVisible] = useState(false);
   
-    const [isLoaded, setIsLoaded] = useState(false);
-    const name = "";
-
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
@@ -54,22 +51,6 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
         setExplore(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("exploration"))));
     }
 
-
-    function showGameDetails(game) {
-        const requirements = game.platforms?.map(p => p.requirements_en?.minimum).join(", ");
-        setSelectedGame({ ...game, requirements });
-        setModalVisible(true);
-    }
-
-
-    function closeModal() {
-        setModalVisible(false);
-        setSelectedGame(null);
-    }
-
-    function ref() {
-        window.location.reload();
-    }
     useEffect(() => {
         async function getStores() {
             try {
@@ -90,7 +71,6 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
         console.log(name);
 
         let url = "";
-
         if (name.toLowerCase() == 'steam') {
             url = 'store.steampowered.com/';
         } else if (name.toLowerCase() == 'getgamez') {
@@ -188,7 +168,7 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
                     <div className="mt-4 xl:mt-0 flex flex-wrap justify-center xl:justify-end f">
                         <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}> Favourites </button>
                         {user ? (
-                            <button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600"> <p className="text-lime-600">LogOut <CgProfile /></p></button>
+                           <Link to="/profile"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"> <p className="text-lime-600 text-4xl"> <CgProfile /></p></button></Link> 
                         ) : (
                             <Link to="/login"><button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full xl:w-auto"> Login <span className="mt-2 mb-1 ml-1"><CiLogin /></span> </button></Link>
                         )}
@@ -226,11 +206,6 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
                     </div>
                 </div>
             )}
-
         </>
-
-
-
-
     )
 }

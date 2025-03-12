@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search.jsx";
 import SearchFind from "./SearchFind.jsx";
-import Stores from "./Stores.jsx";
+import Stores from "./Stores/Stores.jsx";
 import Pagination from '@mui/material/Pagination';
 import './body.css';
 import { useContext } from "react";

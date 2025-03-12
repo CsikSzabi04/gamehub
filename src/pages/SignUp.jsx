@@ -7,16 +7,16 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './LogSig.css';
 
-export default function Register({ auth }) {
+export default function Register({ auth, setUsername, username }) {
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  async function handleRegister(){
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -48,7 +48,7 @@ export default function Register({ auth }) {
             <Typography variant="h4" gutterBottom className="text-3xl font-semibold mb-6 text-white">Register</Typography>
             {success && <Typography color="green" className="text-white mb-4">Account created successfully!</Typography>}
             {error && <Typography color="error" className="text-white mb-4">{error}</Typography>}
-            <TextField fullWidthclassName="tf w-full mb-4 bg-white" margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!error} />
+            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!error} />
             <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} error={!!error} />
             <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!error} />
             <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} error={!!error}/> 

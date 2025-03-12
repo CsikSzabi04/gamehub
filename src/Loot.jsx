@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RotateLoot from "./RotateLoot.jsx";
+import RotateLoot from "./Rotate/RotateLoot.jsx";
 
 export default function Giveaways() {
     const [giveaways, setGiveaways] = useState([]);

@@ -34,9 +34,11 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   return (
     <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
-      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 p-6 sm:p-8 max-h-[90%]">
-        <span className="close-button text-2xl font-bold text-white absolute top-3 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
-        <span className="add-button 0 text-white px-4 py-2 rounded-md cursor-pointer" onClick={addFav}>Add to Fav</span><br />
+      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 p-6 sm:p-8 max-h-[90%] overflow-y-auto">
+        <div className='inp'>
+          <span className="close-button text-2xl font-bold text-white absolute top-3 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
+          <span className="add-button text-white px-4 py-2 rounded-md cursor-pointer" onClick={addFav}>Add to Fav</span>
+        </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
         <h2 className="text-2xl sm:text-3xl font-bold mb-4">{selectedGame.name}</h2>
@@ -51,8 +53,8 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
             </div>
           </p>
         </div>
-       
       </div>
     </div>
+
   );
 }
