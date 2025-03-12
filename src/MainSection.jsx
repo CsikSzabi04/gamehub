@@ -11,7 +11,7 @@ export default function MainSection({ allGames, showGameDetails }) {
 
 
     return (
-        <div className="container mx-auto p-2">
+        <div className="container mx-auto bg-gray-900 p-2">
             <section id="featured-games" className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">Featured Games</h2>
                 <div id="games-grid" className="grid grid-cols-1 md:grid-cols-3 gap-2">

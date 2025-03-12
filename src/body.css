@@ -583,6 +583,12 @@ max-width: 20%;max-height: 40%;
     width: 100%;
     padding: 10px;
 }
+.f{
+  display: inline-flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 }
 
 .page{color: white;}

@@ -11,7 +11,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect } from 'react'
 import SignUp from './pages/SignUp.jsx'
 import Discover from './Dicvover.jsx';
-import News from './News.jsx';
+import Contact from './Contact.jsx';
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -34,7 +34,7 @@ export default function App() {
     { path: "/", element: <Body /> },
     { path: "/login", element: <Login auth={auth} setUser={setUser} component={Login} /> },
     { path: "/discover", element: <Discover /> },
-    { path: "/news", element: <News /> },
+    { path: "/contact", element: <Contact /> },
     { path: "/signup", element: <SignUp auth={auth} /> },
     { path: "*", element: <Notfound /> }
   ]);
