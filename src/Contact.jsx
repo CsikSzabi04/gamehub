@@ -12,6 +12,7 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
+import Header from './Header.jsx';
 
 export default function Contact() {
     const [allGames, setAllGames] = useState([]);
@@ -166,33 +167,7 @@ export default function Contact() {
     return (
         <>
             <div className='bg-gradient-to-r from-cyan-700 via-sky-800 to-blue-900'>
-                <header className="p-4 bg-gray-800 flex justify-between items-center pl-10 pr-10 pt-5 pb-5">
-                    <div className="head flex items-center justify-between w-full md:w-auto">
-                        <Link to="/">
-                            <div className='inline-flex gap-2 mr-8'>
-                                <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" > Game</h1>
-                                <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer text-sky-500"> Data</h1>
-                                <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" > Hub</h1>
-                            </div>
-                        </Link>
-                        <button className="md:hidden text-white text-2xl" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
-                        <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
-                        <nav className={`w-full md:flex md:items-center md:space-x-4 ${menuOpen ? "block" : "hidden"}`}>
-                            <div className="flex flex-col md:flex-row md:space-x-4">
-                                <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={stores}> Stores</button>
-                                <a href="#news"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">News </button></a>
-                                <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Discover </button>  </Link>
-                            </div>
-                        </nav>
-                    </div>
-                    <div className='flex-wrap flex'>
-                        <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={openFavModal}>   Favourites </button>
-                        {user ? (<button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto text-lime-600"> <p className='text-lime-600'>LogOut</p> </button>
-                        ) : (
-                            <Link to="/login"> <button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full md:w-auto">Login <span className='mt-2 mb-1 ml-1'><CiLogin /></span> </button></Link>
-                        )}
-                    </div>
-                </header>
+               <Header />
 
                 <div className="main-content flex flex-col justify-center items-center p-8 shadow-lg">
                     <div className="text-center text-white">
