@@ -70,7 +70,7 @@ Before running the application, ensure you have the following installed:
 2. Install the necessary dependencies:
 
     ```bash
-    npm install
+    pnpm i
     ```
 
 ### Firebase Setup
@@ -100,7 +100,7 @@ To use Firebase Authentication and Firestore, you need to set up Firebase:
 1. Start the development server:
 
     ```bash
-    npm start
+    pnpm run dev
     ```
 
 2. Visit `http://localhost:3000` in your browser to view the application.
