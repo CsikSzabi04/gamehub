@@ -11,8 +11,6 @@ import StoresFooter from './StoresFooter.jsx';
 import Free from './Free.jsx';
 import Loot from './Loot.jsx';
 import News from './News.jsx';
-import Live from './Live.jsx';
-import StartUp from './StartUp.jsx';
 import Discounted from './Discounted.jsx';
 import "tailwindcss";
 import { UserContext } from './UserContext.jsx';
@@ -174,86 +172,90 @@ export default function Body() {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <>
-           {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
-                <div className=''>
-                    <header className="p-4 bg-gray-800 flex flex-wrap justify-between items-center">
-                        <div className="head flex items-center justify-between w-full md:w-auto">
-                            <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" onClick={ref}> Game Data Hub</h1>
-                            <button className="md:hidden text-white text-2xl" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
+            {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
+            <div className=''>
+                <header className="p-4 bg-gray-800 flex  justify-between items-center pl-10 pr-10 pt-5 pb-5">
+                    <div className="head flex items-center justify-between w-full md:w-auto">
+                        <div className='inline-flex gap-2 mr-8'>
+                            <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" onClick={ref}> Game</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer text-sky-500" onClick={ref}> Data</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer" onClick={ref}> Hub</h1>
+                        </div>
+
+                        <button className="md:hidden text-white text-2xl" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
+                        <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
                         <nav className={`w-full md:flex md:items-center md:space-x-4 ${menuOpen ? "block" : "hidden"}`}>
                             <div className="flex flex-col md:flex-row md:space-x-4">
                                 <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={stores}> Stores</button>
-                                <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={openFavModal}>   Favourites </button>
+                                 <a href="#news"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">News </button></a>
                                 <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto">Discover </button>  </Link>
-                                {user ? ( <button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto text-lime-600"> <p className='text-lime-600'>LogOut</p> </button>
-                                ) : (
-                                    <Link to="/login"> <button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full md:w-auto">Login <span className='mt-2 mb-1 ml-1'><CiLogin /></span> </button></Link>
-                                )}
                             </div>
                         </nav>
-                        </div>
-                        <div className="w-full md:w-auto mt-4 md:mt-0 flex justify-center md:justify-end">
-                            <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
-                        </div>
-                    </header>
+                    </div>
+                    <div className='flex-wrap flex'>
+                        <button className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto" onClick={openFavModal}>   Favourites </button>
+                        {user ? (<button onClick={handleLogout} className="nav-button text-white px-4 py-2 rounded-lg w-full md:w-auto text-lime-600"> <p className='text-lime-600'>LogOut</p> </button>
+                        ) : (
+                            <Link to="/login"> <button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full md:w-auto">Login <span className='mt-2 mb-1 ml-1'><CiLogin /></span> </button></Link>
+                        )}
+                    </div>
+                </header>
 
-                    {searchTrue == false ? (
-                        <div className="main-content flex h-screen ">
-                            <div className='allSections'>
-                                <MainSection allGames={allGames} showGameDetails={showGameDetails} />
-                                <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
-                                <Free />
-                                <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
-                                <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
-                                <Discounted />
-                                <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
-                                <Mobile />
-                                <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
-                                <News />
-                                
-                                <Loot />
-                              
-                                <StoresFooter />
-                                
+                {searchTrue == false ? (
+                    <div className="main-content flex h-screen ">
+                        <div className='allSections'>
+                            <MainSection allGames={allGames} showGameDetails={showGameDetails} />
+                            <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+                            <Free />
+                            <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
+                            <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
+                            <Discounted />
+                            <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                            <Mobile />
+                            <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
+                            <div id='news'><News /></div>
+                            <Loot />
+                            <StoresFooter />
+
+                        </div>
+                        <Footer />
+                    </div>
+                ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
+
+                <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
+
+                {modalStoreVisible && (
+                    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                        <div className="modal-content text-white p-6 rounded-lg">
+                            <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
+                            <div className="store overflow-y-auto max-h-96">
+                                {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)} className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" /></p></div>)}
                             </div>
-                            <Footer />
                         </div>
-                    ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
+                    </div>
+                )}
 
-                    <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
-
-                    {modalStoreVisible && (
-                        <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-                            <div className="modal-content text-white p-6 rounded-lg">
-                                <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeStore} >&times; </span>
+                {isFavModalOpen && (
+                    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                        <div className="modal-content text-white p-6 rounded-lg">
+                            <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeFavModal}>&times;</span>
+                            {favorites.length == 0 ? (
+                                <p className="text-white">You don't have any favorite games yet.</p>
+                            ) : (
                                 <div className="store overflow-y-auto max-h-96">
-                                    {store.map((x, i) => <div key={i}><p onClick={() => openStoreUrl(x.storeName)} className='store-row'> <span className='storename'>{x.storeName}</span>  <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" /></p></div>)}
+                                    {favorites.map((fav, i) => (
+                                        <div key={i} className="store-row fav-card bg-gray-800 p-4 rounded-md mb-4">
+                                            <p className="storename text-white mt-2">{fav.name}</p>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
+                            )}
                         </div>
-                    )}
+                    </div>
+                )}
 
-                    {isFavModalOpen && (
-                        <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-                            <div className="modal-content text-white p-6 rounded-lg">
-                                <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={closeFavModal}>&times;</span>
-                                {favorites.length == 0 ? (
-                                    <p className="text-white">You don't have any favorite games yet.</p>
-                                ) : (
-                                    <div className="store overflow-y-auto max-h-96">
-                                        {favorites.map((fav, i) => (
-                                            <div key={i} className="store-row fav-card bg-gray-800 p-4 rounded-md mb-4">
-                                                <p className="storename text-white mt-2">{fav.name}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                  
-                </div>
-                
+            </div>
+
             {/*)}*/}
         </>
     );
