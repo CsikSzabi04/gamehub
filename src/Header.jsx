@@ -143,7 +143,7 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <>
-            <header className="bg-gray-800 text-white p-4 md:p-8">
+            <header className="bg-gray-800 text-white p-4 md:p-8 ">
                 <div className="mx-auto px-6 md:px-12 w-full f">
                     <div className="flex flex-col md:flex-row justify-between items-center md:items-start float-left">
                         <div className="mb-4 md:mb-0 text-center md:text-left mr-5">

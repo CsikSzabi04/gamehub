@@ -51,6 +51,9 @@ export default function Footer() {
                         <a href="/terms" className="text-white hover:text-lime-600">Terms of Service</a> |
                         <a href="/privacy" className="text-white hover:text-lime-600"> Privacy Policy</a>
                     </div>
+                    <div className="mt-2 text-xs sm:text-base">
+                       <span className='text-xs'>Made By:</span>  <a href="https://csszabj.netlify.app/" target='_blank' className="text-white hover:text-sky-600 text-xs">Szabolcs Csík</a> 
+                    </div>
                 </div>
             </div>
         </footer>

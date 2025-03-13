@@ -14,6 +14,7 @@ import "tailwindcss";
 import Mobile from './Mobile.jsx';
 import Footer from './Footer.jsx';
 import Header from './Header.jsx';
+import GamingNews from './GamingNews.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -85,6 +86,7 @@ export default function Body() {
                         <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
                         <div id='news'><News /></div>
                         <Loot />
+                        <GamingNews />
                         <StoresFooter />
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
                     </div>
