@@ -179,8 +179,7 @@ footer {
   background-color: #333;
   padding: 20px;
   border-radius: 12px;
-  width: 38%;
-
+  width: 40%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     max-width: 50%;
     position: relative;
@@ -663,7 +662,7 @@ footer {
     border-radius: 5px;
     cursor: pointer;
     font-size: 8px;
-    top: 6px;
+    top: 3px;
   }
 
   .add-button{
