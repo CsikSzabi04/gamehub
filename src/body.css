@@ -621,7 +621,7 @@ footer {
     cursor: pointer;
     font-size: 10px;
     top: 2px;
-    right: 12px;
+    right: 10px;
   }
 
   .add-button{
@@ -656,12 +656,12 @@ footer {
 
    .close-button{
     width: 25px; height: 15px; 
-    padding: 5px 15px 20px 9px;
+    padding: 0px 15px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 8px;
-    top: 3px;
+    top: 1px;
   }
 
   .add-button{
