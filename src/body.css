@@ -616,6 +616,25 @@ footer {
     flex-wrap: wrap;
   }
 
+  
+  .close-button{
+    width: 30px; height: 30px; 
+    padding: 0px 10px 20px 9px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .add-button{
+    width:80px; height: 20px; 
+    padding: 0px 10px 20px 9px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px; text-align: center; align-items: center;
+  }
+
 
 }
 
@@ -640,21 +659,21 @@ footer {
   }
 
    .close-button{
-    width: 30px; height: 30px; 
+    width: 25px; height: 25px; 
     padding: 0px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
   }
 
   .add-button{
-    width:80px; height: 30px; 
+    width:60px; height: 30px; 
     padding: 0px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 12px; text-align: center; align-items: center;
+    font-size: 10px; text-align: center; align-items: center;
   }
 }
 

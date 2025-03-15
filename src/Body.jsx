@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './body.css';
 import Rotate from "./Rotate/Rotate.jsx"
-import ShowCards from './ShowCards.jsx';
-import FeaturedGames from './FeaturedGames.jsx'; 
-import SearchFind from './SearchFind.jsx';
-import MainSection from './MainSection.jsx';
+import ShowCards from './Features/ShowCards.jsx';
+import FeaturedGames from '././Sections/FeaturedGames.jsx'; 
+import SearchFind from './Features/SearchFind.jsx';
+import MainSection from './Sections/MainSection.jsx';
 import StoresFooter from './Stores/StoresFooter.jsx';
-import Free from './Free.jsx'; 
-import Loot from './Loot.jsx';
-import News from './News.jsx';
-import Discounted from './Discounted.jsx';
+import Free from '././Sections/Free.jsx'; 
+import Loot from '././Sections/Loot.jsx';
+import News from './Sections/News.jsx';
+import Discounted from '././Sections/Discounted.jsx';
 import "tailwindcss";
-import Mobile from './Mobile.jsx';
+import Mobile from './Sections/Mobile.jsx';
 import Footer from './Footer.jsx';
 import Header from './Header.jsx';
-import GamingNews from './GamingNews.jsx';
+import GamingNews from './Sections/GamingNews.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);

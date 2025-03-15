@@ -10,8 +10,8 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect } from 'react'
 import SignUp from './pages/SignUp.jsx'
-import Discover from './Dicvover.jsx';
-import Contact from './Contact.jsx';
+import Discover from '././Sections/Dicvover.jsx';
+import Contact from '././Features/Contact.jsx';
 import Profile from './pages/Profile.jsx';
 import Terms from './TermsAndPrivacy/Terms.jsx';
 import Privacy from './TermsAndPrivacy/Privacy.jsx';

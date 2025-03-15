@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './body.css';
-import Search from './Search.jsx';
+import Search from './Features/Search.jsx';
 import "tailwindcss";
-import { UserContext } from './UserContext.jsx';
+import { UserContext } from './Features/UserContext.jsx';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { CiLogin } from "react-icons/ci";
