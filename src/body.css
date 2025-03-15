@@ -615,17 +615,18 @@ footer {
 
   
   .close-button{
-    width: 30px; height: 30px; 
-    padding: 5px 10px 20px 9px;
+    width: 30px; height: 20px; 
+    padding: 5px 10px 20px 11px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 10px;
+    top: 6px;
   }
 
   .add-button{
     width:80px; height: 20px; 
-    padding: 0px 10px 20px 9px;
+    padding: 5px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -653,16 +654,17 @@ footer {
 
    .close-button{
     width: 25px; height: 15px; 
-    padding: 0px 15px 20px 9px;
+    padding: 5px 15px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 8px;
+    top: 10px;
   }
 
   .add-button{
     width:60px; height: 20px; 
-    padding: 0px 10px 20px 9px;
+    padding: 5px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
