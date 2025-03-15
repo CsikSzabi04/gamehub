@@ -33,11 +33,11 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   if (!selectedGame) return null;
 
   return (
-    <div className=" show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
+    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
       <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto">
         <div className='inp flex center justify center'>
-          <span className="close-button font-bold text-white absolute top-5 right-6 cursor-pointer" onClick={closeModal}>&times;</span>
-          <span className="add-button text-white rounded-md cursor-pointer" onClick={addFav}>Add to Fav</span>
+          <span className="close-button font-bold text-white absolute top-6 right-7 cursor-pointer" onClick={closeModal}>&times;</span>
+          <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span>
         </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
