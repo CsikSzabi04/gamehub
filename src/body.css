@@ -589,7 +589,7 @@ footer {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 450px) {
   .game-card {
     flex: 1 0 100%;
   }
@@ -620,9 +620,8 @@ footer {
     border-radius: 5px;
     cursor: pointer;
     font-size: 10px;
-    top: 5px;
+    top: 2px;
     right: 12px;
-    margin-top: 5px;
   }
 
   .add-button{
