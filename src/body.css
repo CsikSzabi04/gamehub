@@ -182,6 +182,10 @@ footer {
   width: 38%;
 
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    max-width: 50%;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  
 }
 
 .close-button {
@@ -473,14 +477,7 @@ footer {
   opacity: 1;
 }
 
-.modal-content {
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 50%;
 
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
 
 .modal-content img {
 
@@ -619,11 +616,11 @@ footer {
   
   .close-button{
     width: 30px; height: 30px; 
-    padding: 0px 10px 20px 9px;
+    padding: 5px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 10px;
   }
 
   .add-button{
@@ -632,7 +629,7 @@ footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 12px; text-align: center; align-items: center;
+    font-size: 10px; text-align: center; align-items: center;
   }
 
 
@@ -654,26 +651,22 @@ footer {
     align-items: flex-start;
   }
 
-.inp .close-button, .inp .add-button {
-    margin-bottom: 10px; 
-  }
-
    .close-button{
-    width: 25px; height: 25px; 
-    padding: 0px 10px 20px 9px;
+    width: 25px; height: 15px; 
+    padding: 0px 15px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 8px;
   }
 
   .add-button{
-    width:60px; height: 30px; 
+    width:60px; height: 20px; 
     padding: 0px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 10px; text-align: center; align-items: center;
+    font-size: 8px; text-align: center; align-items: center;
   }
 }
 
