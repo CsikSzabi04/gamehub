@@ -621,7 +621,9 @@ footer {
     border-radius: 5px;
     cursor: pointer;
     font-size: 10px;
-    top: 6px;
+    top: 5px;
+    right: 12px;
+    margin-top: 5px;
   }
 
   .add-button{
@@ -631,6 +633,8 @@ footer {
     border-radius: 5px;
     cursor: pointer;
     font-size: 10px; text-align: center; align-items: center;
+    top: 5px;
+  
   }
 
 
@@ -659,7 +663,7 @@ footer {
     border-radius: 5px;
     cursor: pointer;
     font-size: 8px;
-    top: 10px;
+    top: 6px;
   }
 
   .add-button{
