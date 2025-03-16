@@ -6,6 +6,7 @@ import { firestore } from '../../firebaseConfig.js';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './LogSig.css';
+import Header from '../Header.jsx';
 
 export default function Register({ auth, setUsername, username }) {
   const [email, setEmail] = useState('');
@@ -36,11 +37,7 @@ export default function Register({ auth, setUsername, username }) {
 
   return (
     <>
-      <header className="p-4 bg-gray-800 flex justify-between items-center">
-        <div className="head flex items-center justify-between w-full md:w-auto">
-          <Link to="/"><h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer"> Game Data <br /> Hub</h1></Link>
-        </div>
-      </header>
+      <Header />
 
       <div className="login-container flex flex-col md:flex-row items-stretch min-h-screen m-4 p-4 md:p-20">
         <div className="login-form bg-gray-800 w-full md:w-1/2 px-8 py-6 md:p-10 flex items-center justify-center">

@@ -15,6 +15,7 @@ import Contact from '././Features/Contact.jsx';
 import Profile from './pages/Profile.jsx';
 import Terms from './TermsAndPrivacy/Terms.jsx';
 import Privacy from './TermsAndPrivacy/Privacy.jsx';
+import Review from '././Features/Review.jsx';
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -37,6 +38,7 @@ export default function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Body /> },
     { path: "/terms", element: <Terms /> },
+    { path: "/review", element: <Review /> },
     { path: "/privacy", element: <Privacy /> },
     { path: "/profile", element: <Profile setUser={setUser} username={username}/> },
     { path: "/login", element: <Login auth={auth} setUser={setUser} component={Login} /> },

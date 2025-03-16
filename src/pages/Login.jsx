@@ -3,6 +3,7 @@ import { Button, TextField } from '@mui/material';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import './LogSig.css';
+import Header from '../Header';
 
 export default function Login({ auth, setUser }) {
 
@@ -28,11 +29,7 @@ export default function Login({ auth, setUser }) {
 
   return (
     <>
-      <header className="p-4 bg-gray-800 flex justify-between items-center">
-        <div className="head flex items-center justify-between w-full md:w-auto mb-0 pb-0">
-          <Link to="/"><h1 className="text-2xl md:text-3xl font-bold text-white cursor-pointer"> Game Data <br /> Hub</h1></Link> 
-        </div>
-      </header>
+      <Header />
 
       <div className="login-container flex flex-col md:flex-row items-stretch min-h-screen m-4 p-4 md:p-20 pt-0 mt-">
         <div className="login-form bg-gray-800 w-full md:w-1/2 px-8 py-6 md:p-10 flex items-center justify-center">

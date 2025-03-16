@@ -167,6 +167,7 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
                     </div>
                     <div className="mt-4 xl:mt-0 flex flex-wrap justify-center xl:justify-end f">
                         <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}> Favourites </button>
+                        <Link to="/review" className='nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto'>Reviews</Link>
                         {user ? (
                            <Link to="/profile"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"> <p className="text-lime-600 text-4xl"> <CgProfile /></p></button></Link> 
                         ) : (
