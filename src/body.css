@@ -621,7 +621,8 @@ footer {
     cursor: pointer;
     font-size: 10px;
     top: 0px;
-    right: 4px;
+    right: 2px;
+    margin: 0px;
   }
 
   .add-button{
