@@ -589,7 +589,7 @@ footer {
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 480px) {
   .game-card {
     flex: 1 0 100%;
   }

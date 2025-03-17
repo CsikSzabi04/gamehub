@@ -1,7 +1,17 @@
+
+
+.tf{
+    background-color: white;
+    border-radius: 4px;
+}
 .log{
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #12232e, #1c1e41);
+    margin-bottom: 5px;
+}
+#roundL{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+#roundR{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
