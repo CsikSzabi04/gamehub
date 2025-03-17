@@ -61,7 +61,7 @@ export default function Profile({ setUser, username }) {
                     <Typography variant="body1" className="text-center">Loading...</Typography>
                 ) : (
                     <>
-                        <Typography variant="h6" className="mb-4">Username: {userInfo.username}</Typography>
+                        <Typography variant="h6" className="mb-4">Username: {userInfo.email.split("@")[0]}</Typography>
                         <Typography variant="h6" className="mb-4">Email: {userInfo.email}</Typography> <br />
                     </>
                 )}

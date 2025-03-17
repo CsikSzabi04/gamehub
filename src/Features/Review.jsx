@@ -3,6 +3,7 @@ import { UserContext } from './UserContext.jsx';
 import { Button, TextField, Modal } from '@mui/material';
 import Footer from '../Footer.jsx';
 import Header from '../Header.jsx';
+import './Features.css'
 
 export default function Review() {
     const [allGames, setAllGames] = useState([]);
@@ -64,6 +65,8 @@ export default function Review() {
     function showGameDetails(game) {
         setSelectedGame(game);
         fetchReviews();
+        setSearchTerm(game.name)
+        
     };
 
     const filteredGames = allGames.filter(game => game.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -76,10 +79,10 @@ export default function Review() {
         <>
             <div className='min-h-screen'>
                 <Header />
-                <div className=" flex flex-col md:flex-row justify-center gap-8 p-8">
-                    <div className="w-full  min-h-[50%] max-h-[50%] md:w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
+                <div className=" flex flex-col md:flex-row justify-center gap-8 p-8 ">
+                    <div className="w-full  min-h-[50%] max-h-[50%] md:w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg ">
                         <h2 className="text-xl font-semibold text-white mb-4">Write a Review</h2>
-                        <TextField label="Search Game" variant="outlined" className="mb-4 w-full " value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <TextField label="Search Game" variant="outlined" className="mb-4 w-full "sx={{".MuiInputLabel-root": {color:"#0284c7",},".MuiOutlinedInput-root":{input:{color:'white',},fieldset:{border:"1px solid white",},"&:hover fieldset":{border:"1px solid white",},"&.Mui-focused fieldset":{border:"1px solid white",},},}} id="tf" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}  />
                         {searchTerm && (
                             <div className="max-h-40 overflow-y-auto bg-gray-700 p-2 rounded-lg mb-4">
                                 {filteredGames.map(game => (
@@ -89,12 +92,9 @@ export default function Review() {
                         )}
 
                         <div className='mt-20'>
-                            <div className='flex g-5 flex-wrap'>
-                                <h3>Reviewing: </h3>
-                                {selectedGame && (<h3 className="text-white mb-4 ml-2"> {selectedGame.name}</h3>)}
+                            <div className='flex g-5 flex-wrap'>        
                             </div>
-
-                            <TextField label="Write a Review" variant="outlined" multiline rows={4} value={reviewText} onChange={(e) => setReviewText(e.target.value)} className="w-full mb-4 mt-10" />
+                            <TextField className="w-full mb-4 mt-10" label="Write a Review" sx={{".MuiInputLabel-root": {color:"#0284c7",},".MuiOutlinedInput-root":{input:{color:'white',},fieldset:{border:"1px solid white",},"&:hover fieldset":{border:"1px solid white",},"&.Mui-focused fieldset":{border:"1px solid white",},},}} id="tf" multiline rows={4} value={reviewText} onChange={(e) => setReviewText(e.target.value)}/>
                             <div className="flex gap-2 mb-4">
                                 {[1, 2, 3, 4, 5].map(star => (
                                     <span key={star} className={`cursor-pointer text-xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`} onClick={() => setRating(star)} >★ </span>
