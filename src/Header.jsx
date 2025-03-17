@@ -165,14 +165,17 @@ export default function Header({searchTrue, setGames ,setSearchTrue, games}) {
                             </div>
                         </nav>
                     </div>
-                    <div className="mt-4 xl:mt-0 flex flex-wrap justify-center xl:justify-end f">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}> Favourites </button>
+                    <div className="mt-4 xl:mt-0 flex flex-wrap  xl:float-right ">
+                    <nav className={`xl:flex xl:items-center xl:space-x-4 mt-4 xl:mt-0 ${menuOpen ? "block" : "hidden"}`}>
                         <Link to="/review" className='nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto'>Reviews</Link>
+                    </nav>
+                        <Link> <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}> Favourites </button></Link>
                         {user ? (
                            <Link to="/profile"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"> <p className="text-lime-600 text-4xl"> <CgProfile /></p></button></Link> 
                         ) : (
                             <Link to="/login"><button className="nav-button flex flex-wrap text-white px-4 py-2 rounded-lg w-full xl:w-auto"> Login <span className="mt-2 mb-1 ml-1"><CiLogin /></span> </button></Link>
                         )}
+                       
                     </div>
                 </div>
             </header>
