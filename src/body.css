@@ -7,7 +7,6 @@ body {
 }
 
 .back {
-
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -28,7 +27,6 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-
 }
 
 #search-input {
@@ -151,7 +149,6 @@ footer {
   position: fixed;
   top: 0;
   left: 0;
-
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
@@ -181,10 +178,9 @@ footer {
   border-radius: 12px;
   width: 40%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    max-width: 50%;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  
+  max-width: 50%;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .close-button {
@@ -273,7 +269,6 @@ footer {
   background-color: #55555500;
 }
 
-/* Wishlist modal styles */
 .wishlist-modal {
   float: right;
   border: 1px solid red;
@@ -343,7 +338,6 @@ footer {
   display: flex;
 }
 
-/* Game Stores Section */
 #stores-section {
   margin-bottom: 40px;
 }
@@ -367,7 +361,6 @@ footer {
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
-
 
 #game-search-section {
   margin-bottom: 40px;
@@ -414,7 +407,6 @@ footer {
   transform: scale(1.05);
 }
 
-
 .game-card h3 {
   font-size: 1.1rem;
   color: #fff;
@@ -444,7 +436,6 @@ footer {
 .nav-button {
   color: white;
   padding: 10px 20px;
-
   margin: 0 5px;
   border: none;
   cursor: pointer;
@@ -453,50 +444,39 @@ footer {
   position: relative;
 }
 
-/* Modal Styles */
 .modal {
   display: none;
   position: fixed;
   z-index: 9999;
   left: 0;
   top: 0;
-
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.5);
-  /* Semi-transparent background */
   justify-content: center;
   align-items: center;
   transition: opacity 0.3s ease;
 }
-
 
 .modal.show {
   display: flex;
   opacity: 1;
 }
 
-
-
 .modal-content img {
-
   border-radius: 8px;
   margin-bottom: 15px;
 }
-
-
 
 .close:hover {
   color: #e60000;
 }
 
-/* Collapsible Content */
 .collapsible {
   margin-top: 15px;
 }
 
 .collapsible-header {
-
   padding: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -506,8 +486,6 @@ footer {
   justify-content: space-between;
   align-items: center;
 }
-
-
 
 .collapsible-content {
   padding: 10px;
@@ -545,9 +523,7 @@ footer {
 }
 
 .store-row {
-
   text-align: center;
-
   padding: 5px;
   border: 1px solid #3b3b3f;
   border-radius: 5px;
@@ -576,7 +552,6 @@ footer {
   padding: 0% 6% 1% 6%;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .game-card {
     flex: 1 0 48%;
@@ -612,9 +587,9 @@ footer {
     flex-wrap: wrap;
   }
 
-  
-  .close-button{
-    width: 30px; height: 20px; 
+  .close-button {
+    width: 30px;
+    height: 20px;
     padding: 5px 10px 20px 11px;
     border: none;
     border-radius: 5px;
@@ -625,18 +600,49 @@ footer {
     margin: 0px;
   }
 
-  .add-button{
-    width:80px; height: 20px; 
+  .add-button {
+    width: 80px;
+    height: 20px;
     padding: 5px 10px 20px 9px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 10px; text-align: center; align-items: center;
+    font-size: 10px;
+    text-align: center;
+    align-items: center;
     top: 5px;
-  
+  }
+}
+
+@media (max-width: 400px) {
+  .inp {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
+  .close-button {
+    width: 25px;
+    height: 15px;
+    padding: 5px 15px 20px 9px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 8px;
+    top: 0px;
+    right: 0px;
+  }
 
+  .add-button {
+    width: 60px;
+    height: 20px;
+    padding: 5px 10px 20px 9px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 8px;
+    text-align: center;
+    align-items: center;
+  }
 }
 
 .page {
@@ -649,31 +655,44 @@ footer {
   align-items: center;
 }
 
-@media (max-width: 400px) {
-  .inp {
-    flex-direction: column;
-    align-items: flex-start;
+@media (max-width: 770px) {
+  .header-container {
+    flex-direction: column !important;
+    text-align: center;
+    align-items: center;
   }
 
-   .close-button{
-    width: 25px; height: 15px; 
-    padding: 5px 15px 20px 9px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 8px;
-    top: 0px;
-    right: 0px;
+  .nav-links {
+    flex-direction: column !important;
+    width: 100%;
+    text-align: center;
   }
 
-  .add-button{
-    width:60px; height: 20px; 
-    padding: 5px 10px 20px 9px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 8px; text-align: center; align-items: center;
+  .nav-button {
+    width: 100% !important;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .menu-button {
+    display: block !important;
+    margin: 0 auto;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+  
+  .user-button {
+    margin-top: 10px;
   }
 }
 
-
+@media (max-width: 560px){
+  .header-container{
+    align-items: center;
+    display: inline-flex;
+    flex-wrap: wrap;
+    
+  }
+}
