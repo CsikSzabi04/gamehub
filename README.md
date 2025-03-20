@@ -173,11 +173,7 @@ Ways to contribute:
 
 ---
 
-## License
+Feel free to update any placeholder text or customize this as needed for your project!
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Let us know if you have any questions or suggestions! 🚀
+Let me know if you'd like to make any changes!
 
