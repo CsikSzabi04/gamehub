@@ -3,7 +3,7 @@
 **Game Data Hub** is a web application that allows users to discover and explore video games, view detailed game information, and purchase games from various online stores. The platform also includes user authentication, allowing users to log in, manage their favorite games, and get personalized recommendations.
 
 ## Live Demo
-You can visit the application here: **[GameHub Live](https://gamhub.netlify.app/)**
+You can visit the application here: **[Game Data Hub](https://gamhub.netlify.app/)**
 
 ---
 
@@ -127,7 +127,7 @@ To use Firebase Authentication and Firestore, you need to set up Firebase:
     pnpm run dev
     ```
 
-2. Visit `http://localhost:3000` in your browser to view the application.
+2. Visit `http://localhost:5173` in your browser to view the application.
 
 ---
 
