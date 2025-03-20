@@ -87,7 +87,7 @@ Before running the application, ensure you have the following installed:
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/your-username/game-data-hub.git
+    git clone https://github.com/CsikSzabi04/gamehub
     cd game-data-hub
     ```
 
