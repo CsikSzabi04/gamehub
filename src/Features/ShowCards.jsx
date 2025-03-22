@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from './UserContext.jsx';
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
@@ -6,7 +6,19 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   const [name, setName] = useState('');
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
-  const [fav,setFav] = useState(true)
+  const [fav, setFav] = useState(true);
+
+  useEffect(() => {
+    if (modalVisible) {
+      document.body.style.overflow = 'hidden'; 
+    } else {
+      document.body.style.overflow = 'auto'; 
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [modalVisible]);
 
   async function addFav() {
     if (!user) {
@@ -28,25 +40,26 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       setError("Failed to add to favorites.");
     }
     setName('');
-    setFav(false)
-    console.log(selectedGame.id)
-    
+    setFav(false);
+    console.log(selectedGame.id);
   }
+
   async function delFav() {
-    setFav(true)
-    
+    setFav(true);
+
     const fav = { name: selectedGame.name, userId: user.uid };
-    const resp = await fetch("https://gamehub-backend-zekj.onrender.com/delfav/"+selectedGame.id,{
-      method:"DELETE",
-      headers:{ 'Content-Type': 'application/json' },
+    const resp = await fetch("https://gamehub-backend-zekj.onrender.com/delfav/" + selectedGame.id, {
+      method: "DELETE",
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fav),
-    })
+    });
+    
     if (resp.ok) {
       setRefresh(!refresh);
-      console.log("Sikeres torles")
+      console.log("Sikeres torles");
     } else {
       setError("Failed to delete from favorites.");
-      setFav(false)
+      setFav(false);
     }
   }
 
@@ -54,30 +67,28 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   return (
     <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
-    <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto">
-      <div className='inp flex center justify center'>
-        <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
-        {fav == true ? 
-          <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> :
-          <span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>}
-      </div>
-      {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
-      <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4">{selectedGame.name}</h2>
-      <p className="text-sm sm:text-base">Release Date: {selectedGame.released || "?"}</p>
-      <p className="text-sm sm:text-base">Rating: {selectedGame.rating || "?"}/5</p>
-      <p className="text-sm sm:text-base">Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
-      <p className="text-sm sm:text-base">Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
-      <div className="row mt-2">
-        <p className="text-sm sm:text-base">Genres:
-          <div id="tag" className="text-xs sm:text-sm text-gray-500">
-            {selectedGame.tags ? selectedGame.tags.map(g => g.name).join(", ") : "?"}
-          </div>
-        </p>
+      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh]">
+        <div className='inp flex center justify-center'>
+          <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
+          {fav == true ? 
+            <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> :
+            <span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>}
+        </div>
+        {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
+        <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4">{selectedGame.name}</h2>
+        <p className="text-sm sm:text-base">Release Date: {selectedGame.released || "?"}</p>
+        <p className="text-sm sm:text-base">Rating: {selectedGame.rating || "?"}/5</p>
+        <p className="text-sm sm:text-base">Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
+        <p className="text-sm sm:text-base">Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
+        <div className="row mt-2">
+          <p className="text-sm sm:text-base">Genres:
+            <div id="tag" className="text-xs sm:text-sm text-gray-500">
+              {selectedGame.tags ? selectedGame.tags.map(g => g.name).join(", ") : "?"}
+            </div>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-  
-
   );
 }
