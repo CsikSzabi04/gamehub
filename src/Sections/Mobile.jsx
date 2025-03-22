@@ -7,7 +7,7 @@ export default function Mobile() {
             <div className="container mx-auto py-8 px-4">
                 <div className="flex flex-wrap justify-center gap-8">
                     <div className="game-card flex flex-col items-center  w-[45%] ">
-                        <img src="./Mobile.png" alt="Game Data Hub Mobile"className="w-[100%] h-[100%] object-cover mb-4"/>
+                        <img src="./installimg.png" alt="Game Data Hub Mobile"className="w-[100%] h-[100%] object-cover mb-4"/>
                         <p className="text-center text-gray-400 text-base">
                             Games Data Hub Mobile: More games, new look, and free game giveaways! Store app available globally on Android, and on iPhone and iPad in the EU.
                         </p>

@@ -556,7 +556,6 @@ footer {
   font-size: 16px;
   display: inline-block;
   margin-bottom: 10px;
-   text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -579,7 +578,7 @@ footer {
     width: 15%; 
     font-size: 14px; 
     padding: 8px 13px;  
-      text-align: center;
+    text-align: center;
   }
   
 }

@@ -66,7 +66,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   if (!selectedGame) return null;
 
   return (
-  <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50" id="game-modal">
+    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50" id="game-modal">
       <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh]">
         <div className='inp flex '>
           <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
