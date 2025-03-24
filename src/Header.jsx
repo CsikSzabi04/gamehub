@@ -86,13 +86,13 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                     </Link>
                 </div>
                 <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
-                <button className="menu-button md:hidden text-white text-2xl ml-5 mr-5" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
+                <button className="menu-button text-white text-2xl ml-5 mr-5" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
                 <nav className={`nav-links w-full xl:flex xl:items-center xl:space-x-4 mt-4 xl:mt-0 ${menuOpen ? "block" : "hidden"}`}>
                     <div className="flex flex-col xl:flex-row xl:space-x-4">
                         <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={() => setStoreVisible(true)}>Stores</button>
                         <a href="#news"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">News</button></a>
                         <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Discover</button></Link>
-                        <Link to="/review" className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Reviews</Link>
+                        <Link to="/review" ><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Reviews</button></Link>
                     </div>
                 </nav>
             <div className="mt-4 xl:mt-0 flex xl:float-right">
