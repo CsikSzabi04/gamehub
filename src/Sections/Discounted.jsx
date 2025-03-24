@@ -18,9 +18,9 @@ export default function Discounted() {
                 id: game.id,
                 name: game.title,
                 background_image: game.keyImages[0]?.url || "", 
-                originalPrice: game.price.totalPrice?.originalPrice || "?", 
-                discountPrice: game.price.totalPrice?.discountPrice || "?", 
-                endDate: game.promotions?.promotionalOffers?.[0]?.promotionalOffers?.[0]?.endDate.split("T")[0] || "?", 
+                originalPrice: game.price.totalPrice?.originalPrice/100 || "?", 
+                discountPrice: game.price.totalPrice?.discountPrice/100 || "?", 
+                Status: game.status, 
             }));
 
             setFreeGames(freeGames);

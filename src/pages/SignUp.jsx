@@ -45,10 +45,10 @@ export default function Register({ auth, setUsername, username }) {
             <Typography variant="h4" gutterBottom className="text-3xl font-semibold mb-6 text-white">Register</Typography>
             {success && <Typography color="green" className="text-white mb-4">Account created successfully!</Typography>}
             {error && <Typography color="error" className="text-white mb-4">{error}</Typography>}
-            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!error} />
-            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} error={!!error} />
-            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!error} />
-            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} error={!!error}/> 
+            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} error={!!error} onKeyDown={(e) => {if (e.key == "Enter") handleRegister();}}/>
+            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} error={!!error} onKeyDown={(e) => {if (e.key == "Enter") handleRegister();}}/>
+            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} error={!!error} onKeyDown={(e) => {if (e.key == "Enter") handleRegister();}}/>
+            <TextField fullWidth className="tf w-full mb-4 bg-white" margin="normal" label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} error={!!error} onKeyDown={(e) => {if (e.key == "Enter") handleRegister();}}/> 
             <Button fullWidth variant="contained" color="success" onClick={handleRegister} style={{ marginTop: '20px' }}>Register</Button>
             <p className="pp mt-10 text-white">Already have an account?  <Link className="ps" to="/login"> Log in</Link> </p>
           </div>

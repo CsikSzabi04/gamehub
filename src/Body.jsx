@@ -15,6 +15,7 @@ import Mobile from './Sections/Mobile.jsx';
 import Footer from './Footer.jsx';
 import Header from './Header.jsx';
 import GamingNews from './Sections/GamingNews.jsx';
+import StartUp from './Features/StartUp.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -28,6 +29,7 @@ export default function Body() {
     const [store, setStore] = useState([])
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [searchTrue, setSearchTrue] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         async function fetchFeaturedGames() {
@@ -68,9 +70,11 @@ export default function Body() {
         setSelectedGame(null);
     }
 
+    
+
     return (
         <div className='bg-gray-900'>
-            {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
+            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && ( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
@@ -93,7 +97,7 @@ export default function Body() {
                     <Footer />
                 </div>
             ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
-            {/*)}*/}
+            </>) }
         </div>
     );
 }

@@ -35,8 +35,8 @@ export default function Login({ auth, setUser }) {
         <div className="login-form bg-gray-800 w-full md:w-1/2 px-8 py-6 md:p-10 flex items-center justify-center" id='roundL'>
           <div className="form-content w-full p-10">
             <h1 className="text-3xl font-semibold mb-6 text-white">Login</h1>
-            <p className='log'><TextField error={loginError} className="tf w-full" required label="Email" value={email} onChange={e => { setEmail(e.target.value); setLoginError(false); }} /></p>
-            <TextField required label="Password" className="tf w-full" type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+            <p className='log'><TextField error={loginError} className="tf w-full" required label="Email" value={email} onChange={e => { setEmail(e.target.value); setLoginError(false); }} onKeyDown={(e) => {if (e.key == "Enter") login();}}/></p>
+            <TextField required label="Password" className="tf w-full" type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={(e) => {if (e.key == "Enter") login();}}/>
             <div>
               <p className="text-white mt-10">{loginError ? "Wrong username or password!" : "Please Login!"}</p>
             </div>

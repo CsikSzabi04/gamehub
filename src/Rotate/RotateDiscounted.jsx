@@ -15,16 +15,20 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
         <div className="carousel-container overflow-hidden">
             <div className="carousel flex space-x-4">
                 <div className="carousel-container overflow-hidden relative">
-                    <div className="carousel flex transition-transform" style={{ transform: `translateX(-${currentIndex * 320}px)`, transition: "transform 1s ease" }} >
+                    <div className="carousel flex transition-transform flex-none " style={{ transform: `translateX(-${currentIndex * 320}px)`, transition: "transform 1s ease" }} >
                         {games.map((game) => (
-                            <div key={game.id} className="game-card carousel-item" onClick={() => showGameDetails(game)}>
+                            <div key={game.id} className="game-card carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between " onClick={() => showGameDetails(game)}>
                                 <img src={game.background_image} alt={game.name} className="game-image" />
                                 <div className="game-details">
                                     <h3 className="text-lg font-bold mb-2">{game.name}</h3>
-                                    <p className="text-sm text-gray-400">Original Price: {game.originalPrice} Ft</p>
-                                    <p className="text-sm text-gray-400">Discount Price: {game.discountPrice} Ft</p>
-                                    <p className="text-sm text-gray-400">Deal Ends: {game.endDate}</p>
+                                    <p className="text-sm text-gray-400">Original Price: {game.originalPrice} USD</p>
+                                    <p className="text-sm text-gray-400">Discount Price: {game.discountPrice} USD</p>
+                                   
                                 </div>
+                                <div className="justify-end mt-10 mb-0 pb-0 ml-4">
+                                     <p className="text-sm text-gray-400">Deal Status: <span className="text-green-500">{game.Status}</span> </p>
+                                </div>
+                               
                             </div>
                         ))}
                     </div>
