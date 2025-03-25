@@ -1,12 +1,38 @@
-import React, { useContext, useState } from 'react';
-import { UserContext } from './UserContext.jsx';
+import React, { useContext, useState, useEffect } from 'react';
+import { UserContext } from '../Features/UserContext.jsx';
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   const [refresh, setRefresh] = useState(false);
   const [name, setName] = useState('');
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
-  const [fav,setFav] = useState(true)
+  const [fav, setFav] = useState(true);
+  const [favok,setFavok] = useState([])
+
+
+  useEffect(() => {
+    if (modalVisible) {
+      document.body.style.overflow = 'hidden'; 
+    } else {
+      document.body.style.overflow = 'auto'; 
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [modalVisible]);
+
+ useEffect(()=>{
+  async function getFavok() {
+    const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user.uid}`)
+    const json = await resp.json()
+    setFavok(json)
+  }
+  getFavok()
+  console.log(user)
+  console.log(favok)
+ },[user])
+
 
   async function addFav() {
     if (!user) {
@@ -15,7 +41,8 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
     }
 
     setName(selectedGame.name);
-    const fav = { name: selectedGame.name, userId: user.uid };
+    const fav = { name: selectedGame.name, gameId:selectedGame.id, userId: user.uid };
+    
     const resp = await fetch("https://gamehub-backend-zekj.onrender.com/addfav", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,36 +55,38 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       setError("Failed to add to favorites.");
     }
     setName('');
-    setFav(false)
-    console.log(selectedGame.id)
-    
+    setFav(false);
+    console.log(selectedGame.id);
   }
+
   async function delFav() {
-    setFav(true)
-    
-    const fav = { name: selectedGame.name, userId: user.uid };
-    const resp = await fetch("https://gamehub-backend-zekj.onrender.com/delfav/"+selectedGame.id,{
-      method:"DELETE",
-      headers:{ 'Content-Type': 'application/json' },
+    setFav(true);
+
+    const fav = { userId: user.uid};
+    const resp = await fetch("https://gamehub-backend-zekj.onrender.com/delfav/" + selectedGame.id, {
+      method: "DELETE",
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fav),
-    })
+    });
+    
     if (resp.ok) {
       setRefresh(!refresh);
-      console.log("Sikeres torles")
+      console.log("Sikeres torles");
     } else {
       setError("Failed to delete from favorites.");
-      setFav(false)
+      setFav(false);
     }
   }
 
   if (!selectedGame) return null;
 
   return (
-    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
-      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto">
-        <div className='inp flex center justify center'>
-          <span className="close-button font-bold text-white absolute top-6 right-7 cursor-pointer" onClick={closeModal}>&times;</span>
-          {fav==true ? <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span>:<span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>}
+    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50" id="game-modal">
+      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh]">
+        <div className='inp flex '>
+          <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
+          {/*favok.map(x=>x.gameId==selectedGame.id ? setFav(false):setFav(true))*/}
+          {/*fav==true ? <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span>:<span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>*/}
         </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
@@ -75,6 +104,5 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
         </div>
       </div>
     </div>
-
   );
 }

@@ -35,8 +35,8 @@ export default function Login({ auth, setUser }) {
         <div className="login-form bg-gray-800 w-full md:w-1/2 px-8 py-6 md:p-10 flex items-center justify-center" id='roundL'>
           <div className="form-content w-full p-10">
             <h1 className="text-3xl font-semibold mb-6 text-white">Login</h1>
-            <p className='log'><TextField error={loginError} className="tf w-full" required label="Email" value={email} onChange={e => { setEmail(e.target.value); setLoginError(false); }} /></p>
-            <TextField required label="Password" className="tf w-full" type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+            <p className='log' id='m'><TextField error={loginError} className="w-full"  sx={{".MuiInputLabel-root": {color:"#0284c7",},".MuiOutlinedInput-root":{input:{color:'white',},fieldset:{border:"1px solid white",},"&:hover fieldset":{border:"1px solid white",},"&.Mui-focused fieldset":{border:"1px solid white",},},}} required label="Email" value={email} onChange={e => { setEmail(e.target.value); setLoginError(false); }} /></p>
+            <TextField required label="Password" className="w-full" sx={{".MuiInputLabel-root": {color:"#0284c7",},".MuiOutlinedInput-root":{input:{color:'white',},fieldset:{border:"1px solid white",},"&:hover fieldset":{border:"1px solid white",},"&.Mui-focused fieldset":{border:"1px solid white",},},}} type="password" value={password} onChange={e => setPassword(e.target.value)}/>
             <div>
               <p className="text-white mt-10">{loginError ? "Wrong username or password!" : "Please Login!"}</p>
             </div>

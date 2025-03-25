@@ -1,7 +1,4 @@
-.app {
-
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+.app {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
 
 .menu {
   display: flex;
@@ -19,12 +16,7 @@
 }
 .menu .login{display: flex; align-items: center; gap: 10px; float: right;}
 
-.page {
-
-}
-
 .login {
-  
   text-align: center;
   display: flex; gap: 15px; flex-direction: column;
   width: 100%;
