@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from './UserContext.jsx';
+import { UserContext } from '../Features/UserContext.jsx';
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
-  const [refresh, setRefresh] = useState(false);
-  const [name, setName] = useState('');
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
-  const [fav, setFav] = useState(true);
+  const [fav, setFav] = useState(false);
+  const [favok, setFavok] = useState([]);
 
   useEffect(() => {
     if (modalVisible) {
@@ -14,11 +13,29 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
     } else {
       document.body.style.overflow = 'auto'; 
     }
-    
+
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [modalVisible]);
+
+  useEffect(() => {
+    async function getFavok() {
+      const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user.uid}`);
+      const json = await resp.json();
+      setFavok(json);
+    }
+    if (user) {
+      getFavok();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (favok.length > 0 && selectedGame) {
+      const isFav = favok.some(favItem => favItem.gameId === selectedGame.id);
+      setFav(isFav);
+    }
+  }, [favok, selectedGame]);
 
   async function addFav() {
     if (!user) {
@@ -26,40 +43,35 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       return;
     }
 
-    setName(selectedGame.name);
-    const fav = { name: selectedGame.name, userId: user.uid };
+    const favData = { name: selectedGame.name, gameId: selectedGame.id, userId: user.uid };
     const resp = await fetch("https://gamehub-backend-zekj.onrender.com/addfav", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fav),
+      body: JSON.stringify(favData),
     });
 
     if (resp.ok) {
-      setRefresh(!refresh);
+      setFavok([...favok, favData]);
+      setFav(true);  
     } else {
       setError("Failed to add to favorites.");
     }
-    setName('');
-    setFav(false);
-    console.log(selectedGame.id);
   }
 
   async function delFav() {
-    setFav(true);
-
-    const fav = { name: selectedGame.name, userId: user.uid };
-    const resp = await fetch("https://gamehub-backend-zekj.onrender.com/delfav/" + selectedGame.id, {
+    const favData = { userId: user.uid };
+    const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/delfav/${selectedGame.id}`, {
       method: "DELETE",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fav),
+      body: JSON.stringify(favData),
     });
-    
+
     if (resp.ok) {
-      setRefresh(!refresh);
-      console.log("Sikeres torles");
+
+      setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));  
+      setFav(false);  
     } else {
       setError("Failed to delete from favorites.");
-      setFav(false);
     }
   }
 
@@ -70,9 +82,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh]">
         <div className='inp flex '>
           <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
-          {fav == true ? 
-            <span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> :
-            <span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>}
+            {fav ? (<span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span> ) : (<span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> )}
         </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
