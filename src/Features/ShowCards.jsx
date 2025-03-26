@@ -32,7 +32,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   useEffect(() => {
     if (favok.length > 0 && selectedGame) {
-      const isFav = favok.some(favItem => favItem.gameId === selectedGame.id);
+      const isFav = favok.some(favItem => favItem.gameId == selectedGame.id);
       setFav(isFav);
     }
   }, [favok, selectedGame]);

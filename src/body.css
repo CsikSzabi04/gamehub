@@ -22,6 +22,16 @@ h1:hover {
   margin: 0px auto;
 }
 
+.allSections .s{
+  margin-left: 3%; margin-right: 3%;
+}
+
+.arr{
+  font-size: 180%;
+  color: rgba(83, 83, 83, 0.452);
+}
+
+
 header {
   display: flex;
   justify-content: space-between;
@@ -173,7 +183,7 @@ footer {
 }
 
 .modal-content {
-  background-color: #222227;
+  background-color: #18182bfa;
   padding: 20px;
   border-radius: 12px;
   width: 40%;

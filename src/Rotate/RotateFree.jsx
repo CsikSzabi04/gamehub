@@ -11,7 +11,7 @@ export default function RotateFree({ games, showGameDetails, name }) {
 
     return (
         <div className="bg-gray-600/20 sm:p-10 rounded-lg">
-            <section id="free-games" className="mb-2">
+            <section id="free-games" className="mb-2 s">
                 <h2 className="text-2xl font-semibold mb-4">{name} 🎁</h2>
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 320}px)`, }}>

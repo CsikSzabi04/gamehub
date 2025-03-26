@@ -99,7 +99,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                 <Link><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}>Favourites</button></Link>
                 {user ? (
                     <Link to="/profile">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"><CgProfile /></button>
+                        <button className=" text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"><CgProfile /></button>
                     </Link>
                 ) : (
                     <Link to="/login">

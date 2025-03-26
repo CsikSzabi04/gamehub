@@ -70,8 +70,6 @@ export default function Body() {
         setSelectedGame(null);
     }
 
-    
-
     return (
         <div className='bg-gray-900'>
             {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && ( <>
@@ -82,12 +80,12 @@ export default function Body() {
                         <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                         <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                         <Free />
-                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
-                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
+                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
+                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
                         <Discounted />
-                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
                         <Mobile />
-                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
+                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
                         <div id='news'><News /></div>
                         <Loot />
                         <GamingNews />
