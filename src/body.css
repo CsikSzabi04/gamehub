@@ -335,22 +335,29 @@ footer {
 }
 
 #stores-section {
-  margin-bottom: 40px;
+  margin-bottom: auto 40px;
+}
+
+#stores-grid{
+  align-items: center;
+  align-content: center;
+  text-align: center;
+
 }
 
 .store-card {
-  background-color: #1e1e1e;
+  background-color: #262a35;
   border-radius: 12px;
   padding: 16px;
-  text-align: center;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
 }
 
 .store-card img {
-  width: 80px;
-  height: 80px;
+  width: 35%;
+  height: 60%;
   margin-bottom: 8px;
   border-radius: 50%;
+
 }
 
 .store-card:hover {

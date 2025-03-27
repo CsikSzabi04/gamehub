@@ -55,7 +55,7 @@ export default function Stores({ modalStoreVisible }) {
     <div className="modal text-center fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" id="game-modal">
         <div className="modal-content text-center bg-gray-900 p-6 rounded-lg max-w-md w-full">
             <span className="close-button" onClick={closeStore}>&times;</span>
-            <div className='store text-center'>
+            <div className='store text-center '> 
                 {store.map((x, i) => <div className='inlinestore'> <div className='flex w-full h-auto rounded-md mb-2'> {<img className='store-pic' src={`https://www.cheapshark.com${x.images.logo}`} />} <p className='store-row' key={x.storeID}>{x.storeName} </p></div></div>)}
             </div>
         </div>

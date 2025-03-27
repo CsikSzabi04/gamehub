@@ -117,10 +117,10 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                     <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={() => setStoreVisible(false)}>&times;</span>
                     <div className="store overflow-y-auto max-h-96">
                         {store.map((x, i) => (
-                            <div key={i}>
-                                <p onClick={() => openStoreUrl(x.storeName)} className="store-row">
+                            <div key={i} >
+                                <p onClick={() => openStoreUrl(x.storeName)} className="store-row flex flex-col items-center">
                                     <span className="storename">{x.storeName}</span>
-                                    <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" />
+                                    <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic mt-4" />
                                 </p>
                             </div>
                         ))}
