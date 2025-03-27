@@ -16,6 +16,7 @@ import Profile from './pages/Profile.jsx';
 import Terms from './TermsAndPrivacy/Terms.jsx';
 import Privacy from './TermsAndPrivacy/Privacy.jsx';
 import Review from '././Features/Review.jsx';
+import React from 'react';
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);

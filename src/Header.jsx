@@ -14,8 +14,8 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [favorites, setFavorites] = useState([]);
-    const { user } = useContext(UserContext);
-
+    const { user } = useContext(UserContext) || {};
+    
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {

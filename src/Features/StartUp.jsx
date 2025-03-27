@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ThreeDot } from "react-loading-indicators";
+import React from 'react';
 
 export default function StartUp({ onLoaded }) {
     const [loading, setLoading] = useState(true);
