@@ -37,6 +37,9 @@ You can visit the application here: **[Game Data Hub](https://gamdatahub.netlify
 - **Database:** Firebase Firestore for authentication and storing user favorites.
 - **External APIs:** Integrates with external game databases and store APIs for real-time information.
 
+### Workflow Diagram
+*(You can add a diagram showing the interaction between frontend, backend, and APIs here.)*
+
 ---
 
 ## Application Structure
@@ -172,4 +175,3 @@ Ways to contribute:
 ---
 
 Let us know if you have any questions or suggestions! 🚀
-
