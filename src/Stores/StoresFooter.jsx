@@ -34,9 +34,9 @@ export default function StoresFooter() {
                 <h2 className="text-2xl font-semibold mb-4">Main Game Stores </h2>
                 <div id="stores-grid" className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {stores.map(store => ( 
-                        <div key={store.storeID} className="store-card">
-                            <img src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName}  className="w-full h-auto rounded-md mb-2" />
-                            <h3 className="text-lg font-semibold text-center">{store.storeName}</h3>
+                        <div key={store.storeID} className="store-card flex flex-col items-center">
+                            <img src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName}  />
+                            <p className="text-lg font-semibold ">{store.storeName}</p>
                         </div>
                     ))}
                 </div>

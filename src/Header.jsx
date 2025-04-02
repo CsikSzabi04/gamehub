@@ -14,8 +14,8 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [favorites, setFavorites] = useState([]);
-    const { user } = useContext(UserContext);
-
+    const { user } = useContext(UserContext) || {};
+    
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
@@ -65,7 +65,8 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
             const intervalId = setInterval(getFavorites, 100);
             return () => clearInterval(intervalId);
         }
-    }, [user]);
+        
+    }, [user,favorites]);
 
     function handleLogout() {
         signOut(auth);
@@ -86,20 +87,20 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                     </Link>
                 </div>
                 <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
-                <button className="menu-button md:hidden text-white text-2xl ml-5 mr-5" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
+                <button className="menu-button text-white text-2xl ml-5 mr-5" onClick={() => setMenuOpen(!menuOpen)}> ☰ </button>
                 <nav className={`nav-links w-full xl:flex xl:items-center xl:space-x-4 mt-4 xl:mt-0 ${menuOpen ? "block" : "hidden"}`}>
                     <div className="flex flex-col xl:flex-row xl:space-x-4">
                         <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={() => setStoreVisible(true)}>Stores</button>
                         <a href="#news"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">News</button></a>
                         <Link to="/discover"><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Discover</button></Link>
-                        <Link to="/review" className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Reviews</Link>
+                        <Link to="/review" ><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto">Reviews</button></Link>
                     </div>
                 </nav>
             <div className="mt-4 xl:mt-0 flex xl:float-right">
                 <Link><button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto" onClick={openFavModal}>Favourites</button></Link>
                 {user ? (
                     <Link to="/profile">
-                        <button className="nav-button text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"><CgProfile /></button>
+                        <button className=" text-white px-4 py-2 rounded-lg w-full xl:w-auto text-lime-600 text-4xl"><CgProfile /></button>
                     </Link>
                 ) : (
                     <Link to="/login">
@@ -117,10 +118,10 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                     <span className="close-button text-2xl absolute top-2 right-2 cursor-pointer" onClick={() => setStoreVisible(false)}>&times;</span>
                     <div className="store overflow-y-auto max-h-96">
                         {store.map((x, i) => (
-                            <div key={i}>
-                                <p onClick={() => openStoreUrl(x.storeName)} className="store-row">
+                            <div key={i} >
+                                <p onClick={() => openStoreUrl(x.storeName)} className="store-row flex flex-col items-center">
                                     <span className="storename">{x.storeName}</span>
-                                    <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic" />
+                                    <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="store-pic mt-4" />
                                 </p>
                             </div>
                         ))}

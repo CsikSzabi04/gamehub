@@ -15,6 +15,7 @@ import Mobile from './Sections/Mobile.jsx';
 import Footer from './Footer.jsx';
 import Header from './Header.jsx';
 import GamingNews from './Sections/GamingNews.jsx';
+import StartUp from './Features/StartUp.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -28,6 +29,7 @@ export default function Body() {
     const [store, setStore] = useState([])
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [searchTrue, setSearchTrue] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         async function fetchFeaturedGames() {
@@ -70,7 +72,7 @@ export default function Body() {
 
     return (
         <div className='bg-gray-900'>
-            {/*{!isLoaded && <StartUp onLoaded={() => setIsLoaded(true)} />} {isLoaded && (*/}
+            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && ( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
@@ -78,12 +80,12 @@ export default function Body() {
                         <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                         <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                         <Free />
-                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} />
-                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"} />
+                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
+                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
                         <Discounted />
-                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} />
+                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
                         <Mobile />
-                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} />
+                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
                         <div id='news'><News /></div>
                         <Loot />
                         <GamingNews />
@@ -93,7 +95,7 @@ export default function Body() {
                     <Footer />
                 </div>
             ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
-            {/*)}*/}
+            </>) }
         </div>
     );
 }

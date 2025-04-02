@@ -5,13 +5,13 @@ export default function RotateGamingNews({ articles, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-        const interval = setInterval(() => setCurrentIndex(i => (i + 1) % articles.length), 15000);
+        const interval = setInterval(() => setCurrentIndex(i => (i + 1) % articles.length), 20000);
         return () => clearInterval(interval);
     }, [articles]);
 
     return (
         <div className="sm:p-10 rounded-lg">
-            <section id="gaming-news" className="mb-2 p-6">
+            <section id="gaming-news" className="mb-2 p-6 ">
                 <h2 className="text-2xl font-semibold mb-4">{name} 📰</h2>
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 320}px)` }}>

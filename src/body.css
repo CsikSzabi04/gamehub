@@ -22,6 +22,16 @@ h1:hover {
   margin: 0px auto;
 }
 
+.allSections .s{
+  margin-left: 3%; margin-right: 3%;
+}
+
+.arr{
+  font-size: 180%;
+  color: rgba(83, 83, 83, 0.452);
+}
+
+
 header {
   display: flex;
   justify-content: space-between;
@@ -173,7 +183,7 @@ footer {
 }
 
 .modal-content {
-  background-color: #222227;
+  background-color: #18182bfa;
   padding: 20px;
   border-radius: 12px;
   width: 40%;
@@ -325,22 +335,29 @@ footer {
 }
 
 #stores-section {
-  margin-bottom: 40px;
+  margin-bottom: auto 40px;
+}
+
+#stores-grid{
+  align-items: center;
+  align-content: center;
+  text-align: center;
+
 }
 
 .store-card {
-  background-color: #1e1e1e;
+  background-color: #262a35;
   border-radius: 12px;
   padding: 16px;
-  text-align: center;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
 }
 
 .store-card img {
-  width: 80px;
-  height: 80px;
+  width: 35%;
+  height: 60%;
   margin-bottom: 8px;
   border-radius: 50%;
+
 }
 
 .store-card:hover {
@@ -515,7 +532,6 @@ footer {
   border-radius: 5px;
   background-color: #3b3b3f9c;
   cursor: pointer;
-  
 }
 
 .store-pic {
@@ -557,6 +573,19 @@ footer {
   font-size: 16px;
   display: inline-block;
   margin-bottom: 10px;
+}
+
+@media (max-width:1400px) {
+  .nav-button {
+    font-size: 18px;
+  }
+}
+
+
+@media (max-width:1330px) {
+  .nav-button {
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -644,8 +673,49 @@ footer {
   justify-content: space-between;
   align-items: center;
 }
-#m{
-  margin-bottom: 20px;
+
+@media (min-width: 1280px) {
+  .menu-button{   display: none; }
+  
+}
+
+@media (max-width:1060px) {
+  .header-container {
+    flex-direction: column !important;
+    text-align: center;
+    align-items: center;
+  }
+
+  .nav-links {
+    flex-direction: column !important;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-button {
+    width: 100% !important;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .menu-button {
+    display: block !important;
+    margin: 0 auto;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+  
+  .user-button {
+    margin-top: 10px;
+  }
+
+  .inp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 @media (max-width: 770px) {

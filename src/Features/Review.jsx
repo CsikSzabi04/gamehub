@@ -13,7 +13,7 @@ export default function Review() {
     const [modalVisible, setModalVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [rating, setRating] = useState(0);
-    const { user } = useContext(UserContext);
+    const { user } = useContext(UserContext) || {};
 
     useEffect(() => {
         async function fetchGames() {

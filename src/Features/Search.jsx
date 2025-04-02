@@ -35,10 +35,13 @@ export default function Search({ setGames, games, setSearchTrue }) {
     }
   }
 
+  
+  
+
   return (
       <div className="flex flex-wrap ">
         <div className="relative sm:w-64">
-          <input className="p-2 pr-12 rounded-lg text-black w-full bg-white pl-10" type="text" placeholder="Search games..." value={query} onChange={(e) => setQuery(e.target.value)}/>
+          <input className="p-2 pr-12 rounded-lg text-black w-full bg-white pl-10" type="text" placeholder="Search games..." value={query} onChange={(e) => setQuery(e.target.value)}  onKeyDown={(e) => {if (e.key == "Enter") searchGames();}}/>
           <button onClick={searchGames}><FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" /></button>
         </div>
         {/* <div className="relative w-full sm:w-32"> <input className="p-2 rounded-lg text-black w-full bg-white" type="number" placeholder="Max Price" value={maxPrice === 500 ? "" : maxPrice} onChange={(e) => setMaxPrice(e.target.value || Infinity)}/> </div>*/}
