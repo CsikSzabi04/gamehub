@@ -5,6 +5,7 @@ import ShowCards from './Features/ShowCards.jsx';
 import FeaturedGames from '././Sections/FeaturedGames.jsx'; 
 import SearchFind from './Features/SearchFind.jsx';
 import MainSection from './Sections/MainSection.jsx';
+import UnderMain from './Sections/UnderMain.jsx';
 import StoresFooter from './Stores/StoresFooter.jsx';
 import Free from '././Sections/Free.jsx'; 
 import Loot from '././Sections/Loot.jsx';
@@ -88,6 +89,7 @@ export default function Body() {
                         <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
                         <div id='news'><News /></div>
                         <Loot />
+                        <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
                         <GamingNews />
                         <StoresFooter />
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
