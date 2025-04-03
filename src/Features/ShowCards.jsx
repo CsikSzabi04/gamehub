@@ -78,8 +78,8 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   if (!selectedGame) return null;
 
   return (
-    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50" id="game-modal">
-      <div className="modal-content rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh]">
+    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50 " id="game-modal">
+      <div className="modal-content fr rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] sm:max-h-[70%] md:max-h-[80%] ">
         <div className='inp flex '>
           <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
             {fav ? (<span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span> ) : (<span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> )}
@@ -91,13 +91,14 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
         <p className="text-sm sm:text-base">Rating: {selectedGame.rating || "?"}/5</p>
         <p className="text-sm sm:text-base">Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
         <p className="text-sm sm:text-base">Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
-        <div className="row mt-2">
-          <p className="text-sm sm:text-base">Genres:
-            <div id="tag" className="text-xs sm:text-sm text-gray-500">
-              {selectedGame.tags ? selectedGame.tags.map(g => g.name).join(", ") : "?"}
+        <div>
+              <span className="font-medium">Genres:</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {selectedGame.tags?.map((g, i) => (
+                  <span key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{g.name}</span>
+                )) || "N/A"}
+              </div>
             </div>
-          </p>
-        </div>
       </div>
     </div>
   );
