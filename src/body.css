@@ -662,6 +662,7 @@ footer {
     width: 50%;
     font-size: 8px;
   }
+  .fr{max-height: 50%;}
 }
 
 .page {
@@ -764,6 +765,7 @@ footer {
     flex-wrap: wrap;
     
   }
+  .fr{max-height: 50%;}
 }
 
 @media (max-width: 350px) {
