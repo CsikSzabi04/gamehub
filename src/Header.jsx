@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from './Features/UserContext.jsx';
 import { CiLogin } from "react-icons/ci";
+import { TiDelete } from "react-icons/ti";
 import { CgProfile, CgGames } from "react-icons/cg";
 import { FaStore, FaNewspaper, FaSearch, FaHeart, FaTimes } from "react-icons/fa";
 import { GoStarFill } from "react-icons/go";
@@ -65,8 +66,21 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
             const intervalId = setInterval(getFavorites, 100);
             return () => clearInterval(intervalId);
         }
-        
-    }, [user,favorites]);
+
+    }, [user, favorites]);
+
+    async function delFav(id) {
+        console.log(id)
+        const favData = { userId: user.uid };
+        const resp = await fetch(
+            `https://gamehub-backend-zekj.onrender.com/delfav/${id}`,
+            {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(favData),
+            }
+        );
+    }
 
     return (
         <>
@@ -106,6 +120,13 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                                     <FaSearch className="mr-1" /> Discover
                                 </motion.button>
                             </Link>
+
+                            <Link to="/review">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors">
+                                    <FaSearch className="mr-1" /> Reviews
+                                </motion.button>
+                            </Link>
+
 
                             {user ? (
                                 <>
@@ -215,8 +236,12 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                             ) : (
                                 <div className="space-y-3">
                                     {favorites.map((fav, i) => (
-                                        <motion.div key={i} whileHover={{ x: 5 }} className="bg-gray-700 p-4 rounded-lg" >
-                                            <p className="text-white font-medium">{fav.name}</p>
+                                        <motion.div key={i} whileHover={{ x: 5 }} className="bg-gray-700 p-4 rounded-lg flex  place-content-between" >
+                                            <p className="text-white font-medium  place-content-between">{fav.name}</p>
+                                            <TiDelete
+                                                className="ml-2 w-5 h-5 cursor-pointer  place-content-between"
+                                                onClick={() => delFav(fav.gameId)}
+                                            />
                                         </motion.div>
                                     ))}
                                 </div>
