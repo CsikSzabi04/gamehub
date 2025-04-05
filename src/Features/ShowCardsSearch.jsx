@@ -86,16 +86,11 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
         <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex z-50" id="game-modal">
             <div className="modal-content p-10 bg-gray-900 rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] md:max-h-[80%] relative  ">
                 <div className='flex justify-between items-start'>
-                    <div>
-                        {fav ? (
-                            <button className="close-button rede text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md text-sm" onClick={delFav}>Delete from Fav</button>
-                        ) : (
-                            <button className="add-button re text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md text-sm" onClick={addFav}> Add to Fav  </button>
-                        )}
+                    <div className='inp flex '>
+                        <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
+                        {fav ? (<span className="close-buttona text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>) : (<span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span>)}
                     </div>
-                    <button className="close-button text-white text-2xl font-bold hover:text-gray-300" onClick={closeModal}> &times;</button>
                 </div>
-
                 {error && <p className="error text-red-500 text-sm mt-2 p-5">{error}</p>}
                 <div className="mt-4">
                     <img src={selectedGame.thumb || `https://via.placeholder.com/400x225?text=${encodeURIComponent(selectedGame.external)}`} alt={selectedGame.external} className="rounded-lg mb-4 w-full h-48 sm:h-64 object-cover" />
