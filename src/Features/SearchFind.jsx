@@ -1,9 +1,13 @@
 import { useState } from "react";
-import Pagination from "@mui/material/Pagination"; import { FaArrowLeftLong } from "react-icons/fa6";
-
+import Pagination from "@mui/material/Pagination";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import ShowCardsSearch from "./ShowCardsSearch";
 
 export default function SearchFind({ setGames, games }) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedGame, setSelectedGame] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    
     const gamesPerPage = 10;
     const pageCount = Math.ceil(games.length / gamesPerPage);
 
@@ -11,7 +15,13 @@ export default function SearchFind({ setGames, games }) {
     const indexOfLastGame = currentPage * gamesPerPage;
     const indexOfFirstGame = indexOfLastGame - gamesPerPage;
     const currentGames = games.slice(indexOfFirstGame, indexOfLastGame);
+    
     function Home() { location.reload(); }
+
+    const openGameModal = (game) => {
+        setSelectedGame(game);
+        setModalVisible(true);
+    };
 
     return (
         <div className="bg-gray-900 flex flex-col items-center mx-4 sm:mx-10 md:mx-20 p-4 sm:p-10 m-4 sm:m-10 relative">
@@ -23,7 +33,7 @@ export default function SearchFind({ setGames, games }) {
 
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-12">
                 {currentGames.map((game) => (
-                    <div key={game.gameID} className="game-card w-full p-4 flex flex-col items-center hover:transform hover:scale-105 transition-transform duration-200">
+                    <div key={game.gameID}  onClick={() => openGameModal(game)} className="game-card w-full p-4 flex flex-col items-center hover:transform hover:scale-105 transition-transform duration-200">
                         <img src={game.thumb || `https://via.placeholder.com/200x250?text=${encodeURIComponent(game.external)}`} alt={game.external} className="game-image w-full h-48 sm:h-56 object-cover rounded-md mb-2 shadow-lg" />
                         <div className="game-details w-full bg-gray-800 p-3 rounded-md text-center">
                             <h3 className="text-lg font-bold mb-2 line-clamp-2">{game.external}</h3>
@@ -48,6 +58,13 @@ export default function SearchFind({ setGames, games }) {
                     />
                 </div>
             </div>
+            {modalVisible && (
+                <ShowCardsSearch 
+                    selectedGame={selectedGame}
+                    closeModal={() => setModalVisible(false)}
+                    modalVisible={modalVisible}
+                />
+            )}
         </div>
     );
 }

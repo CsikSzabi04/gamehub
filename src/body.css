@@ -689,6 +689,7 @@ footer {
     font-size: 8px;
   }
   .fr{max-height: 50%;}
+  .re, .rede{width: 90%; font-size: 10px;}
 }
 
 .page {
@@ -782,7 +783,7 @@ footer {
     justify-content: space-between;
     align-items: center;
   }
-  .close-buttona{font-size: 10px;}
+  .close-buttona{font-size: 10px;}  .rede {width: 100% !important; font-size: 10px ;}
 }
 
 @media (max-width: 560px){
@@ -810,6 +811,7 @@ footer {
     width: 60%;
     font-size: 9px;
   }
+  .rede{width: 85% !important; font-size: 8px !important;}
 }
 
 
@@ -823,5 +825,5 @@ footer {
   .close-buttona{
     width: 40%; font-size: 8px;
   }
-
+  .rede{width: 50% !important; font-size: 8px !important;}
 }

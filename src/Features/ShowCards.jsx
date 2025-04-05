@@ -28,7 +28,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
     if (user) {
       getFavok();
     }
-    
+
   }, [user]);
 
   useEffect(() => {
