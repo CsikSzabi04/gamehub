@@ -62,12 +62,12 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                 console.error("Error fetching favorites:", error);
             }
         }
+        getFavorites();
         if (user) {
             getFavorites();
             const intervalId = setInterval(getFavorites, 100);
             return () => clearInterval(intervalId);
         }
-
     }, [user, favorites]);
 
     async function delFav(id) {

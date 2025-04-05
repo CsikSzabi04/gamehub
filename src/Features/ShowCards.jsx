@@ -9,9 +9,9 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   useEffect(() => {
     if (modalVisible) {
-      document.body.style.overflow = 'hidden'; 
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto'; 
+      document.body.style.overflow = 'auto';
     }
 
     return () => {
@@ -28,6 +28,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
     if (user) {
       getFavok();
     }
+    
   }, [user]);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       setFav(isFav);
     }
   }, [favok, selectedGame]);
+
 
   async function addFav() {
     if (!user) {
@@ -52,7 +54,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
     if (resp.ok) {
       setFavok([...favok, favData]);
-      setFav(true);  
+      setFav(true);
     } else {
       setError("Failed to add to favorites.");
     }
@@ -67,9 +69,8 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
     });
 
     if (resp.ok) {
-
-      setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));  
-      setFav(false);  
+      setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));
+      setFav(false);
     } else {
       setError("Failed to delete from favorites.");
     }
@@ -82,7 +83,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       <div className="modal-content fr rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] md:max-h-[80%] ">
         <div className='inp flex '>
           <span className="close-button font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
-            {fav ? (<span className="close-buttona text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span> ) : (<span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span> )}
+          {fav ? (<span className="close-buttona text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}>Delete from Fav</span>) : (<span className="add-button text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}>Add to Fav</span>)}
         </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
         <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
@@ -92,13 +93,13 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
         <p className="text-sm sm:text-base">Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
         <p className="text-sm sm:text-base">Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
         <div>
-              <span className="font-medium">Genres:</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {selectedGame.tags?.map((g, i) => (
-                  <span key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{g.name}</span>
-                )) || "N/A"}
-              </div>
-            </div>
+          <span className="font-medium">Genres:</span>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {selectedGame.tags?.map((g, i) => (
+              <span key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{g.name}</span>
+            )) || "N/A"}
+          </div>
+        </div>
       </div>
     </div>
   );

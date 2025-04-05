@@ -31,13 +31,15 @@ export default function Body() {
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [searchTrue, setSearchTrue] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [componentsLoaded, setComponentsLoaded] = useState(false);
 
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
                 const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
                 const data = await response.json();
-                setAllGames(data.games); // Access games 
+                setAllGames(data.games);
+                setComponentsLoaded(true);
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -70,10 +72,11 @@ export default function Body() {
         setModalVisible(false);
         setSelectedGame(null);
     }
+    
 
     return (
         <div className='bg-gray-900'>
-            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && ( <>
+            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && componentsLoaded &&( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
