@@ -7,7 +7,8 @@ import { CgProfile, CgGames } from "react-icons/cg";
 import { FaStore, FaNewspaper, FaSearch, FaHeart, FaTimes } from "react-icons/fa";
 import { GoStarFill } from "react-icons/go";
 import { motion, AnimatePresence } from 'framer-motion';
-import Search from './Features/Search.jsx';
+import Search from './Features/Search.jsx'; import { MdOutlineRateReview } from "react-icons/md";
+
 
 export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     const [allGames, setAllGames] = useState([]);
@@ -123,7 +124,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
 
                             <Link to="/review">
                                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors">
-                                    <FaSearch className="mr-1" /> Reviews
+                                    <MdOutlineRateReview  className="mr-1" /> Reviews
                                 </motion.button>
                             </Link>
 

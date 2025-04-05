@@ -197,6 +197,8 @@ footer {
   background-color: #e53935;
 }
 
+.close-buttona {  background-color: #e53935;}
+
 .add-button {
   background-color: #269622be;
 }
@@ -564,7 +566,7 @@ footer {
   margin-bottom: 10px;
 }
 
-.add-button, .close-button {
+.add-button, .close-button, .close-buttona {
   width: auto;
   padding: 8px 16px;
   border: none;
@@ -604,13 +606,28 @@ footer {
     padding: 15px;
   }
 
-   .close-button {
+   .close-button{
     width: 15%; 
     font-size: 14px; 
     padding: 8px 13px;  
     text-align: center;
   }
+  .close-buttona {
+    width: 30%; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
   
+}
+
+@media (max-width:680px) {
+  .close-buttona {
+    width: 30%; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -642,6 +659,11 @@ footer {
     font-size: 15px; 
     padding: 8px 13px;  
   }
+
+  .close-buttona{
+    width: 40%;
+    font-size: 4px;
+  }
   
 }
 
@@ -656,6 +678,10 @@ footer {
     width: 20%; 
     font-size: 10px; 
     padding: 8px 10px;  
+  }
+  .close-buttona{
+    font-size: 5px;
+    width: 35%;
   }
 
   .add-button{
@@ -756,15 +782,11 @@ footer {
     justify-content: space-between;
     align-items: center;
   }
+  .close-buttona{font-size: 10px;}
 }
 
 @media (max-width: 560px){
-  .header-container{
-    align-items: center;
-    display: inline-flex;
-    flex-wrap: wrap;
-    
-  }
+
   .fr{max-height: 50%;}
 }
 
@@ -780,6 +802,10 @@ footer {
     font-size: 10px; 
   }
 
+  .close-buttona{
+    width: 35%; font-size: 8px;
+  }
+
   .add-button{
     width: 60%;
     font-size: 9px;
@@ -791,3 +817,11 @@ footer {
     display: none;
   }  
 
+  
+@media (max-width: 300px){
+
+  .close-buttona{
+    width: 40%; font-size: 8px;
+  }
+
+}

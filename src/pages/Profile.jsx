@@ -20,7 +20,7 @@ export default function Profile({ setUser, username }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        async function fetchUserData() {
             try {
                 const user = auth.currentUser;
                 if (!user) {
@@ -59,7 +59,7 @@ export default function Profile({ setUser, username }) {
         fetchUserData();
     }, [navigate]);
 
-    const handleLogout = async () => {
+    async function handleLogout() {
         try {
             await signOut(auth);
             setUser(null);
@@ -70,7 +70,7 @@ export default function Profile({ setUser, username }) {
         }
     };
 
-    const handleUpdateUsername = async () => {
+    async function handleUpdateUsername(){
         try {
             await updateProfile(auth.currentUser, {
                 displayName: newUsername
