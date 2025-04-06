@@ -203,6 +203,10 @@ footer {
   background-color: #269622be;
 }
 
+.add-buttona{
+  background-color: #269622be; padding: 10px; width: 10% !important ; text-align: center; align-items: center; 
+}
+
 .close-button:hover {
   background-color: #c62828;
 }
@@ -566,7 +570,7 @@ footer {
   margin-bottom: 10px;
 }
 
-.add-button, .close-button, .close-buttona {
+.add-button, .close-button, .close-buttona, .add-buttona {
   width: auto;
   padding: 8px 16px;
   border: none;
@@ -613,7 +617,13 @@ footer {
     text-align: center;
   }
   .close-buttona {
-    width: 30%; 
+    width: 30% !important; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
+  .add-buttona{
+    width: 20% !important; 
     font-size: 10px; 
     padding: 8px 13px;  
     text-align: center;
@@ -685,11 +695,14 @@ footer {
   }
 
   .add-button{
-    width: 50% !important;
+    width: 50% ;
     font-size: 8px !important;
   }
+  .ads{ width: 30% ;
+    font-size: 15px !important;}
   .fr{max-height: 50%;}
   .re, .rede{width: 90%; font-size: 10px;}
+  .add-buttona{font-size: 8px; width: 30% !important;}
 }
 
 .page {
@@ -702,7 +715,7 @@ footer {
   align-items: center;
 }
 @media (max-width: 420px) {
-  .ed{width: 40%; font-size: 10px;}
+  .ed{width: 40%; font-size: 10px;} .esd{width: 20%;}
 }
 
 @media (min-width: 1280px) {
@@ -814,9 +827,10 @@ footer {
     width: 60%;
     font-size: 9px;
   }
-  .rede{width: 85% !important; font-size: 8px !important;} .ed{width: 70%; font-size: 5px;}
+  .rede{width: 85% !important; font-size: 8px !important;} 
 }
-
+.ads{ width: 30% ; text-align: center !important;
+  font-size: 15px !important;}
 
   .modal-content::-webkit-scrollbar {
     display: none;
@@ -829,4 +843,6 @@ footer {
     width: 40%; font-size: 8px;
   }
   .rede{width: 50% !important; font-size: 8px !important;}
+  .ads{ width: 30% ;
+    font-size: 15px !important;}
 }
