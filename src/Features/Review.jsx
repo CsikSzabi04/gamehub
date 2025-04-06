@@ -4,6 +4,7 @@ import { Button, TextField, Modal } from '@mui/material';
 import Footer from '../Footer.jsx';
 import Header from '../Header.jsx';
 import './Features.css'
+import { Link } from 'react-router-dom';
 
 export default function Review() {
     const [allGames, setAllGames] = useState([]);
@@ -109,7 +110,8 @@ export default function Review() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {reviews.length > 0 ? (
                                 reviews.map((review, index) => (
-                                    <div key={index} className="bg-gray-700 p-4 rounded-lg shadow-md flex flex-col justify-between">
+                                    <div key={index} className="bg-gray-700 p-4 rounded-lg shadow-md flex flex-col justify-between  cursor-pointer" >
+                                        <Link to={`/reviews/${review.gameId}`}>
                                         <h3 className="text-white font-semibold">{review.gameName}</h3>
                                         <h4 className="text-white font-semibold">{review.email}</h4>
                                         <div className="flex items-center mb-2">
@@ -118,6 +120,7 @@ export default function Review() {
                                             ))}
                                         </div>
                                         <p className="text-white">{review.review}</p>
+                                        </Link>
                                     </div>
                                 ))
                             ) : ( <p className="text-white">No reviews yet.</p>)}

@@ -17,6 +17,7 @@ import Terms from './TermsAndPrivacy/Terms.jsx';
 import Privacy from './TermsAndPrivacy/Privacy.jsx';
 import Review from '././Features/Review.jsx';
 import React from 'react';
+import ReviewsOpen from './Features/ReviewsOpen.jsx';
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -46,7 +47,9 @@ export default function App() {
     { path: "/discover", element: <Discover /> },
     { path: "/contact", element: <Contact /> },
     { path: "/signup", element: <SignUp auth={auth} setUsername={setUsername} username={username}/> },
-    { path: "*", element: <Notfound /> }
+    { path: "*", element: <Notfound /> },
+    { path: "/reviews/:gameId", element: <ReviewsOpen /> }
+
   ]);
   
   return (
