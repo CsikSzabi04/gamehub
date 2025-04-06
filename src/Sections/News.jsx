@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FaAngleLeft,  FaChevronRight } from "react-icons/fa6";
+import gsap from "gsap";
 
 
 export default function News() {
@@ -19,21 +20,42 @@ export default function News() {
     fetchNews();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-    }, 20000);
-
-    return () => clearInterval(interval);
-  }, [newsItems]);
-
-  const nextItem = () => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % newsItems.length);
-  };
-
-  const prevItem = () => {
-    setCurrentIndex(prevIndex => (prevIndex - 1 + newsItems.length) % newsItems.length);
-  };
+     const carouselRef = useRef(null);
+ 
+     useEffect(() => {
+      if (!newsItems.length || !carouselRef.current) return;
+         const totalItems = newsItems.length;
+         const intervalTime = 20000;
+ 
+         const gamesToShow = [...newsItems, ...newsItems];
+ 
+         const carousel = carouselRef.current;
+         const totalItemsToShow = gamesToShow.length;
+ 
+         const rotateInterval = setInterval(() => {
+             setCurrentIndex(prevIndex => {
+                 const newIndex = (prevIndex + 2) % totalItems;
+                 gsap.to(carousel, {
+                     x: -newIndex * 1000,
+                     duration: 1.5,
+                     ease: "power2.inOut",
+                     overwrite: true
+                 });
+                 return newIndex;
+             });
+         }, intervalTime);
+ 
+         return () => clearInterval(rotateInterval);
+     }, [newsItems]);
+ 
+     const nextItem = () => {
+         setCurrentIndex(prevIndex => (prevIndex + 1) % newsItems.length);
+     };
+ 
+     const prevItem = () => {
+         setCurrentIndex(prevIndex => (prevIndex - 1 + newsItems.length) % newsItems.length);
+     };
+ 
 
   return (
     <section id="news" className="mb-8 px-4 relative">
@@ -71,7 +93,7 @@ export default function News() {
 
       <div className="flex justify-center mt-4 space-x-2">
         {newsItems.map((_, index) => (
-          <button key={index} onClick={() => setCurrentIndex(index)} className={`w-2 h-2 rounded-full ${currentIndex === index ? 'bg-white' : 'bg-gray-600'}`} aria-label={`Go to news ${index + 1}`} />
+          <button key={index} onClick={() => setCurrentIndex(index)} className={`w-2 h-2 rounded-full ${currentIndex == index ? 'bg-white' : 'bg-gray-600'}`} aria-label={`Go to news ${index + 1}`} />
         ))}
       </div>
     </section>

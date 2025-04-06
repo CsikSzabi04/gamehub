@@ -17,6 +17,7 @@ import Footer from './Footer.jsx';
 import Header from './Header.jsx';
 import GamingNews from './Sections/GamingNews.jsx';
 import StartUp from './Features/StartUp.jsx';
+import ReviewsOpenMain from './Sections/ReviewsOpenMain.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -72,6 +73,7 @@ export default function Body() {
         setModalVisible(false);
         setSelectedGame(null);
     }
+
     
 
     return (
@@ -87,6 +89,7 @@ export default function Body() {
                         <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
                         <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
                         <Discounted />
+                        <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
                         <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
                         <Mobile />
                         <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>

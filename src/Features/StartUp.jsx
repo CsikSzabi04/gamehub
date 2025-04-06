@@ -13,14 +13,20 @@ export default function StartUp({ onLoaded }) {
                 if (newProgress >= 100) {
                     clearInterval(interval);
                     setLoading(false);
-                    onLoaded();
+                    return newProgress;
                 }
                 return newProgress;
             });
         }, 350); 
 
         return () => clearInterval(interval);
-    }, [onLoaded]);
+    }, []);
+
+    useEffect(() => {
+        if (progress >= 100) {
+            onLoaded();
+        }
+    }, [progress, onLoaded]); 
 
     return (
         loading && (

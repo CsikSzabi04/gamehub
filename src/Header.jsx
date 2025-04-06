@@ -53,11 +53,16 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     }
 
     useEffect(() => {
+        if (!user?.uid) return;
+
+        let isMounted = true; 
+        const controller = new AbortController();
+
         async function getFavorites() {
             try {
                 const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user?.uid}`);
                 const data = await resp.json();
-                setFavorites(data);
+                if (isMounted) setFavorites(data);
             } catch (error) {
                 console.error("Error fetching favorites:", error);
             }
@@ -65,9 +70,16 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
         getFavorites();
         if (user) {
             getFavorites();
-            const intervalId = setInterval(getFavorites, 100);
+            const intervalId = setInterval(getFavorites, 1000);
             return () => clearInterval(intervalId);
         }
+
+        return () => {
+            isMounted = false;
+            clearInterval(intervalId);
+            controller.abort(); 
+        };
+        
     }, [user, favorites]);
 
     async function delFav(id) {

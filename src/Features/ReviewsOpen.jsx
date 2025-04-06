@@ -125,7 +125,7 @@ export default function ReviewsOpen() {
     }
 
     async function submitReview() {
-        if (!newReview || rating === 0) {
+        if (!newReview || rating == 0) {
             setError("Please write a review and select a rating");
             return;
         }
@@ -242,7 +242,7 @@ export default function ReviewsOpen() {
                                 <div className="flex justify-between items-start">
                                     <h1 className="text-3xl font-bold mb-4">{game.name}</h1>
                                     {fav ? (
-                                        <button onClick={delFav} className="hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>
+                                        <button onClick={delFav} className=" hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>
                                     ) : (
                                         <button onClick={addFav} className=" hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>
                                     )}
@@ -308,10 +308,7 @@ export default function ReviewsOpen() {
                                 <div className="flex items-center mb-4">
                                     <span className="mr-2">Rating:</span>
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <button key={star} className={`text-2xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`} onClick={() => setRating(star)}>
-                                            ★
-                                        </button>
-                                    ))}
+                                        <button key={star} className={`text-2xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`} onClick={() => setRating(star)}>★ </button> ))}
                                 </div>
                                 <button onClick={submitReview} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md"> Submit Review</button>
                                 {error && <p className="text-red-500 mt-2">{error}</p>}
@@ -325,11 +322,7 @@ export default function ReviewsOpen() {
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-semibold">{review.email}</h4>
                                             <div className="flex">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <span key={i} className={`${i < review.rating ? 'text-yellow-400' : 'text-gray-400'}`} >
-                                                        ★
-                                                    </span>
-                                                ))}
+                                                {[...Array(5)].map((_, i) => (<span key={i} className={`${i < review.rating ? 'text-yellow-400' : 'text-gray-400'}`} > ★</span>))}
                                             </div>
                                         </div>
                                         <p className="whitespace-pre-line">{review.review}</p>

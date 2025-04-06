@@ -69,7 +69,7 @@ export default function Giveaways() {
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">Loot 💰</h2>
           
           <div className="relative">
-            <button onClick={prevItem} className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-1 sm:p-2 rounded-full transition-all duration-200 hover:scale-110" disabled={currentIndex === 0}>
+            <button onClick={prevItem} className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-1 sm:p-2 rounded-full transition-all duration-200 hover:scale-110" disabled={currentIndex == 0}>
               <FaChevronLeft className="text-xs sm:text-sm" />
             </button>
       
@@ -111,7 +111,7 @@ export default function Giveaways() {
       
           <div className="flex justify-center mt-3 sm:mt-4 space-x-1 sm:space-x-2">
             {Array.from({ length: Math.max(1, giveaways.length - cardsToShow + 1) }).map((_, index) => (
-              <button key={index} onClick={() => setCurrentIndex(index)} className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ${index === currentIndex ? 'bg-white w-4 sm:w-6' : 'bg-gray-600'}`}/>
+              <button key={index} onClick={() => setCurrentIndex(index)} className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ${index == currentIndex ? 'bg-white w-4 sm:w-6' : 'bg-gray-600'}`}/>
             ))}
           </div>
         </section>
