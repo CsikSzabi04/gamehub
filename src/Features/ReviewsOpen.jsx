@@ -242,9 +242,9 @@ export default function ReviewsOpen() {
                                 <div className="flex justify-between items-start">
                                     <h1 className="text-3xl font-bold mb-4">{game.name}</h1>
                                     {fav ? (
-                                        <button onClick={delFav} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>
+                                        <button onClick={delFav} className="hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>
                                     ) : (
-                                        <button onClick={addFav} className="bg-blue-600 hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>
+                                        <button onClick={addFav} className=" hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>
                                     )}
                                 </div>
 
