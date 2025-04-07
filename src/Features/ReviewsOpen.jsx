@@ -233,7 +233,8 @@ export default function ReviewsOpen() {
                 <div className="max-w-6xl mx-auto">
                     <Link to="/review" className="mb-6 flex items-center text-blue-400 hover:text-blue-300"><FaArrowLeftLong /> <span className='ml-2'>Back to Reviews</span></Link>
                     <div className="bg-gray-800 rounded-lg p-6 mb-8">
-                        <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex flex-col md:flex-wrap gap-6">
+                            <div className="flex flex-col md:flex-row gap-6">
                             <div className="md:w-1/3">
                                 <img src={game.background_image} alt={game.name} className="w-full h-auto rounded-lg object-cover" />
                             </div>
@@ -269,9 +270,10 @@ export default function ReviewsOpen() {
                                         </div>
                                     </div>
                                 </div>
-
-                                {game.platforms?.some(p => p.requirements_en?.minimum) && (
-                                    <div className="mb-6">
+                            </div>
+                            </div>              
+                            {game.platforms?.some(p => p.requirements_en?.minimum) && (
+                                    <div className="mb-6 ">
                                         <h3 className="text-xl font-bold mb-4">System Requirements</h3>
                                         <div className="bg-gray-700 p-6 rounded-lg shadow-md space-y-4">
                                             <div>
@@ -294,12 +296,11 @@ export default function ReviewsOpen() {
                                             )}
                                         </div>
                                     </div>
-                                )}
-                            </div>
+                                )}   
                         </div>
                     </div>
 
-                    <div className="bg-gray-800 rounded-lg p-6">
+                    <div className="bg-gray-800 rounded-lg p-6 ">
                         <h2 className="text-2xl font-bold mb-6">Reviews</h2>
                         {user && (
                             <div className="mb-8 bg-gray-700 p-4 rounded-lg">
