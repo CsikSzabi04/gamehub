@@ -33,10 +33,10 @@ h1:hover {
 
 
 header {
-  display: flex;
+ 
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 20px;
 }
 
 #search-input {
@@ -197,8 +197,14 @@ footer {
   background-color: #e53935;
 }
 
+.close-buttona {  background-color: #e53935;}
+
 .add-button {
   background-color: #269622be;
+}
+
+.add-buttona{
+  background-color: #269622be; padding: 10px; width: 10% !important ; text-align: center; align-items: center; 
 }
 
 .close-button:hover {
@@ -564,7 +570,7 @@ footer {
   margin-bottom: 10px;
 }
 
-.add-button, .close-button {
+.add-button, .close-button, .close-buttona, .add-buttona {
   width: auto;
   padding: 8px 16px;
   border: none;
@@ -604,13 +610,34 @@ footer {
     padding: 15px;
   }
 
-   .close-button {
+   .close-button{
     width: 15%; 
     font-size: 14px; 
     padding: 8px 13px;  
     text-align: center;
   }
+  .close-buttona {
+    width: 30% !important; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
+  .add-buttona{
+    width: 20% !important; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
   
+}
+
+@media (max-width:680px) {
+  .close-buttona {
+    width: 30%; 
+    font-size: 10px; 
+    padding: 8px 13px;  
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -642,6 +669,11 @@ footer {
     font-size: 15px; 
     padding: 8px 13px;  
   }
+
+  .close-buttona{
+    width: 40%;
+    font-size: 4px;
+  }
   
 }
 
@@ -657,11 +689,20 @@ footer {
     font-size: 10px; 
     padding: 8px 10px;  
   }
+  .close-buttona{
+    font-size: 5px;
+    width: 35%;
+  }
 
   .add-button{
-    width: 50%;
-    font-size: 8px;
+    width: 50% ;
+    font-size: 8px !important;
   }
+  .ads{ width: 30% ;
+    font-size: 15px !important;}
+  .fr{max-height: 50%;}
+  .re, .rede{width: 90%; font-size: 10px;}
+  .add-buttona{font-size: 8px; width: 30% !important;}
 }
 
 .page {
@@ -672,6 +713,9 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+@media (max-width: 420px) {
+  .ed{width: 40%; font-size: 10px;} .esd{width: 20%;}
 }
 
 @media (min-width: 1280px) {
@@ -755,15 +799,12 @@ footer {
     justify-content: space-between;
     align-items: center;
   }
+  .close-buttona{font-size: 10px;}  .rede {width: 100% !important; font-size: 10px ;}
 }
 
 @media (max-width: 560px){
-  .header-container{
-    align-items: center;
-    display: inline-flex;
-    flex-wrap: wrap;
-    
-  }
+
+  .fr{max-height: 50%;}
 }
 
 @media (max-width: 350px) {
@@ -778,14 +819,30 @@ footer {
     font-size: 10px; 
   }
 
+  .close-buttona{
+    width: 35%; font-size: 8px;
+  }
+
   .add-button{
     width: 60%;
     font-size: 9px;
   }
+  .rede{width: 85% !important; font-size: 8px !important;} 
 }
-
+.ads{ width: 30% ; text-align: center !important;
+  font-size: 15px !important;}
 
   .modal-content::-webkit-scrollbar {
     display: none;
   }  
 
+  
+@media (max-width: 300px){
+
+  .close-buttona{
+    width: 40%; font-size: 8px;
+  }
+  .rede{width: 50% !important; font-size: 8px !important;}
+  .ads{ width: 30% ;
+    font-size: 15px !important;}
+}

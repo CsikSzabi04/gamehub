@@ -5,6 +5,7 @@ import ShowCards from './Features/ShowCards.jsx';
 import FeaturedGames from '././Sections/FeaturedGames.jsx'; 
 import SearchFind from './Features/SearchFind.jsx';
 import MainSection from './Sections/MainSection.jsx';
+import UnderMain from './Sections/UnderMain.jsx';
 import StoresFooter from './Stores/StoresFooter.jsx';
 import Free from '././Sections/Free.jsx'; 
 import Loot from '././Sections/Loot.jsx';
@@ -16,6 +17,7 @@ import Footer from './Footer.jsx';
 import Header from './Header.jsx';
 import GamingNews from './Sections/GamingNews.jsx';
 import StartUp from './Features/StartUp.jsx';
+import ReviewsOpenMain from './Sections/ReviewsOpenMain.jsx';
 
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
@@ -30,13 +32,15 @@ export default function Body() {
     const [modalStoreVisible, setStoreVisible] = useState(false);
     const [searchTrue, setSearchTrue] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [componentsLoaded, setComponentsLoaded] = useState(false);
 
     useEffect(() => {
         async function fetchFeaturedGames() {
             try {
                 const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
                 const data = await response.json();
-                setAllGames(data.games); // Access games 
+                setAllGames(data.games);
+                setComponentsLoaded(true);
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -70,9 +74,11 @@ export default function Body() {
         setSelectedGame(null);
     }
 
+    
+
     return (
         <div className='bg-gray-900'>
-            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && ( <>
+            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && componentsLoaded &&( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
@@ -83,11 +89,13 @@ export default function Body() {
                         <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
                         <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
                         <Discounted />
+                        <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
                         <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
                         <Mobile />
                         <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
                         <div id='news'><News /></div>
                         <Loot />
+                        <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
                         <GamingNews />
                         <StoresFooter />
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />

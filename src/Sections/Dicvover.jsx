@@ -11,6 +11,7 @@ import { CiLogin } from "react-icons/ci";
 import Header from "../Header.jsx";
 import Footer from "../Footer.jsx";
 import News from "./News.jsx";
+import UnderMain from './UnderMain.jsx';
 
 export default function Discover() {
     const [allGames, setAllGames] = useState([]);
@@ -163,16 +164,21 @@ export default function Discover() {
         console.log('Closing favorites modal');
         setIsFavModalOpen(false);
     };
-
+    
+    function showGameDetails(game) {
+        const requirements = game.platforms?.map(p => p.requirements_en?.minimum).join(", ");
+        setSelectedGame({ ...game, requirements });
+        setModalVisible(true);
+    }
 
     return (
         <div>
             <Stores modalStoreVisible={modalStoreVisible} />
             <Header />
-
+            <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
             {searchTrue == false ? (
-                <div>
-                    <div className=" bg-gray-900">
+                <div className="pl-20 pr-20">
+                    <div className=" bg-gray-900 ">
                         <div className=" mx-auto p-4">
                             <section id="featured-games" className="mb-8">
                                 <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>

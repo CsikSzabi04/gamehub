@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
-import { FaSquareInstagram } from "react-icons/fa6";
+import { FaGamepad, FaSquareInstagram } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 
 export default function Footer() {
@@ -10,10 +10,17 @@ export default function Footer() {
         <footer className="bg-gray-800 text-white mt-12">
             <div className="container mx-auto px-6 md:px-12 w-full">
                 <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
-                    <div className="mb-4 md:mb-0 text-center md:text-left">
-                        <h3 className="text-xl font-bold sm:text-2xl md:text-3xl">Game <span className='text-sky-500'> Data</span> Hub</h3>
-                        <p className="text-sm sm:text-base mt-2">
-                            Your one-stop hub for discovering and tracking your favorite games. Stay updated with news, multiplayer games, and more.
+                <div className="flex flex-col items-center md:items-start">
+                        <div className="flex items-center mb-4">
+                            <FaGamepad className="text-sky-500 text-3xl mr-2" />
+                            <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-500 to-cyan-700 bg-clip-text text-transparent">
+                                Game Data Hub
+                            </h3>
+                        </div>
+                        <p className="text-gray-400 text-center md:text-left ">Your one-stop hub for discovering and tracking your favorite games. Stay updated with news, multiplayer games, and more.</p>
+                        <br />
+                        <p className="text-gray-400 text-center md:text-left max-w-md">
+                            The ultimate gaming companion. Discover, track, and stay updated with your favorite games.
                         </p>
                     </div>
 
@@ -53,7 +60,7 @@ export default function Footer() {
                         <a href="/privacy" className="text-white hover:text-lime-600"> Privacy Policy</a>
                     </div>
                     <div className="mt-2 text-xs sm:text-base">
-                       <span className='text-xs'>Made By:</span>  <a href="https://csszabj.netlify.app/" target='_blank' className="text-white hover:text-sky-600 text-xs">Szabolcs Csík</a>, Furdan Milán & Balog Bence
+                       <span className='text-xs'>Made By:</span>  <a href="https://csszabj.netlify.app/" target='_blank' className="text-white hover:text-sky-600 text-xs">Szabolcs Csík</a> , <a href="" className="text-white hover:text-sky-600 text-xs">Balog Bence</a> , <a href="" className="text-white hover:text-sky-600 text-xs">Furdan Milán</a>
                     </div>
                 </div>
             </div>

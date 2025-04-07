@@ -30,7 +30,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
 
         return () => clearInterval(rotateInterval);
     }, [games]);
-
+    //Math.random().toString(36).slice(2) + Date.now().toString(36) this is the randomKeyGenerator
     return (
         <section id="free-games" className="mb-8 s">
             <h2 className="text-2xl font-semibold mb-4">{name} 💸</h2>
@@ -38,7 +38,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
                 <div className="carousel flex space-x-4" ref={carouselRef}>
                     {games.concat(games).map((game) => (
                         <div
-                            key={game.id}
+                            key={Math.random().toString(36).slice(2) + Date.now().toString(36)}
                             className="game-card carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between"
                             onClick={() => showGameDetails(game)}
                         >
