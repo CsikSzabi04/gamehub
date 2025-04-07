@@ -31,7 +31,7 @@ export default function StartUp({ onLoaded }) {
     return (
         loading && (
             <div className="fixed inset-0 flex flex-col justify-center items-center bg-black text-white text-3xl font-bold z-50">
-                <img src="./main.png" alt="Main" className="mb-10 rounded-3xl w-40 h-40 object-contain" onLoad={() => setProgress(30)} /> 
+                <img src="./main.png" alt="MainImgS" className="mb-10 rounded-3xl w-40 h-40 object-contain" onLoad={() => setProgress(30)} /> 
                 <div className="flex flex-col items-center">
                     <h1 className="flex items-center gap-2">
                         Loading <ThreeDot color="#fff" size="medium" />

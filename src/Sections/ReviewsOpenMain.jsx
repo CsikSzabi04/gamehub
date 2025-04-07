@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
-export default function MiniReviewSection({ allGames, showGameDetails }) {
+export default function ReviewsOpenMain({ allGames, showGameDetails }) {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,15 +35,9 @@ export default function MiniReviewSection({ allGames, showGameDetails }) {
     for (let i = 0; i < uniqueGameIds.length; i++) {
         const gameId = uniqueGameIds[i];
         const game = allGames.find(game => game.id == gameId);
-
         if (game) {
             const gameReviews = reviews.filter(review => review.gameId == gameId);
-
-            reviewedGames.push({
-                ...game, 
-                reviews: gameReviews 
-            });
-        }
+            reviewedGames.push({ ...game,  reviews: gameReviews  });}
     }
 
     const finalReviewedGames = reviewedGames.slice(0, 5);
@@ -57,14 +51,14 @@ export default function MiniReviewSection({ allGames, showGameDetails }) {
                 <div className="relative h-48 sm:h-56 md:h-64">
                   <img src={game.background_image} alt={game.name} className="w-full h-full object-cover cursor-pointer hover:scale-104 transition-transform duration-300"onClick={() => showGameDetails(game)}  />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-3 sm:p-4">
-                    <h3 className="text-lg sm:text-xl font-bold text-white">{game.name}</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-white ">{game.name}</h3>
                     <div className="flex items-center mt-1 sm:mt-2">
                       {[...Array(5)].map((_, i) => ( <span key={i} className={`text-sm sm:text-base ${i < Math.floor(game.reviews[0].rating) ? 'text-yellow-400' : 'text-gray-400'}`} >★</span>))}
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="p-3 sm:p-4">
+                <div className="p-3 sm:p-4 justify-items-center ">
                   <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">{game.name}</h3>
                   <div className="space-y-2 sm:space-y-3">
                     {game.reviews.slice(0, 2).map(review => (

@@ -22,67 +22,74 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
     }, [modalVisible]);
 
     useEffect(() => {
+        if (modalVisible) {
+          document.body.style.overflow = 'hidden'; 
+        } else {
+          document.body.style.overflow = 'auto'; 
+        }
+    
+        return () => {
+          document.body.style.overflow = 'auto';
+        };
+      }, [modalVisible]);
+    
+      useEffect(() => {
         async function getFavok() {
-            const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user.uid}`);
-            const json = await resp.json();
-            setFavok(json);
+          const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user.uid}`);
+          const json = await resp.json();
+          setFavok(json);
         }
         if (user) {
-            getFavok();
+          getFavok();
         }
-    }, [user]);
-
-    useEffect(() => {
+      }, [user,favok]);     
+    
+      useEffect(() => {
         if (favok.length > 0 && selectedGame) {
-            const isFav = favok.some(favItem => favItem.gameId == selectedGame.gameID);
-            setFav(isFav);
+          const isFav = favok.some(favItem => favItem.gameId == selectedGame.id);
+          setFav(isFav);
         }
-    }, [favok, selectedGame]);
-
-    async function addFav() {
+      }, [favok, selectedGame]);
+    
+      async function addFav() {
         if (!user) {
-            setError("You must log in to add favorites.");
-            return;
+          setError("You must log in to add favorites.");
+          return;
         }
-
-        const favData = {
-            name: selectedGame.external,
-            gameId: selectedGame.gameID,
-            userId: user.uid,
-            thumb: selectedGame.thumb
-        };
-
+    
+        const favData = { name: selectedGame.name, gameId: selectedGame.id, userId: user.uid };
         const resp = await fetch("https://gamehub-backend-zekj.onrender.com/addfav", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(favData),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(favData),
         });
-
+    
         if (resp.ok) {
-            setFavok([...favok, favData]);
-            setFav(true);
+          setFavok([...favok, favData]);
+          setFav(true);  
         } else {
-            setError("Failed to add to favorites.");
+          setError("Failed to add to favorites.");
         }
-    }
-
-    async function delFav() {
+      }
+    
+      async function delFav() {
         const favData = { userId: user.uid };
-        const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/delfav/${selectedGame.gameID}`, {
-            method: "DELETE",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(favData),
+        const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/delfav/${selectedGame.id}`, {
+          method: "DELETE",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(favData),
         });
-
+    
         if (resp.ok) {
-            setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.gameID));
-            setFav(false);
+    
+          setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));  
+          setFav(false);  
         } else {
-            setError("Failed to delete from favorites.");
+          setError("Failed to delete from favorites.");
         }
-    }
-
-    if (!selectedGame) return null;
+      }
+    
+      if (!selectedGame) return null;
 
     return (
         <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex z-50" id="game-modal">

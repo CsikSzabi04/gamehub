@@ -29,14 +29,19 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       getFavok();
     }
 
-  }, [user]);
+  }, [user,fav]);
 
   useEffect(() => {
-    if (favok.length > 0 && selectedGame) {
-      const isFav = favok.some(favItem => favItem.gameId == selectedGame.id);
-      setFav(isFav);
+    if (favok.length >= 0 && selectedGame) {
+      for(let o of favok){
+        if(o.gameId != selectedGame.id){
+          setFav(false)
+        }else{
+          setFav(true)
+        }
+      }
     }
-  }, [favok, selectedGame]);
+  }, [selectedGame,fav]);
 
 
   async function addFav() {

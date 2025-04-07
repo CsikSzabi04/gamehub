@@ -101,7 +101,7 @@ export default function Review() {
                                     <span key={star} className={`cursor-pointer text-xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`} onClick={() => setRating(star)} >★ </span>
                                 ))}
                             </div>
-                            <Button onClick={handleReviewSubmit} variant="contained" color="primary" fullWidth> Submit Review </Button>
+                            <Button onClick={handleReviewSubmit} variant="contained" color="primary" fullWidth  > Submit Review </Button>
                         </div>
                     </div>
 
