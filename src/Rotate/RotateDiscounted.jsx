@@ -8,7 +8,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
 
     useEffect(() => {
         const totalItems = games.length;
-        const intervalTime = 3000; 
+        const intervalTime = 10000; 
 
         const gamesToShow = [...games, ...games];
 

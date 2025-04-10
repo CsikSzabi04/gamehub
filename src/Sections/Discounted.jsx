@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import RotateFree from "../Rotate/RotateFree.jsx";
 import RotateDiscounted from "../Rotate/RotateDiscounted.jsx";
+import DiscountedShowCards from "../Features/DiscountedShowCards.jsx";
 
 export default function Discounted() {
     const [freeGames, setFreeGames] = useState([]);
+    const [selectedGame, setSelectedGame] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         fetchFreeGames();
@@ -28,13 +30,21 @@ export default function Discounted() {
             console.error("Error fetching free games from Epic:", error);
         }
     }
+
     function showGameDetails(game) {
-        console.log("Game Details:", game);
+        setSelectedGame(game);
+        setModalVisible(true);
+    }
+
+    function closeModal() {
+        setModalVisible(false);
+        setSelectedGame(null);
     }
 
     return (
         <section id="free-games" className="mb-8">
-            <RotateDiscounted games={freeGames} showGameDetails={showGameDetails} name="Discounted Games" />
+            <RotateDiscounted  games={freeGames}  showGameDetails={showGameDetails}  name="Discounted Games" />
+            {modalVisible && selectedGame && ( <DiscountedShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible}/>)}
         </section>
     );
 }
