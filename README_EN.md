@@ -37,9 +37,6 @@ You can visit the application here: **[Game Data Hub](https://gamdatahub.netlify
 - **Database:** Firebase Firestore for authentication and storing user favorites.
 - **External APIs:** Integrates with external game databases and store APIs for real-time information.
 
-### Workflow Diagram
-*(You can add a diagram showing the interaction between frontend, backend, and APIs here.)*
-
 ---
 
 ## Application Structure
@@ -73,61 +70,6 @@ The `Login` component handles user authentication.
 #### Key Functions:
 - `login()`: Handles Firebase Authentication login process.
 
----
-
-## Setup Instructions
-
-### Prerequisites
-Before running the application, ensure you have the following installed:
-- [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
-
-### Clone the Repository
-
-1. Clone this repository to your local machine:
-
-    ```bash
-    git clone https://github.com/your-username/game-data-hub.git
-    cd game-data-hub
-    ```
-
-2. Install the necessary dependencies:
-
-    ```bash
-    pnpm i
-    ```
-
-### Firebase Setup
-
-To use Firebase Authentication and Firestore, you need to set up Firebase:
-
-1. Go to the [Firebase Console](https://console.firebase.google.com/).
-2. Create a new project and enable Firebase Authentication and Firestore.
-3. Copy your Firebase configuration and create a `firebaseConfig.js` file in the `src` directory:
-
-    ```javascript
-    // src/firebaseConfig.js
-    export const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    ```
-
-4. Ensure that Firebase Authentication and Firestore are correctly set up in your Firebase Console.
-
-### Running the Application
-
-1. Start the development server:
-
-    ```bash
-    pnpm run dev
-    ```
-
-2. Visit `http://localhost:3000` in your browser to view the application.
 
 ---
 
