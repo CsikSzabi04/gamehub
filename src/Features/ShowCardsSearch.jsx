@@ -96,9 +96,9 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
             <div className="modal-content p-10 bg-gray-900 rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] md:max-h-[80%] relative  ">
                 <div className='flex justify-between items-start'>
                     <div className='inp flex '>
-                        <span className="close-button esd font-bold text-white absolute top-1 right-2 cursor-pointer" onClick={closeModal}>&times;</span>
-                        {fav ? (<span className="close-button text-white rounded-md cursor-pointer top-5 left-6" onClick={delFav}><MdDeleteForever /></span>) : (<span className="add-buttona ads text-white rounded-md cursor-pointer top-5 left-6" onClick={addFav}><IoAddCircleOutline /></span>)}
-                    </div>
+                         <div>{fav ? (<button className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full text-lg md:text-xl"onClick={delFav}> <MdDeleteForever /></button>) : ( <button className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full text-lg md:text-xl"onClick={addFav} ><IoAddCircleOutline /> </button> )}</div>
+                          <button  className="text-white text-2xl md:text-3xl font-bold hover:text-gray-300 p-1" onClick={closeModal} > &times;</button>
+                      </div>
                 </div>
                 {error && <p className="error text-red-500 text-sm mt-2 p-5">{error}</p>}
                 <div className="mt-4">

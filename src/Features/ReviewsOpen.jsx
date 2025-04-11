@@ -238,17 +238,11 @@ export default function ReviewsOpen() {
                             <div className="md:w-1/3">
                                 <img src={game.background_image} alt={game.name} className="w-full h-auto rounded-lg object-cover" />
                             </div>
-
                             <div className="md:w-2/3">
                                 <div className="flex justify-between items-start">
                                     <h1 className="text-3xl font-bold mb-4">{game.name}</h1>
-                                    {fav ? (
-                                        <button onClick={delFav} className=" hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>
-                                    ) : (
-                                        <button onClick={addFav} className=" hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>
-                                    )}
+                                    {fav ? ( <button onClick={delFav} className=" hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>) : (<button onClick={addFav} className=" hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>)}
                                 </div>
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <div>
                                         <p className="text-gray-400">Release Date</p>
@@ -279,18 +273,14 @@ export default function ReviewsOpen() {
                                             <div>
                                                 <h4 className="text-lg font-semibold mb-3 text-blue-400">Minimum:</h4>
                                                 <div className="text-gray-300 text-sm space-y-2">
-                                                    {parseRequirementsText(
-                                                        game.platforms.find(p => p.requirements_en?.minimum)?.requirements_en?.minimum
-                                                    )}
+                                                    {parseRequirementsText(game.platforms.find(p => p.requirements_en?.minimum)?.requirements_en?.minimum)}
                                                 </div>
                                             </div>
                                             {game.platforms[0].requirements_en?.recommended && (
                                                 <div>
                                                     <h4 className="text-lg font-semibold mb-3 text-green-400">Recommended:</h4>
                                                     <div className="text-gray-300 text-sm space-y-2">
-                                                        {parseRequirementsText(
-                                                            game.platforms.find(p => p.requirements_en?.recommended)?.requirements_en?.recommended
-                                                        )}
+                                                        {parseRequirementsText(game.platforms.find(p => p.requirements_en?.recommended)?.requirements_en?.recommended)}
                                                     </div>
                                                 </div>
                                             )}
