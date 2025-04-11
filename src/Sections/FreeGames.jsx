@@ -10,7 +10,7 @@ export default function FreeGames() {
 
     async function fetchFreeGames() {
         try {
-            const response = await fetch("https://gamehub-backend-zekj.onrender.com/freegames");
+            const response = await fetch("");
             const data = await response.json();
 
             const freeGames = data.data.Catalog.searchStore.elements.map((game) => ({
