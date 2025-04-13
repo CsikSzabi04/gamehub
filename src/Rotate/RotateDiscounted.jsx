@@ -28,11 +28,11 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
         return () => clearInterval(rotateInterval);
     }, [games]);
 
-    const nextItem = () => {
+    function nextItem(){
         const carousel = carouselRef.current;
-        const newIndex = (currentIndex + 1) % games.length;
+        const newIndex = (currentIndex + 2) % games.length;
         gsap.to(carousel, {
-            x: -newIndex * 2000,
+            x: -newIndex * 500,
             duration: 0.5,
             ease: "power2.inOut",
             overwrite: true
@@ -40,11 +40,11 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
         setCurrentIndex(newIndex);
     };
 
-    const prevItem = () => {
+    function prevItem() {
         const carousel = carouselRef.current;
-        const newIndex = (currentIndex - 1 + games.length) % games.length;
+        const newIndex = (currentIndex - 2 + games.length) % games.length;
         gsap.to(carousel, {
-            x: -newIndex * 2000,
+            x: -newIndex * 500,
             duration: 0.5,
             ease: "power2.inOut",
             overwrite: true
@@ -59,8 +59,8 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex space-x-4"  ref={carouselRef} style={{ width: `${games.length * 2 * itemWidth}px` }}>
                         {games.concat(games).map((game, index) => (
-                            <div key={`${game.id}-${index}`} className="game-card carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between" style={{ width: `${itemWidth}px` }} onClick={() => showGameDetails(game)}>
-                                <img src={game.background_image} alt={game.name} className="game-image" />
+                            <div key={`${game.id}-${index}`} className="game-carda carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between" style={{ width: `${itemWidth}px` }} onClick={() => showGameDetails(game)}>
+                                <img src={game.background_image} alt={game.name} className="game-imagea " />
                                 <div className="game-details">
                                     <h3 className="text-lg font-bold mb-2">{game.name}</h3>
                                     <p className="text-sm text-gray-400">Original Price: {game.originalPrice} USD</p>
