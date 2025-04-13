@@ -79,7 +79,20 @@ section h2 {
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
 }
 
+.game-carda{
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+}
+
 .game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.game-carda:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
@@ -383,6 +396,14 @@ footer {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.game-carda {
+  background-color: #25273bc2;
+  padding: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .game-card img {
   width: 100%;
   height: 180px;
@@ -391,12 +412,36 @@ footer {
   margin-bottom: 12px;
 }
 
+.game-carda img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+
 .game-card:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .game-card .price {
+  font-size: 1rem;
+  color: #1e88e5;
+}
+
+.game-carda:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.game-carda .price {
+  font-size: 1rem;
+  color: #1e88e5;
+}
+
+.game-carda .price{
   font-size: 1rem;
   color: #1e88e5;
 }
@@ -416,7 +461,17 @@ footer {
   transform: scale(1.05);
 }
 
+.game-carda:hover {
+  transform: scale(1.05);
+}
+
 .game-card h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.game-carda h3{
   font-size: 1.1rem;
   color: #fff;
   margin-bottom: 10px;
@@ -433,6 +488,20 @@ footer {
 }
 
 .game-card a:hover {
+  color: #1565c0;
+}
+
+.game-carda .price {
+  color: #66bb6a;
+  margin-bottom: 10px;
+}
+
+.game-carda a {
+  color: #1e88e5;
+  text-decoration: underline;
+}
+
+.game-carda a:hover {
   color: #1565c0;
 }
 
