@@ -7,6 +7,11 @@ Az alkalmazást itt érheted el: **[Game Data Hub](https://gamehub.hu/)**
 
 ---
 
+![image](https://github.com/user-attachments/assets/dbc4a7ad-0be8-467f-9d39-761569bab6ab)
+
+
+---
+
 ## Jellemzők
 
 - **Keresés**: Böngéssz a játékok hatalmas listájában, melyek műfajok szerint vannak kategorizálva, mint például Akció, Sci-Fi, Multiplayer és még sok más.
@@ -70,6 +75,49 @@ a `Login` komponens a felhasználói hitelesítésért felel.
 #### Főbb függvények:
 - `login()`: A Firebase hitelesítési folyamatát kezeli.
 
+---
+
+## Telepítési útmutató
+
+### Előfeltételek
+Az alkalmazás futtatása előtt győződjön meg arról, hogy telepítve van:
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
+
+### Clone the Repository
+
+1. Repó Klónozása:
+
+    ```bash
+    git clone https://github.com/your-username/game-data-hub.git
+    cd game-data-hub
+    ```
+
+2. Telepítse a szükséges függőségeket:
+
+    ```bash
+    pnpm i
+    ```
+
+### Firebase Setup
+
+A Firebase Hitelesítés és Firestore használatához konfigurálnia kell a Firebase-t:
+
+1. Lépjen be a Firebase oldalára [Firebase Console](https://console.firebase.google.com/).
+2. Hozzon létre egy új projektet és engedélyezze a Firebase Hitelesítés és Firestore szolgáltatásokat
+3. Másolja ki a Firebase konfigurációs adatait és hozzon létre egy `firebaseConfig.js` fájlt az `src` könyvtárban:
+
+    ```javascript
+    // src/firebaseConfig.js
+    export const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    ```
 ---
 
 ## Tesztelési Stratégia
