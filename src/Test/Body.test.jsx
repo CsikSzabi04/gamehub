@@ -38,7 +38,7 @@ describe('StartUp Component', () => {
 
 });
 
-/* Review.jsx */
+/* Review.jsx 
 
 const UserContext = React.createContext();
 const mockUser = { email: "test@example.com", uid: "123" };
@@ -108,5 +108,6 @@ describe('Review Component', () => {
         expect(screen.getByText("Borderlands 2 It is a bad game unfortunatelly")).toBeInTheDocument();
         cleanup();
     });
-    */
+    
 });
+*/
