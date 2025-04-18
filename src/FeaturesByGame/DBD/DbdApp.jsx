@@ -110,7 +110,7 @@ export default function DbdApp() {
             <section className="hero-section h-screen w-full flex items-center justify-center snap-start" style={{ opacity }}>
                 <div className="absolute inset-0 bg-[url('https://static.tumblr.com/maopbtg/E9Bmgtoht/splash.png')] opacity-20 mix-blend-overlay"></div>
                 <div className="relative row z-10 text-center">
-                    <h1 className="dbd-title  font-bold text-red-600 mb-4 animate-pulse">Dead by <br /> Daylight</h1>
+                    <h1 className="dbd-title  font-bold mb-4 animate-pulse">Dead by <br /> Daylight</h1>
                     <img className="dbd-logo " src="dbdL.png" alt="Dead by Daylight logo" />
                 </div>
             </section>
