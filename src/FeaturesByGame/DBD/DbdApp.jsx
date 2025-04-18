@@ -3,6 +3,9 @@ import RotateDbd from "./RotateDbd.jsx";
 import DbdCards from "./DbdCards.jsx";
 import { Link } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import DbdKiller from "./DbdKiller.jsx";
+import "./DbdApp.css";
+import { useRef } from "react";
 
 export default function DbdApp() {
     const [characters, setCharacters] = useState([]);
@@ -11,9 +14,17 @@ export default function DbdApp() {
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [scrollY, setScrollY] = useState(0);
+    const charactersSectionRef = useRef(null);
 
     useEffect(() => {
         fetchCharacters();
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+        
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     async function fetchCharacters() {
@@ -39,8 +50,7 @@ export default function DbdApp() {
             }));
             setCharacters(formattedCharacters);
 
-
-            const responseK = await fetch("https://gamehub-backend-zekj.onrender.com/characters");
+            const responseK = await fetch("https://gamehub-backend-zekj.onrender.com/charactersK");
             const dataK = await responseK.json();
             const formattedCharactersK = dataK.map(killer => ({
                 id: killer.id,
@@ -73,7 +83,6 @@ export default function DbdApp() {
                 }
             }));
             setCharactersK(formattedCharactersK);
-
             setLoading(false);
         } catch (error) {
             console.error("Error fetching characters:", error);
@@ -92,26 +101,34 @@ export default function DbdApp() {
         setSelectedCharacter(null);
     }
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-gray-900">
-                <div className="text-red-600 text-xl">Loading characters from The Entity's realm...</div>
-            </div>
-        );
-    }
-    if (error) { return (<div className="flex justify-center items-center h-screen bg-gray-900"><div className="text-red-600 text-xl">Error: {error}</div></div>); }
+    const opacity = Math.max(1 - scrollY / 200, 0); 
+
+    if (loading) {return ( <div className="flex justify-center items-center h-screen bg-black"> <div className="text-red-600 text-xl animate-pulse">Loading characters from The Entity's realm...</div></div> ); }
+
     return (
-        <section id="characters" className="bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
-            <div className="max-w-7xl mx-auto">
-                <h2 className="text-3xl font-extrabold text-red-600 mb-2 text-center">Dead by Daylight Characters </h2>
-                <p className="text-gray-400 text-center mb-8">Explore the survivors and killers of The Entity's realm </p>
-                <Link to="/"><button type="button" className="mb-5 flex items-center bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
-                    <FaArrowLeftLong />
-                    <span className="ml-3">Home</span>
-                </button></Link>
-                <RotateDbd characters={characters} characterK={charactersK} showCharacterDetails={showCharacterDetails} />
-                {modalVisible && selectedCharacter && (<DbdCards selectedCharacter={selectedCharacter} closeModal={closeModal} />)}
-            </div>
-        </section>
+        <div className="bg-black">
+            <section className="hero-section h-screen w-full flex items-center justify-center snap-start" style={{ opacity }}>
+                <div className="absolute inset-0 bg-[url('https://static.tumblr.com/maopbtg/E9Bmgtoht/splash.png')] opacity-20 mix-blend-overlay"></div>
+                <div className="relative row z-10 text-center">
+                    <h1 className="dbd-title  font-bold text-red-600 mb-4 animate-pulse">Dead by <br /> Daylight</h1>
+                    <img className="dbd-logo " src="dbdL.png" alt="Dead by Daylight logo" />
+                </div>
+            </section>
+            <div ref={charactersSectionRef} className="bg-black py-12 px-4 sm:px-6 lg:px-8  snap-start"></div>
+            <section id="characters"   className="bg-black py-12 px-4 sm:px-6 lg:px-8 min-h-screen snap-start">
+                <div className="max-w-[90%] mx-auto">
+                    <h2 className="text-4xl md:text-6xl font-extrabold text-red-600 mb-10 text-center" > Dead by Daylight </h2>
+                    <p className="text-gray-400 text-center mb-8 text-lg"> Explore the survivors and killers of The Entity's realm</p>
+                    <Link to="/">
+                        <button type="button" className="mb-10 flex items-center bg-gray-800 hover:bg-red-900 text-white px-4 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-red-500/30">
+                            <FaArrowLeftLong /> <span className="ml-3">Home</span>
+                        </button>
+                    </Link>
+                    <RotateDbd characters={characters} showCharacterDetails={showCharacterDetails} />
+                    <DbdKiller killers={charactersK} showKillerDetails={showCharacterDetails} />
+                    {modalVisible && selectedCharacter && (<DbdCards selectedCharacter={selectedCharacter} closeModal={closeModal} />)}
+                </div>
+            </section>
+        </div>
     );
 }

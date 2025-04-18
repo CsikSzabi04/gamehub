@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+@font-face {font-family: 'DeadByDaylight'; src: url('/fonts/deadbydaylight.ttf') format('truetype');}
+.hero-section { height: 100vh; background-color: black; display: flex; justify-content: center; align-items: center;}
+.row { display: flex; align-items: center; justify-content: center; gap: 20px;  flex-wrap: wrap;}
+.dbd-title {font-family: 'DeadByDaylight', sans-serif;font-weight: bolder;font-size:8rem;color: rgb(190, 190, 190);text-shadow: 0 0 20px rgba(109, 109, 109, 0.7);}
+.dbd-logo {width: 30%;height: auto;}
+html {scroll-behavior: smooth; scroll-snap-type: y mandatory;}
+@keyframes scrollIndicator { 0% { transform: translateY(0); opacity: 1; }100% { transform: translateY(3px); opacity: 0.5; }}
+.animate-scrollIndicator { animation: scrollIndicator 1.5s infinite alternate;}
