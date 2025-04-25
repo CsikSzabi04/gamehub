@@ -942,3 +942,12 @@ footer {
   .ads{ width: 30% ;
     font-size: 15px !important;}
 }
+
+.animate-fadeIn {
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
