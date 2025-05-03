@@ -183,6 +183,12 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                                 </motion.button>
                             </Link>
 
+                            <Link to="/review" className="block">
+                                <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" >
+                                    <MdOutlineRateReview className="mr-2" /> Reviews
+                                </motion.button>
+                            </Link>
+
                             {user ? (
                                 <>
                                     <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" onClick={openFavModal}>
