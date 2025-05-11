@@ -57,7 +57,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
           return;
         }
     
-        const favData = { name: selectedGame.name, gameId: selectedGame.id, userId: user.uid };
+        const favData = { name: selectedGame.external, gameId: selectedGame.gameID, userId: user.uid };
         const resp = await fetch("https://gamehub-backend-zekj.onrender.com/addfav", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
