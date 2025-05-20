@@ -17,6 +17,7 @@ import Profile from './pages/Profile.jsx';
 import Terms from './TermsAndPrivacy/Terms.jsx';
 import Privacy from './TermsAndPrivacy/Privacy.jsx';
 import Review from '././Features/Review.jsx';
+import AllReview from '././Features/AllReview.jsx';
 import React from 'react';
 import ReviewsOpen from './Features/ReviewsOpen.jsx';
 import Dbd from './FeaturesByGame/DBD_Movies.jsx';
@@ -47,6 +48,7 @@ export default function App() {
     { path: "/movies", element: <Movie /> },
     { path: "/dbd", element: <DbdApp /> },
     { path: "/review", element: <Review /> },
+    { path: "/allreview/:gameId", element: <AllReview /> },
     { path: "/privacy", element: <Privacy /> },
     { path: "/profile", element: <Profile setUser={setUser} username={username}/> },
     { path: "/login", element: <Login auth={auth} setUser={setUser} component={Login} /> },

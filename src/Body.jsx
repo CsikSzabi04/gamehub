@@ -20,6 +20,7 @@ import StartUp from './Features/StartUp.jsx';
 import ReviewsOpenMain from './Sections/ReviewsOpenMain.jsx';
 import DBD_Movies from './FeaturesByGame/DBD_Movies.jsx';
 
+
 export default function Body() {
     const [allGames, setAllGames] = useState([]);
     const [multiplayerGames, setMultiplayerGames] = useState([]);
@@ -84,6 +85,7 @@ export default function Body() {
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
                     <div className='allSections'>
+                       
                         <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                         <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                         <Free />

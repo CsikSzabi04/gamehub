@@ -268,4 +268,3 @@ Hogyan segíthetsz:
 - Új funkciók javaslata.
 - Dokumentáció fejlesztése.
 - Pull request-ek átnézése.
-

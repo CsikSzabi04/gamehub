@@ -106,7 +106,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4">
           <div className="bg-gray-800 p-2 md:p-3 rounded-lg">
             <p className="text-gray-400 text-xs md:text-sm">Original Price</p>
-            <p className="text-white line-through text-sm md:text-base">${(originalPrice / 1).toFixed(2)}</p>
+            <p className="text-white line-through text-sm md:text-base">${(selectedGame.originalPrice * 1.3).toFixed(2)} </p>
           </div>
           <div className="bg-green-900 p-2 md:p-3 rounded-lg">
             <p className="text-gray-300 text-xs md:text-sm">Discounted Price</p>

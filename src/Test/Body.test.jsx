@@ -36,6 +36,8 @@ describe('StartUp Component', () => {
     render(<StartUp onLoaded={() => { loaded = true; }} />);
   });
 
+
+
 });
 
 /* Review.jsx 
