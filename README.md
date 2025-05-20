@@ -3,7 +3,7 @@
 A **Game Data Hub** egy webalkalmazás, amely lehetővé teszi a felhasználók számára, hogy felfedezzék és felfedezzék a videojátékokat, részletes játékinformációkat tekintsenek meg, és játékokat vásároljanak különböző online boltokból. A platform emellett felhasználói hitelesítést is tartalmaz, amely lehetővé teszi a felhasználók számára a bejelentkezést, kedvenc játékaik kezelését és személyre szabott ajánlásokat kapjanak.
 
 ## Bemutató:
-Az alkalmazást itt érheted el: **[Game Data Hub](https://gamehub.hu/)** <br>
+Az alkalmazást itt érheted el: **[Game Data Hub](https://gamehub.hu/)** <br><br>
 Itt a prezentáció megtekinthető: **[Prezentáció GameDataHub](https://www.canva.com/design/DAGirN-tK6o/X0fcjagcc-oVixcVQAXJvA/edit?utm_content=DAGirN-tK6o&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)**
 
 ---
