@@ -4,6 +4,7 @@ A **Game Data Hub** egy webalkalmazás, amely lehetővé teszi a felhasználók 
 
 ## Bemutató:
 Az alkalmazást itt érheted el: **[Game Data Hub](https://gamehub.hu/)**
+Itt a prezentáció megtekinthető: **[Prezentáció GameDataHub](https://www.canva.com/design/DAGirN-tK6o/X0fcjagcc-oVixcVQAXJvA/edit?utm_content=DAGirN-tK6o&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)**
 
 ---
 
