@@ -97,7 +97,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
 
     return (
         <>
-            <header className="bg-gray-900 text-white shadow-lg sticky top-0 z-20">
+            <header className="bg-gray-900/80 text-white shadow-lg sticky top-0 z-20">
                 <div className="header-container px-4 py-3 place-content-between">
                     <div className="flex items-center justify-between ">
                         <Link to="/" className="flex items-center space-x-2">

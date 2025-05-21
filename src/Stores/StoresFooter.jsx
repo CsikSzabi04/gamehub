@@ -9,7 +9,7 @@ export default function StoresFooter() {
         "Epic Games Store",
         "Gog",
         "Origin",
-        "Direct2Drive"
+        "Direct2Drive",
     ];
 
     useEffect(() => {
@@ -21,22 +21,22 @@ export default function StoresFooter() {
             const response = await fetch("https://gamehub-backend-zekj.onrender.com/stores");
             const data = await response.json();
             const filteredStores = data.filter(store => allowedStores.includes(store.storeName));
-            setStores(filteredStores); 
-           
+            setStores(filteredStores);
+
         } catch (error) {
             console.error("Error fetching stores:", error);
         }
     }
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto">
             <section id="stores-section" className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Main Game Stores </h2>
-                <div id="stores-grid" className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {stores.map(store => ( 
-                        <div key={store.storeID} className="store-card flex flex-col items-center">
-                            <img src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName}  />
-                            <p className="text-lg font-semibold ">{store.storeName}</p>
+                <div id="stores-grid" className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 
+            max-[1000px]:flex max-[1000px]:overflow-x-auto max-[1000px]:gap-4 max-[1000px]:py-4">
+                    {stores.map(store => (
+                        <div key={store.storeID} className="store-card flex flex-col items-center max-[1000px]:flex-shrink-0">
+                            <img src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName} />
+                            <p className="text-lg font-semibold">{store.storeName}</p>
                         </div>
                     ))}
                 </div>

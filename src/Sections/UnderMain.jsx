@@ -23,7 +23,7 @@ export default function MainSection({ allGames, showGameDetails }) {
                                                 <h3 className="text-sm font-semibold text-white truncate">{game.name}</h3>
                                                 <div className="flex justify-between text-xs text-gray-300 mt-1">
                                                     <span>{game.released}</span>
-                                                    <span className="bg-blue-600 px-1.5 py-0.5 rounded-full">
+                                                    <span className="bg-blue-900/50 px-1.5 py-0.5 rounded-full">
                                                         {game.rating.toFixed(1)}/5
                                                     </span>
                                                 </div>
@@ -39,7 +39,7 @@ export default function MainSection({ allGames, showGameDetails }) {
                                         <h3 className="text-xl font-bold text-white">{randomGames[0].name}</h3>
                                         <div className="flex justify-between text-sm text-gray-300 mt-1">
                                             <span>Released: {randomGames[0].released}</span>
-                                            <span className="bg-blue-600 px-2 py-1 rounded-full text-white">
+                                            <span className="bg-blue-900/50 px-2 py-1 rounded-full text-white">
                                                 {randomGames[0].rating.toFixed(1)}/5
                                             </span>
                                         </div>

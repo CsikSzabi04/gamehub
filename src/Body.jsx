@@ -54,7 +54,11 @@ export default function Body() {
     useEffect(() => {
         if (allGames.length > 0) {
             categorizeGames();
-        } setStoreVisible(false)
+        } setStoreVisible(false);
+         window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }, [allGames]);
 
 
@@ -76,17 +80,15 @@ export default function Body() {
         setSelectedGame(null);
     }
 
-    
-
     return (
-        <div className='bg-gray-900'>
+        <div>
             {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && componentsLoaded &&( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
-                    <div className='allSections'>
-                       
+                    <div className='allSections'>      
                         <MainSection allGames={allGames} showGameDetails={showGameDetails} />
+                         <StoresFooter />
                         <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
                         <Free />
                         <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
@@ -101,7 +103,7 @@ export default function Body() {
                         <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
                         <DBD_Movies />
                         <GamingNews />
-                        <StoresFooter />
+                       
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
                     </div>
                     <Footer />
