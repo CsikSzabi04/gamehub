@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../Features/UserContext.jsx'; import { IoAddCircleOutline } from "react-icons/io5"; import { MdDeleteForever } from "react-icons/md";
-
-
+import { UserContext } from '../Features/UserContext.jsx';
+import { IoAddCircleOutline } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible }) {
   const { user } = useContext(UserContext);
@@ -34,21 +34,24 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
     if (user) {
       getFavok();
     }
-  }, [user,fav]);
-
+  }, [user, fav]);
 
   useEffect(() => {
     if (favok.length >= 0 && selectedGame) {
-      for(let o of favok){
-        if(o.gameId != selectedGame.gameID){
-          setFav(false)
-        }else{
-          setFav(true)
-        }
-      }
+      const isFavorite = favok.some(o => o.gameId === selectedGame.gameID);
+      setFav(isFavorite);
     }
-  }, [selectedGame,fav]);
+  }, [selectedGame, favok]);
 
+  const handleAddFavorite = (e) => {
+    e.stopPropagation();
+    addFav();
+  };
+
+  const handleRemoveFavorite = (e) => {
+    e.stopPropagation();
+    delFav();
+  };
 
   async function addFav() {
     if (!user) {
@@ -73,7 +76,6 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
         setFav(true);
         setFavok([...favok, favData]);
         setError('');
-        console.log(fav);
       } else {
         setError("Failed to add to favorites.");
       }
@@ -92,7 +94,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
       });
 
       if (resp.ok) {
-        setFavok(favok.filter(favItem => favItem.gameId != selectedGame.gameID));
+        setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.gameID));
         setFav(false);
         setError('');
       } else {
@@ -107,24 +109,80 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
   if (!selectedGame) return null;
 
   return (
-    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flex z-50" id="game-modal">
-      <div className="modal-content p-10 bg-gray-900 rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] md:max-h-[80%] relative  ">
-        <div className='flex justify-between items-start'>
-          <div className='inp flex '>
-            <div>{fav ? (<button className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full text-lg md:text-xl" onClick={delFav}> <MdDeleteForever /></button>) : (<button className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full text-lg md:text-xl" onClick={addFav} ><IoAddCircleOutline /> </button>)}</div>
-            <button className="text-white text-2xl md:text-3xl font-bold hover:text-gray-300 p-1" onClick={closeModal} > &times;</button>
+    <div 
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={closeModal}
+    >
+      <div 
+        className="bg-gray-900 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative border border-gray-700"
+        onClick={(e) => e.stopPropagation()}
+      >
+
+        <div className="sticky top-0 bg-gray-900/80 backdrop-blur-sm p-4 border-b border-gray-800 flex justify-between items-center z-10">
+          <h2 className="text-xl font-bold text-white line-clamp-1 pr-4">
+            {selectedGame.external}
+          </h2>
+          <button 
+            onClick={closeModal}
+            className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800 transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="relative aspect-video w-full">
+          <img
+            src={selectedGame.thumb || `https://via.placeholder.com/800x450?text=${encodeURIComponent(selectedGame.external)}`}
+            alt={selectedGame.external}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute bottom-4 right-4 bg-green-600 text-white font-bold px-3 py-1 rounded-md text-sm">
+            ${selectedGame.cheapest}
           </div>
         </div>
-        {error && <p className="error text-red-500 text-sm mt-2 p-5">{error}</p>}
-        <div className="mt-4">
-          <img src={selectedGame.thumb || `https://via.placeholder.com/400x225?text=${encodeURIComponent(selectedGame.external)}`} alt={selectedGame.external} className="rounded-lg mb-4 w-full h-48 sm:h-64 object-cover" />
-          <h2 className="text-2xl sm:text-3xl font-bold mb-2">{selectedGame.external}</h2>
-          <div className="space-y-2">
-            <p className="text-sm sm:text-base">
-              <span className="font-semibold">Price:</span> ${selectedGame.cheapest}
-            </p>
-            <a href={`https://www.cheapshark.com/redirect?dealID=${selectedGame.cheapestDealID}`} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md" >View Deal on CheapShark </a>
+
+        <div className="p-6 space-y-4">
+          <div>
+            {fav ? (
+              <button 
+                onClick={handleRemoveFavorite}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors justify-center"
+              >
+                <MdDeleteForever className="text-lg" />
+                Remove from Favorites
+              </button>
+            ) : (
+              <button 
+                onClick={handleAddFavorite}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors  justify-center"
+              >
+                <IoAddCircleOutline className="text-lg" />
+                Add to Favorites
+              </button>
+            )}
           </div>
+
+          {error && (
+            <div className="p-3 bg-red-900/50 text-red-200 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <a
+            href={`https://rawg.io/games/${selectedGame.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full inline-flex items-center justify-center bg-blue-900 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
+          >
+            View Details
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>

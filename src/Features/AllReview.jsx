@@ -239,7 +239,7 @@ export default function ReviewsOpen() {
             <div className="min-h-screen bg-cover bg-center text-white p-4 sm:p-8" style={{ backgroundImage: `url(${game.background_image})` }}>
                 <div className="max-w-6xl mx-auto">
 
-                    <div className="bg-gray-800 rounded-lg p-6 mb-8">
+                    <div className="bg-gray-900 bg-opacity-90 rounded-lg p-6 mb-8">
                         <div className="flex flex-col md:flex-wrap gap-6">
                             <div className="flex flex-col md:flex-row gap-6">
                                 <div className="md:w-1/3">
@@ -308,7 +308,7 @@ export default function ReviewsOpen() {
                         </div>
                     </div>
 
-                    <div className="bg-gray-800 rounded-lg p-6 ">
+                    <div className="bg-gray-900 bg-opacity-90 rounded-lg p-6 ">
                         <h2 className="text-2xl font-bold mb-6">Reviews</h2>
                         {user && (
                             <div className="mb-8 bg-gray-700 p-4 rounded-lg">
