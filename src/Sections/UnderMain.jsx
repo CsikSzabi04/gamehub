@@ -18,7 +18,7 @@ export default function MainSection({ allGames, showGameDetails }) {
                                 {randomGames.slice(1).map((game) => (
                                     <div key={game.id} className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group flex-1" onClick={() => showGameDetails(game)} >
                                         <div className="relative h-24 w-full">
-                                            <img src={game.background_image} alt={game.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                            <img  loading="lazy"  src={game.background_image} alt={game.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
                                                 <h3 className="text-sm font-semibold text-white truncate">{game.name}</h3>
                                                 <div className="flex justify-between text-xs text-gray-300 mt-1">
@@ -34,7 +34,7 @@ export default function MainSection({ allGames, showGameDetails }) {
                             </div>
                             <div key={randomGames[0].id} className="md:col-span-2 rounded-lg overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group" onClick={() => showGameDetails(randomGames[0])}>
                                 <div className="relative h-64 md:h-80 w-full">
-                                    <img src={randomGames[0].background_image} alt={randomGames[0].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <img  loading="lazy"  src={randomGames[0].background_image} alt={randomGames[0].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                         <h3 className="text-xl font-bold text-white">{randomGames[0].name}</h3>
                                         <div className="flex justify-between text-sm text-gray-300 mt-1">

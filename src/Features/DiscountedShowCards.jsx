@@ -101,7 +101,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
           <button  className="text-white text-2xl md:text-3xl font-bold hover:text-gray-300 p-1" onClick={closeModal} > &times;</button>
         </div>
         {error && <p className="error text-red-500 text-sm mb-4 text-center">{error}</p>}
-        <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 w-full h-48 md:h-64 object-cover"/>
+        <img  loading="lazy" src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 w-full h-48 md:h-64 object-cover"/>
         <h2 className="text-xl md:text-2xl font-bold mb-2 text-white text-center">{selectedGame.name}</h2>
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4">
           <div className="bg-gray-800 p-2 md:p-3 rounded-lg">

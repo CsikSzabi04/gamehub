@@ -46,7 +46,7 @@ export default function ReviewsOpenMain({ allGames, showGameDetails }) {
                     <div key={game.id} className={`bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${ index == 0 ? 'xs:col-span-2 md:col-span-1 lg:col-span-2 lg:row-span-2' : '' }`}>
                         {index == 0 ? (
                             <div className="relative h-48 sm:h-56 md:h-64">
-                                <img src={game.background_image} alt={game.name} className="w-full h-full object-cover cursor-pointer hover:scale-104 transition-transform duration-300" onClick={() => showGameDetails(game)} />
+                                <img  loading="lazy"  src={game.background_image} alt={game.name} className="w-full h-full object-cover cursor-pointer hover:scale-104 transition-transform duration-300" onClick={() => showGameDetails(game)} />
                                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-3 sm:p-4">
                                     <h3 className="text-lg sm:text-xl font-bold text-white ">{game.name}</h3>
                                     <div className="flex items-center mt-1 sm:mt-2">

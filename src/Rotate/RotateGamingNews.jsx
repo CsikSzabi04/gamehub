@@ -17,7 +17,7 @@ export default function RotateGamingNews({ articles, name }) {
                     <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 320}px)` }}>
                         {articles.map((article) => (
                             <div key={article.url} className="article-card flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mr-6">
-                               <a href={article.url} target="_blank"><img src={article.urlToImage} alt={article.title} className="object-cover rounded-md mb-4" /></a> 
+                               <a href={article.url} target="_blank"><img   loading="lazy"  src={article.urlToImage} alt={article.title} className="object-cover rounded-md mb-4" /></a> 
                                 <div className="article-details">
                                     <h3 className="text-lg font-bold">{article.title}</h3>
                                     <div className="mt-[5%]">

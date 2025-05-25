@@ -55,7 +55,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
                                 {games.concat(games).map((x, index) => (
                                     <div key={`${x.id}-${index}`} className="game-card carousel-item w-[220px] sm:w-[260px] md:w-[300px] flex-shrink-0 cursor-pointer transform hover:scale-105 transition-all duration-300 group/card" onClick={() => showGameDetails(x)}>
                                         <div className="relative overflow-hidden rounded-md md:rounded-lg h-32 sm:h-36 md:h-40">
-                                            <img src={x.background_image} alt={x.name} className="game-image w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                                            <img  loading="lazy"  src={x.background_image} alt={x.name} className="game-image w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80"></div>
                                             <Link to={`/allreview/${x.id}`} className="absolute bottom-3 right-3 bg-gray-700/90 text-white p-1.5 sm:p-2 rounded-full transition-all duration-300 flex items-center justify-center shadow-lg opacity-0 group-hover/card:opacity-100 transform translate-y-2 group-hover/card:translate-y-0 hover:scale-110 hover:shadow-blue-500/30" onClick={(e) => e.stopPropagation()}><FaExternalLinkAlt className="text-xs text-white" /></Link>
                                         </div>

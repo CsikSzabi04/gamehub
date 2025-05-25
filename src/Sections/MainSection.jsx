@@ -30,7 +30,7 @@ export default function MainSection({ allGames, showGameDetails }) {
           {randomGames.length > 0 ? (
             <>
               <div key={randomGames[0].id} className="md:col-span-2 md:row-span-1 hover:shadow-lg mr-5 transition transform cursor-pointer  bg-[url(${randomGames[0].background_image})] relative group" onClick={() => showGameDetails(randomGames[currentFeaturedIndex])}>
-                <img src={randomGames[currentFeaturedIndex].background_image} alt={randomGames[0].name} className="min-w-[100%] min-h-[75%] max-w-[100%] max-h-[75%] object-cover rounded-md " />
+                <img src={randomGames[currentFeaturedIndex].background_image} alt={randomGames[0].name} className="min-w-[100%] min-h-[75%] max-w-[100%] max-h-[75%] object-cover rounded-md " loading="lazy" />
                 <h3 className="text-md font-bold truncate ">{randomGames[currentFeaturedIndex].name}</h3>
                 <p className="text-xs text-gray-400">Released: {randomGames[currentFeaturedIndex].released}</p>
                 <p className="text-xs text-gray-400">Rating: {randomGames[currentFeaturedIndex].rating}/5</p>
@@ -39,7 +39,7 @@ export default function MainSection({ allGames, showGameDetails }) {
               <div className="md:col-span-1 flex flex-col gap-2">
                 {randomGames.map((game, index) => (index !== currentFeaturedIndex && (
                   <div key={game.id} className=" hover:shadow-lg hover:scale-105 transition transform cursor-pointer flex flex-col bg-[url(${game.background_image})] relative group" onClick={() => showGameDetails(game)}>
-                    <img src={game.background_image} alt={game.name} className="w-full h-24 object-cover rounded-md" />
+                    <img loading="lazy"   src={game.background_image} alt={game.name} className="w-full h-24 object-cover rounded-md" />
                     <div className="game-details p-1">
                       <h3 className="text-sm font-bold truncate">{game.name}</h3>
                       <p className="text-xs text-gray-400">Released: {game.released}</p>

@@ -59,7 +59,7 @@ export default function RotateFree({ games, showGameDetails, name }) {
                             <div key={game.id} className="game-card carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
                                 <div className="bg-gray-800 p-4 rounded-md shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col cursor-pointer"onClick={() => showGameDetails(game)} >
                                     <div className="relative mb-4 overflow-hidden rounded-md">
-                                        <img src={game.thumbnail} alt={game.title} className="h-48 w-full object-cover hover:scale-105 transition-transform duration-500" />
+                                        <img  loading="lazy"  src={game.thumbnail} alt={game.title} className="h-48 w-full object-cover hover:scale-105 transition-transform duration-500" />
                                     </div>
                                     <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{game.title}</h3>
                                     <p className="text-sm text-gray-400 mb-4 line-clamp-3">{game.short_description}</p>

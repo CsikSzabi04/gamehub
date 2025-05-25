@@ -62,7 +62,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
                     <div className="carousel flex space-x-4" ref={carouselRef} style={{ width: `${games.length * 2 * itemWidth}px` }}>
                         {games.concat(games).map((game, index) => (
                           <div key={`${game.id}-${index}`} className="game-carda carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between cursor-pointer transform hover:scale-105 transition-all duration-300 group/card" style={{ width: `${itemWidth}px` }} onClick={() => showGameDetails(game)}>                                <div className="relative overflow-hidden rounded-md md:rounded-lg h-32 sm:h-36 md:h-40">
-                                    <img src={game.background_image} alt={game.name} className="game-image w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                                    <img  loading="lazy"  src={game.background_image} alt={game.name} className="game-image w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80"></div>
                                 </div>
                                 <div className="game-details p-2 sm:p-3 md:p-4 bg-gray-800/80 rounded-b-md md:rounded-b-lg flex flex-col justify-between min-h-[120px]">

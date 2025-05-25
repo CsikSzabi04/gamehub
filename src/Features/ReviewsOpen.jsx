@@ -236,7 +236,7 @@ export default function ReviewsOpen() {
                         <div className="flex flex-col md:flex-wrap gap-6">
                             <div className="flex flex-col md:flex-row gap-6">
                                 <div className="md:w-1/3">
-                                    <img src={game.background_image} alt={game.name} className="w-full h-auto rounded-lg object-cover" />
+                                    <img  loading="lazy" src={game.background_image} alt={game.name} className="w-full h-auto rounded-lg object-cover" />
                                     <Link to="/" className="group mb-6 mt-10 inline-flex items-center px-5 py-3 bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 transform-gpu">
                                         <FaArrowLeftLong className="mr-3 transition-transform duration-300 group-hover:-translate-x-1" />
                                         <span className="relative overflow-hidden">

@@ -82,7 +82,7 @@ export default function Giveaways() {
                     <div key={giveaway.id} className="flex-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 p-1 sm:p-2 min-w-[50%] sm:min-w-[33.33%] md:min-w-[25%] lg:min-w-[20%]" >
                       <div className="bg-gray-800 p-2 sm:p-3 rounded-md shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer h-full hover:-translate-y-1"onClick={() => showGiveawayDetails(giveaway)} >
                         <div className="relative mb-2 sm:mb-3 h-20 sm:h-28 md:h-32 lg:h-36 overflow-hidden rounded-md">
-                          <img src={giveaway.thumbnail} alt={giveaway.title} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
+                          <img  loading="lazy"  src={giveaway.thumbnail} alt={giveaway.title} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
                         </div>
                         <h3 className="text-xs sm:text-sm font-bold mb-1 line-clamp-1">{giveaway.title}</h3>
                         <p className="text-xxs sm:text-xs text-gray-400 mb-1 sm:mb-2 line-clamp-2">{giveaway.description}</p>

@@ -35,7 +35,7 @@ export default function StoresFooter() {
             max-[1000px]:flex max-[1000px]:overflow-x-auto max-[1000px]:gap-4 max-[1000px]:py-4">
                     {stores.map(store => (
                         <div key={store.storeID} className="store-card flex flex-col items-center max-[1000px]:flex-shrink-0">
-                            <img src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName} />
+                            <img  loading="lazy"  src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName} />
                             <p className="text-lg font-semibold">{store.storeName}</p>
                         </div>
                     ))}

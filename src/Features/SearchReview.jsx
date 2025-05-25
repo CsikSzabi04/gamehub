@@ -125,7 +125,7 @@ export default function SearchReview() {
                     <div className="bg-gray-900 bg-opacity-90 backdrop-blur-md rounded-2xl p-6 md:p-10 mb-10 shadow-xl">
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="md:w-1/3">
-                                <img src={game.background_image} alt={game.name} className="w-full rounded-2xl object-cover shadow-lg" />
+                                <img  loading="lazy" src={game.background_image} alt={game.name} className="w-full rounded-2xl object-cover shadow-lg" />
                                 <Link to="/" className="group mt-6 inline-flex items-center px-5 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl shadow-md transition-all duration-300 hover:-translate-y-0.5 transform-gpu">
                                     <FaArrowLeftLong className="mr-3 transition-transform duration-300 group-hover:-translate-x-1" />
                                     <span className="relative overflow-hidden">

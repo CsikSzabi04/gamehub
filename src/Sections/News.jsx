@@ -71,7 +71,7 @@ export default function News() {
                 <div className="bg-gray-800 p-4 rounded-md shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
                   <div className="relative mb-4 overflow-hidden rounded-md">
                     {news.thumbnail && (
-                      <img src={news.thumbnail} alt={news.title} className="h-48 w-full object-cover hover:scale-105 transition-transform duration-500" />
+                      <img  loading="lazy"  src={news.thumbnail} alt={news.title} className="h-48 w-full object-cover hover:scale-105 transition-transform duration-500" />
                     )}
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{news.title}</h3>

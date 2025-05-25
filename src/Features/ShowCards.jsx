@@ -93,7 +93,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
           <button className="text-white text-2xl md:text-3xl font-bold hover:text-gray-300 p-1" onClick={closeModal} > &times;</button>
         </div>
         {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
-        <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80" />
+        <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80"  loading="lazy" />
         <h2 className="text-2xl sm:text-3xl font-bold mb-4">{selectedGame.name}</h2>
         <p className="text-sm sm:text-base">Release Date: {selectedGame.released}</p>
         <p className="text-sm sm:text-base">Rating: {selectedGame.rating}/5</p>

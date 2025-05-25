@@ -226,7 +226,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                             <div className="grid grid-cols-2 gap-4">
                                 {store.map((x, i) => (
                                     <motion.div key={i} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="bg-gray-700 p-4 rounded-lg cursor-pointer text-center" onClick={() => openStoreUrl(x.storeName)} >
-                                        <img src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="h-12 mx-auto mb-2 object-contain" />
+                                        <img   loading="lazy"  src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="h-12 mx-auto mb-2 object-contain" />
                                         <p className="text-white font-medium">{x.storeName}</p>
                                     </motion.div>
                                 ))}
