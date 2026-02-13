@@ -1,7 +1,36 @@
+/* Features Page - Modern Styles */
 
-.tfP{
+.tfP {
     margin-top: 10px;
 }
-#tf{
+
+#tf {
     color: white;
+}
+
+/* Custom scrollbar for search results */
+.max-h-48::-webkit-scrollbar {
+    width: 6px;
+}
+
+.max-h-48::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.max-h-48::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 3px;
+}
+
+.max-h-48::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.5);
+}
+
+/* Line clamp for review text */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

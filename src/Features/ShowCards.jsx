@@ -1,7 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../Features/UserContext.jsx';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoAddCircleOutline } from "react-icons/io5";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdClose, MdStar, MdCalendarToday, MdGamepad, MdStore, MdRateReview } from "react-icons/md";
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   const { user } = useContext(UserContext);
@@ -86,28 +88,160 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   if (!selectedGame) return null;
 
   return (
-    <div className="modal show fixed inset-0 bg-black bg-opacity-75 flexz-50 " id="game-modal">
-      <div className="modal-content fr rounded-lg sm:max-w-lg mx-4 sm:mx-0 sm:p-8 overflow-y-auto max-h-screen sm:max-h-[80vh] md:max-h-[80%] ">
-        <div className='flex justify-between items-start mb-4'>
-          <div>{fav ? (<button className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full text-lg md:text-xl" onClick={delFav}> <MdDeleteForever /></button>) : (<button className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full text-lg md:text-xl" onClick={addFav} ><IoAddCircleOutline /> </button>)}</div>
-          <button className="text-white text-2xl md:text-3xl font-bold hover:text-gray-300 p-1" onClick={closeModal} > &times;</button>
-        </div>
-        {error && <> <br /><br /> <p className="error text-red-500 text-sm mt-2">{error}</p></>}
-        <img src={selectedGame.background_image} alt={selectedGame.name} className="rounded-lg mb-4 mt-8 object-cover w-full sm:h-80"  loading="lazy" />
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">{selectedGame.name}</h2>
-        <p className="text-sm sm:text-base">Release Date: {selectedGame.released}</p>
-        <p className="text-sm sm:text-base">Rating: {selectedGame.rating}/5</p>
-        <p className="text-sm sm:text-base">Stores: {selectedGame.stores ? selectedGame.stores.map(store => store.store.name).join(", ") : "?"}</p>
-        <p className="text-sm sm:text-base">Platforms: {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
-        <div>
-          <span className="font-medium">Genres:</span>
-          <div className="flex flex-wrap gap-1 mt-1">
-            {selectedGame.tags?.map((g, i) => (
-              <span key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{g.name}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <AnimatePresence>
+      {modalVisible && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={closeModal}
+        >
+          <motion.div 
+            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button 
+              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+              onClick={closeModal}
+            >
+              <MdClose className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Hero Image */}
+            <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl">
+              <img 
+                src={selectedGame.background_image} 
+                alt={selectedGame.name} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+              
+              {/* Rating Badge */}
+              {selectedGame.rating && (
+                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm font-bold flex items-center gap-1">
+                  <MdStar className="text-sm" />
+                  {selectedGame.rating}/5
+                </div>
+              )}
+            </div>
+
+            {/* Content */}
+            <div className="p-6 md:p-8 -mt-12 relative">
+              {/* Title */}
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">{selectedGame.name}</h2>
+
+              {/* Meta Info Grid */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                  <div className="p-2 rounded-lg bg-violet-500/20 text-violet-400">
+                    <MdCalendarToday className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Release Date</p>
+                    <p className="text-sm text-white font-medium">{selectedGame.released || 'TBA'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                  <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
+                    <MdGamepad className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Platforms</p>
+                    <p className="text-sm text-white font-medium truncate">
+                      {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stores */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
+                  <MdStore className="w-4 h-4" />
+                  Available Stores
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedGame.stores ? (
+                    selectedGame.stores.map((store, i) => (
+                      <span 
+                        key={i} 
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm"
+                      >
+                        {store.store.name}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500 text-sm">No stores available</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Genres/Tags */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-400 mb-3">Genres & Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedGame.tags?.slice(0, 8).map((g, i) => (
+                    <span 
+                      key={i} 
+                      className="px-3 py-1.5 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm"
+                    >
+                      {g.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                  {error}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
+                {/* Reviews Button */}
+                <Link
+                  to={`/allreview/${selectedGame.id}`}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all"
+                >
+                  <MdRateReview className="w-5 h-5" />
+                  Reviews
+                </Link>
+
+                {fav ? (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={delFav}
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-semibold hover:bg-red-500/30 transition-all"
+                  >
+                    <MdDeleteForever className="w-5 h-5" />
+                    Remove
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={addFav}
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
+                  >
+                    <IoAddCircleOutline className="w-5 h-5" />
+                    Add to Favorites
+                  </motion.button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

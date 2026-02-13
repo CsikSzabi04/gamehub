@@ -10,7 +10,7 @@ export default function RotateGamingNews({ articles, name }) {
     }, [articles]);
 
     return (
-        <div className="sm:p-10 rounded-lg">
+        <div className="sm:p-10 rounded-lg" data-aos="fade-up">
             <section id="gaming-news" className="mb-2 p-6 ">
                 <h2 className="text-2xl font-semibold mb-4">{name} 📰</h2>
                 <div className="carousel-container overflow-hidden relative">

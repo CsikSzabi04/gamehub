@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import '../body.css';
-import { FaChevronRight } from "react-icons/fa6";
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaChevronRight, FaAngleLeft } from "react-icons/fa6";
+import { FaExternalLinkAlt, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import { motion } from 'framer-motion';
 
 export default function Rotate({ games, showGameDetails, name, intervalTimeA, k }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,23 +17,24 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
         const gamesToShow = [...games, ...games];
 
         const carousel = carouselRef.current;
-        const totalItemsToShow = gamesToShow.length;
-
+        
         const rotateInterval = setInterval(() => {
             setCurrentIndex(prevIndex => {
                 const newIndex = (prevIndex + 2) % totalItems;
-                gsap.to(carousel, {
-                    x: -newIndex * k,
-                    duration: 1.5,
-                    ease: "power2.inOut",
-                    overwrite: true
-                });
+                if (carousel) {
+                    gsap.to(carousel, {
+                        x: -newIndex * k,
+                        duration: 1.5,
+                        ease: "power2.inOut",
+                        overwrite: true
+                    });
+                }
                 return newIndex;
             });
         }, intervalTime);
 
         return () => clearInterval(rotateInterval);
-    }, [games]);
+    }, [games, intervalTimeA, k]);
 
     const nextItem = () => {
         setCurrentIndex(prevIndex => (prevIndex + 1) % games.length);
@@ -45,35 +45,100 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
     };
 
     return (
-        <div className="relative group" >
-            <section id="multiplayer-games" className="mb-8 md:mb-12 relative px-2 sm:px-0">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-white">{name}</h2>
-                <div className="overflow-hidden relative rounded-lg md:rounded-xl">
-                    <div className="flex space-x-3 md:space-x-4">
-                        <div className="overflow-hidden relative w-full">
-                            <div className="flex transition-transform duration-300 ease-out"  ref={carouselRef} style={{ transform: `translateX(-${currentIndex * (window.innerWidth < 640 ? 240 : 320)}px)` }}>
-                                {games.concat(games).map((x, index) => (
-                                    <div key={`${x.id}-${index}`} className="game-card carousel-item w-[220px] sm:w-[260px] md:w-[300px] flex-shrink-0 cursor-pointer transform hover:scale-105 transition-all duration-300 group/card" onClick={() => showGameDetails(x)}>
-                                        <div className="relative overflow-hidden rounded-md md:rounded-lg h-32 sm:h-36 md:h-40">
-                                            <img  loading="lazy"  src={x.background_image} alt={x.name} className="game-image w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80"></div>
-                                            <Link to={`/allreview/${x.id}`} className="absolute bottom-3 right-3 bg-gray-700/90 text-white p-1.5 sm:p-2 rounded-full transition-all duration-300 flex items-center justify-center shadow-lg opacity-0 group-hover/card:opacity-100 transform translate-y-2 group-hover/card:translate-y-0 hover:scale-110 hover:shadow-blue-500/30" onClick={(e) => e.stopPropagation()}><FaExternalLinkAlt className="text-xs text-white" /></Link>
+        <div className="relative group mb-12">
+            {/* Section Header */}
+            <div className="flex items-center justify-between mb-6 px-2">
+                <div className="relative">
+                    <h2 className="text-xl md:text-2xl font-bold text-white">{name}</h2>
+                    <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full"></div>
+                </div>
+            </div>
+
+            {/* Carousel Container */}
+            <div className="relative overflow-hidden rounded-2xl">
+                <div className="overflow-hidden relative">
+                    <div 
+                        className="flex gap-4 transition-transform duration-500 ease-out" 
+                        ref={carouselRef} 
+                        style={{ transform: `translateX(-${currentIndex * (window.innerWidth < 640 ? 240 : 320)}px)` }}
+                    >
+                        {games.concat(games).map((x, index) => (
+                            <motion.div
+                                key={`${x.id}-${index}`}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                                whileHover={{ y: -8 }}
+                                onClick={() => showGameDetails(x)}
+                                className="game-card carousel-item w-[220px] sm:w-[260px] md:w-[300px] flex-shrink-0 cursor-pointer bg-white/5 border border-white/5 hover:border-violet-500/40 transition-all duration-300 rounded-2xl overflow-hidden"
+                            >
+                                {/* Image Container */}
+                                <div className="relative overflow-hidden aspect-[16/10]">
+                                    <img
+                                        loading="lazy"
+                                        src={x.background_image}
+                                        alt={x.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent opacity-80"></div>
+                                    
+                                    {/* Rating Badge */}
+                                    {x.rating && (
+                                        <div className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center gap-1">
+                                            <FaStar className="text-[10px]" />
+                                            {x.rating}
                                         </div>
-                                        <div className="game-details p-2 sm:p-3 md:p-4  rounded-b-md md:rounded-b-lg">
-                                            <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 sm:mb-2 text-white line-clamp-1">{x.name}</h3>
-                                            <p className="text-xs sm:text-sm text-gray-300">Released: {x.released}</p>
-                                            <p className="text-xs sm:text-sm text-gray-300">Rating: {x.rating}/5</p>
-                                        </div>
+                                    )}
+                                    
+                                    {/* External Link */}
+                                    <Link 
+                                        to={`/allreview/${x.id}`}
+                                        className="absolute top-3 left-3 z-20 p-2 rounded-lg bg-black/60 hover:bg-violet-600 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <FaExternalLinkAlt className="w-3 h-3 text-white" />
+                                    </Link>
+                                </div>
+
+                                {/* Content */}
+                                <div className="p-4">
+                                    <h3 className="text-white font-semibold text-sm md:text-base truncate mb-2">
+                                        {x.name}
+                                    </h3>
+                                    <div className="flex items-center justify-between text-xs text-gray-500">
+                                        <span className="flex items-center gap-1">
+                                            📅 {x.released || 'TBA'}
+                                        </span>
+                                        {x.genres?.[0] && (
+                                            <span className="px-2 py-0.5 rounded bg-violet-500/10 border border-violet-500/20 text-violet-400">
+                                                {x.genres[0].name}
+                                            </span>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
+                                </div>
+
+                                {/* Bottom Accent */}
+                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
-            </section>
+            </div>
+
+            {/* Navigation Controls */}
             <div className="controls opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button onClick={prevItem} className="absolute left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-2 sm:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10"><FaAngleLeft className="text-lg sm:text-xl" /></button>
-                <button onClick={nextItem} className="absolute right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-2 sm:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10"><FaChevronRight className="text-lg sm:text-xl" /></button>
+                <button 
+                    onClick={prevItem} 
+                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                >
+                    <FaAngleLeft className="text-xl" />
+                </button>
+                <button 
+                    onClick={nextItem} 
+                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                >
+                    <FaChevronRight className="text-xl" />
+                </button>
             </div>
         </div>
     );

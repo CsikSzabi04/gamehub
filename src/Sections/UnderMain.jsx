@@ -8,7 +8,7 @@ export default function MainSection({ allGames, showGameDetails }) {
     }, [allGames]);
 
     return (
-        <div className="container mx-auto bg-gray-900 p-4 mt-10 mb-10">
+        <div className="container mx-auto bg-gray-900 p-4 mt-10 mb-10" data-aos="fade-up">
             <section id="featured-games" className="mb-8">
                 <h2 className="text-2xl font-bold text-white mb-4">Featured Games</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

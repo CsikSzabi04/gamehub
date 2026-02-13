@@ -87,22 +87,54 @@ export default function Body() {
             {searchTrue == false ? (
                 <div className="main-content flex h-screen ">
                     <div className='allSections'>      
-                        <MainSection allGames={allGames} showGameDetails={showGameDetails} />
-                         <StoresFooter />
-                        <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
-                        <Free />
-                        <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
-                        <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
-                        <Discounted />
-                        <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
-                        <Mobile />
-                        <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
-                        <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
-                        <div id='news'><News /></div>
-                        <Loot />
-                        <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
-                        <DBD_Movies />
-                        <GamingNews />
+                        <div data-aos="fade-up" data-aos-duration="1000">
+                            <MainSection allGames={allGames} showGameDetails={showGameDetails} />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+                            <StoresFooter />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                            <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                            <Free />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                            <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
+                            <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+                            <Discounted />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="700">
+                            <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
+                            <Mobile />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="900">
+                            <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1000">
+                            <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
+                        </div>
+                        <div id='news' data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1100">
+                            <News />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1200">
+                            <Loot />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1300">
+                            <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1400">
+                            <DBD_Movies />
+                        </div>
+                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1500">
+                            <GamingNews />
+                        </div>
                        
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
                     </div>

@@ -64,7 +64,7 @@ export default function Giveaways() {
     if (!giveaways.length) return <div className="text-center py-8">Loading giveaways...</div>;
 
     return (
-    <div className="bg-gray-600/20 rounded-lg mt-4 sm:mt-8 lg:mt-12 p-4 sm:p-6 lg:p-10" >
+    <div className="bg-gray-600/20 rounded-lg mt-4 sm:mt-8 lg:mt-12 p-4 sm:p-6 lg:p-10" data-aos="fade-up">
         <section className="mb-6 sm:mb-8 px-2 sm:px-4 relative">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">Loot 💰</h2>
           

@@ -55,7 +55,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
     };
 
     return (
-        <div className="relative">
+        <div className="relative" data-aos="fade-up">
             <section id="free-games" className="mb-8 s">
                 <h2 className="text-2xl font-semibold mb-4">{name} 💸</h2>
                 <div className="carousel-container overflow-hidden relative">

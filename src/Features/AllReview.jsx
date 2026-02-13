@@ -3,7 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../Features/UserContext.jsx';
 import Header from '../Header.jsx';
 import Footer from '../Footer.jsx';
-import { FaArrowLeftLong } from 'react-icons/fa6';
+import { FaArrowLeft, FaStar, FaHeart, FaCalendar, FaGamepad, FaPen } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 export default function ReviewsOpen() {
     const { gameId } = useParams();
@@ -130,7 +131,7 @@ export default function ReviewsOpen() {
     }
 
     async function submitReview() {
-        if (!newReview || rating == 0) {
+        if (!newReview || rating === 0) {
             setError("Please write a review and select a rating");
             return;
         }
@@ -169,8 +170,12 @@ export default function ReviewsOpen() {
         return (
             <>
                 <Header />
-                <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-                    <div className="text-white">Loading game details...</div>
+                <div className="min-h-screen bg-[#030712] flex items-center justify-center">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full"
+                    />
                 </div>
                 <Footer />
             </>
@@ -181,8 +186,8 @@ export default function ReviewsOpen() {
         return (
             <>
                 <Header />
-                <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-                    <div className="text-white">{error}</div>
+                <div className="min-h-screen bg-[#030712] flex items-center justify-center">
+                    <p className="text-white">{error}</p>
                 </div>
                 <Footer />
             </>
@@ -193,8 +198,8 @@ export default function ReviewsOpen() {
         return (
             <>
                 <Header />
-                <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-                    <div className="text-white">Game not found</div>
+                <div className="min-h-screen bg-[#030712] flex items-center justify-center">
+                    <p className="text-white">Game not found</p>
                 </div>
                 <Footer />
             </>
@@ -202,147 +207,261 @@ export default function ReviewsOpen() {
     }
 
     function parseRequirementsText(text) {
+        if (!text) return null;
         const lines = text.split('\n');
         return lines.map((line, index) => {
             const cleanLine = line.replace(/<[^>]*>/g, '').trim();
+            if (!cleanLine) return null;
 
             if (line.includes('<li>')) {
                 return (
-                    <div key={index} style={{ display: 'flex', marginBottom: '4px' }}>
-                        <span style={{ marginRight: '8px' }}>•</span>
-                        <span>{cleanLine}</span>
+                    <div key={index} className="flex items-start mb-1">
+                        <span className="text-violet-400 mr-2">•</span>
+                        <span className="text-gray-300">{cleanLine}</span>
                     </div>
                 );
             }
 
             if (line.includes('<strong>')) {
                 return (
-                    <div key={index} style={{ fontWeight: 'bold', color: 'white', marginBottom: '8px' }}>
-                        <strong>{cleanLine}</strong>
+                    <div key={index} className="font-bold text-white mb-2">
+                        {cleanLine}
                     </div>
                 );
             }
 
             return (
-                <div key={index} style={{ marginBottom: '8px' }}>
+                <div key={index} className="text-gray-300 mb-1">
                     {cleanLine}
                 </div>
             );
         });
     }
 
-
-
     return (
         <>
             <Header />
-            <div className="min-h-screen bg-cover bg-center text-white p-4 sm:p-8" style={{ backgroundImage: `url(${game.background_image})` }}>
-                <div className="max-w-6xl mx-auto">
+            <div className="min-h-screen bg-[#030712] text-white pt-20">
+                {/* Background Image with Overlay */}
+                <div className="relative h-[400px] md:h-[500px] overflow-hidden">
+                    <img 
+                        loading="lazy" 
+                        src={game.background_image} 
+                        alt={game.name} 
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/80 to-transparent"></div>
+                </div>
 
-                    <div className="bg-gray-900 bg-opacity-90 rounded-lg p-6 mb-8">
-                        <div className="flex flex-col md:flex-wrap gap-6">
-                            <div className="flex flex-col md:flex-row gap-6">
-                                <div className="md:w-1/3">
-                                    <img  loading="lazy"  src={game.background_image} alt={game.name} className="w-full h-auto rounded-lg object-cover mb-10" />
-                                    <Link to="/" className="group mb-6 mt-10  inline-flex items-center px-5 py-3 bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 transform-gpu">
-                                        <FaArrowLeftLong className="mr-3 transition-transform duration-300 group-hover:-translate-x-1" />
-                                        <span className="relative overflow-hidden">
-                                            <span className="block transition-transform duration-300 group-hover:-translate-y-[110%]">
-                                                Back to Home Page
-                                            </span>
-                                            <span className="absolute inset-0 block translate-y-[110%] transition-transform duration-300 group-hover:translate-y-0">
-                                                Take Me Back!
-                                            </span>
-                                        </span>
-                                    </Link>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <div className="flex justify-between items-start">
-                                        <h1 className="text-3xl font-bold mb-4">{game.name}</h1>
-                                        {fav ? (<button onClick={delFav} className=" hover:bg-red-700 px-4 py-2 rounded-md close-button">Remove from Favorites</button>) : (<button onClick={addFav} className=" hover:bg-green-700 px-4 py-2 rounded-md add-button">Add to Favorites</button>)}
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                        <div>
-                                            <p className="text-gray-400">Release Date</p>
-                                            <p>{game.released || "?"}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-400">Rating</p>
-                                            <p>{game.rating || "?"}/5</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-400">Platforms</p>
-                                            <p>{game.platforms ? game.platforms.map(p => p.platform.name).join(", ") : "?"}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-400">Genres</p>
-                                            <div className="flex flex-wrap gap-1">
-                                                {game.tags?.map((g, i) => (
-                                                    <span key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{g.name} </span>)) || "?"}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <div className="max-w-6xl mx-auto px-4 -mt-32 relative z-10">
+                    {/* Game Info Card */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 mb-8"
+                    >
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Left - Image */}
+                            <div className="lg:col-span-1">
+                                <img 
+                                    loading="lazy" 
+                                    src={game.background_image} 
+                                    alt={game.name} 
+                                    className="w-full h-auto rounded-2xl object-cover mb-6"
+                                />
+                                
+                                {/* Back Button */}
+                                <Link 
+                                    to="/" 
+                                    className="group inline-flex items-center px-5 py-3 bg-white/5 hover:bg-violet-500/20 border border-white/10 hover:border-violet-500/30 rounded-xl text-white font-medium transition-all"
+                                >
+                                    <FaArrowLeft className="mr-3 transition-transform group-hover:-translate-x-1" />
+                                    Back
+                                </Link>
                             </div>
-                            {game.platforms?.some(p => p.requirements_en?.minimum) && (
-                                <div className="mb-6 ">
-                                    <h3 className="text-xl font-bold mb-4">System Requirements</h3>
-                                    <div className="bg-gray-700 p-6 rounded-lg shadow-md space-y-4">
-                                        <div>
-                                            <h4 className="text-lg font-semibold mb-3 text-blue-400">Minimum:</h4>
-                                            <div className="text-gray-300 text-sm space-y-2">
-                                                {parseRequirementsText(game.platforms.find(p => p.requirements_en?.minimum)?.requirements_en?.minimum)}
-                                            </div>
-                                        </div>
-                                        {game.platforms[0].requirements_en?.recommended && (
-                                            <div>
-                                                <h4 className="text-lg font-semibold mb-3 text-green-400">Recommended:</h4>
-                                                <div className="text-gray-300 text-sm space-y-2">
-                                                    {parseRequirementsText(game.platforms.find(p => p.requirements_en?.recommended)?.requirements_en?.recommended)}
-                                                </div>
-                                            </div>
+
+                            {/* Right - Details */}
+                            <div className="lg:col-span-2">
+                                <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+                                    <h1 className="text-3xl md:text-4xl font-bold">{game.name}</h1>
+                                    
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-3">
+                                        {fav ? (
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={delFav}
+                                                className="flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-400 rounded-xl hover:bg-red-500/30 transition-all"
+                                            >
+                                                <FaHeart className="fill-current" />
+                                                Remove
+                                            </motion.button>
+                                        ) : (
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={addFav}
+                                                className="flex items-center gap-2 px-4 py-2 bg-violet-500/20 border border-violet-500/30 text-violet-400 rounded-xl hover:bg-violet-500/30 transition-all"
+                                            >
+                                                <FaHeart />
+                                                Add to Favorites
+                                            </motion.button>
                                         )}
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    </div>
 
-                    <div className="bg-gray-900 bg-opacity-90 rounded-lg p-6 ">
-                        <h2 className="text-2xl font-bold mb-6">Reviews</h2>
-                        {user && (
-                            <div className="mb-8 bg-gray-700 p-4 rounded-lg">
-                                <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
-                                <textarea value={newReview} onChange={(e) => setNewReview(e.target.value)} className="w-full bg-gray-800 border border-gray-600 rounded p-3 mb-4" rows="4" placeholder="Share your thoughts about this game..." />
-                                <div className="flex items-center mb-4">
-                                    <span className="mr-2">Rating:</span>
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button key={star} className={`text-2xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`} onClick={() => setRating(star)}>★ </button>))}
+                                {/* Meta Info Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <div className="flex items-center gap-2 text-gray-400 mb-1">
+                                            <FaCalendar className="w-4 h-4" />
+                                            <span className="text-xs">Release Date</span>
+                                        </div>
+                                        <p className="font-medium">{game.released || "?"}</p>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <div className="flex items-center gap-2 text-gray-400 mb-1">
+                                            <FaStar className="w-4 h-4" />
+                                            <span className="text-xs">Rating</span>
+                                        </div>
+                                        <p className="font-medium text-amber-400">{game.rating || "?"}/5</p>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-white/5 border border-white/5 col-span-2">
+                                        <div className="flex items-center gap-2 text-gray-400 mb-1">
+                                            <FaGamepad className="w-4 h-4" />
+                                            <span className="text-xs">Platforms</span>
+                                        </div>
+                                        <p className="font-medium text-sm truncate">
+                                            {game.platforms ? game.platforms.map(p => p.platform.name).join(", ") : "?"}
+                                        </p>
+                                    </div>
                                 </div>
-                                <button onClick={submitReview} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md"> Submit Review</button>
-                                {error && <p className="text-red-500 mt-2">{error}</p>}
+
+                                {/* Genres */}
+                                <div>
+                                    <p className="text-gray-400 text-sm mb-2">Genres</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {game.tags?.slice(0, 6).map((g, i) => (
+                                            <span key={i} className="px-3 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm">
+                                                {g.name}
+                                            </span>
+                                        )) || "?"}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* System Requirements */}
+                        {game.platforms?.some(p => p.requirements_en?.minimum) && (
+                            <div className="mt-8 pt-8 border-t border-white/10">
+                                <h3 className="text-xl font-bold mb-4">System Requirements</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <h4 className="text-lg font-semibold mb-3 text-cyan-400">Minimum</h4>
+                                        <div className="text-sm text-gray-300">
+                                            {parseRequirementsText(game.platforms.find(p => p.requirements_en?.minimum)?.requirements_en?.minimum)}
+                                        </div>
+                                    </div>
+                                    {game.platforms[0].requirements_en?.recommended && (
+                                        <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                            <h4 className="text-lg font-semibold mb-3 text-green-400">Recommended</h4>
+                                            <div className="text-sm text-gray-300">
+                                                {parseRequirementsText(game.platforms.find(p => p.requirements_en?.recommended)?.requirements_en?.recommended)}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </motion.div>
+
+                    {/* Reviews Section */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 mb-12"
+                    >
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500">
+                                <FaPen className="w-5 h-5 text-white" />
+                            </div>
+                            <h2 className="text-2xl font-bold">Reviews</h2>
+                        </div>
+
+                        {/* Write Review */}
+                        {user && (
+                            <div className="mb-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                                <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
+                                <textarea 
+                                    value={newReview} 
+                                    onChange={(e) => setNewReview(e.target.value)} 
+                                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 mb-4"
+                                    rows="4"
+                                    placeholder="Share your thoughts about this game..."
+                                />
+                                <div className="flex flex-wrap items-center gap-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-gray-400">Rating:</span>
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button 
+                                                key={star} 
+                                                className={`text-2xl transition-colors ${rating >= star ? 'text-amber-400' : 'text-gray-600 hover:text-amber-300'}`}
+                                                onClick={() => setRating(star)}
+                                            >
+                                                ★
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={submitReview}
+                                        className="px-6 py-2 bg-gradient-to-r from-violet-600 to-cyan-600 rounded-xl text-white font-medium"
+                                    >
+                                        Submit Review
+                                    </motion.button>
+                                </div>
+                                {error && <p className="text-red-400 mt-3">{error}</p>}
                             </div>
                         )}
 
+                        {/* Reviews List */}
                         {reviews.length > 0 ? (
-                            <div className="space-y-4">
-                                {reviews.map((review) => (
-                                    <div key={review.id} className="bg-gray-700 p-4 rounded-lg">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-semibold">{review.email}</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {reviews.map((review, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-violet-500/30 transition-all"
+                                    >
+                                        <div className="flex justify-between items-start mb-3">
+                                            <div>
+                                                <h4 className="font-semibold text-white">{review.email}</h4>
+                                                <p className="text-gray-500 text-xs">
+                                                    {new Date(review.createdAt).toLocaleDateString()}
+                                                </p>
+                                            </div>
                                             <div className="flex">
-                                                {[...Array(5)].map((_, i) => (<span key={i} className={`${i < review.rating ? 'text-yellow-400' : 'text-gray-400'}`} > ★</span>))}
+                                                {[...Array(5)].map((_, i) => (
+                                                    <span key={i} className={`text-lg ${i < review.rating ? 'text-amber-400' : 'text-gray-600'}`}>★</span>
+                                                ))}
                                             </div>
                                         </div>
-                                        <p className="whitespace-pre-line">{review.review}</p>
-                                        <p className="text-gray-400 text-sm mt-2">
-                                            {new Date(review.createdAt).toLocaleDateString()}
-                                        </p>
-                                    </div>
+                                        <p className="text-gray-300 text-sm whitespace-pre-line">{review.review}</p>
+                                    </motion.div>
                                 ))}
                             </div>
-                        ) : (<p className="text-gray-400">No reviews yet. Be the first to review!</p>)}
-                    </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <FaStar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                                <p className="text-gray-400">No reviews yet. Be the first to review!</p>
+                            </div>
+                        )}
+                    </motion.div>
                 </div>
             </div>
             <Footer />

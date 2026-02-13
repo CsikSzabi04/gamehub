@@ -1,19 +1,27 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { motion } from 'framer-motion';
 
 export default function Search({ setGames, games, setSearchTrue }) {
   const [query, setQuery] = useState("");
   const [maxPrice, setMaxPrice] = useState(500);
   const [error, setError] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    if (query) {
-      searchGames();
+    if (query && query.length >= 2) {
+      const debounceTimer = setTimeout(() => {
+        searchGames();
+      }, 500);
+      return () => clearTimeout(debounceTimer);
     }
-  }, [maxPrice]);
+  }, [query, maxPrice]);
 
   async function searchGames() {
+    if (!query.trim()) return;
+    
+    setIsSearching(true);
     try {
       const response = await fetch(
         `https://api.rawg.io/api/games?key=984255fceb114b05b5e746dc24a8520a&search=${query}`
@@ -21,8 +29,6 @@ export default function Search({ setGames, games, setSearchTrue }) {
       const data = await response.json();
       const gamesWithPrices = data.results.map(game => ({
         ...game,
-        cheapest: Math.floor(Math.random() * 100) + 10,
-        cheapestDealID: Math.random().toString(36).substring(7),
         external: game.name,
         thumb: game.background_image,
         gameID: game.id,
@@ -45,26 +51,46 @@ export default function Search({ setGames, games, setSearchTrue }) {
     } catch (err) {
       console.error("Error fetching games:", err);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSearching(false);
     }
   }
 
   return (
-    <div className="flex flex-wrap ">
-      <div className="relative sm:w-64">
+    <div className="w-full">
+      <div className="relative w-full">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          {isSearching ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full"
+            />
+          ) : (
+            <FaSearch className="w-4 h-4 text-gray-500" />
+          )}
+        </div>
         <input
-          className="p-2 pr-12 rounded-lg text-black w-full bg-white pl-10"
+          id="search-input"
+          className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
           type="text"
           placeholder="Search games..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key == "Enter") searchGames();
+            if (e.key === "Enter") searchGames();
           }}
         />
-        <button onClick={searchGames}>
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-        </button>
       </div>
+      {error && (
+        <motion.p 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-2 text-red-400 text-sm"
+        >
+          {error}
+        </motion.p>
+      )}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export default function RotateFree({ games, showGameDetails, name }) {
     };
 
     return (
-        <section id="free-games" className="mb-8 px-4 relative bg-gray-600/20 p-10">
+        <section id="free-games" data-aos="fade-up" className="mb-8 px-4 relative bg-gray-600/20 p-10">
             <h2 className="text-2xl font-semibold mb-4">{name} 🎁</h2>
             <div className="relative group pl-2 pr-2">
                 <button onClick={prevItem} className="absolute -left-4 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"  aria-label="Previous game"  > <FaAngleLeft size={20} /> </button>

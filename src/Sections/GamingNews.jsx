@@ -29,7 +29,7 @@ export default function GamingNews() {
     }
 
     return (
-        <section className="mb-8">
+        <section className="mb-8" data-aos="fade-up">
             <RotateGamingNews articles={articles} name={"Latest Gaming News"} />
         </section>
     );

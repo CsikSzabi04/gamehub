@@ -32,7 +32,7 @@ export default function FreeGames() {
     }
 
     return (
-        <section id="free-games" className="mb-8">
+        <section id="free-games" className="mb-8" data-aos="fade-up">
             <RotateFree games={freeGames} showGameDetails={showGameDetails} name="Free Games" />
         </section>
     );

@@ -42,7 +42,7 @@ export default function Discounted() {
     }
 
     return (
-        <section id="free-games" className="mb-8">
+        <section id="free-games" className="mb-8" data-aos="fade-up">
             <RotateDiscounted  games={freeGames}  showGameDetails={showGameDetails}  name="Discounted Games" />
             {modalVisible && selectedGame && ( <DiscountedShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible}/>)}
         </section>

@@ -1,17 +1,49 @@
+/* Login & SignUp - Modern Styles */
+/* These styles are now handled by inline Tailwind classes in the components */
 
-
-.tf{
+.tf {
     background-color: white;
-    border-radius: 4px;
+    border-radius: 8px;
 }
-.log{
-    margin-bottom: 5px;
+
+.log {
+    margin-bottom: 16px;
 }
-#roundL{
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+
+#roundL {
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
 }
-#roundR{
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+
+#roundR {
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+}
+
+/* Legacy support - can be removed if all components are updated */
+.login-container {
+    min-height: calc(100vh - 80px);
+}
+
+.login-form {
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.form-content {
+    max-width: 400px;
+}
+
+.pp {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.ps {
+    color: #8b5cf6;
+    font-weight: 600;
+}
+
+.ps:hover {
+    color: #a78bfa;
 }

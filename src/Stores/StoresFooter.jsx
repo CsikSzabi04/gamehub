@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from 'framer-motion';
 
 export default function StoresFooter() {
     const [stores, setStores] = useState([]);
@@ -29,18 +30,38 @@ export default function StoresFooter() {
     }
 
     return (
-        <div className="container mx-auto">
-            <section id="stores-section" className="mb-8">
-                <div id="stores-grid" className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 
-            max-[1000px]:flex max-[1000px]:overflow-x-auto max-[1000px]:gap-4 max-[1000px]:py-4">
-                    {stores.map(store => (
-                        <div key={store.storeID} className="store-card flex flex-col items-center max-[1000px]:flex-shrink-0">
-                            <img  loading="lazy"  src={`https://www.cheapshark.com${store.images.logo}`} alt={store.storeName} />
-                            <p className="text-lg font-semibold">{store.storeName}</p>
-                        </div>
-                    ))}
+        <div className="w-full mb-16">
+            {/* Section Header */}
+            <div className="flex items-center justify-between mb-6 px-2">
+                <div className="relative">
+                    <h2 className="text-xl md:text-2xl font-bold text-white">Popular Stores</h2>
+                    <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full"></div>
                 </div>
-            </section>
+            </div>
+
+            {/* Stores Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {stores.map((store, index) => (
+                    <motion.div
+                        key={store.storeID}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        className="group flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-violet-500/40 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                    >
+                        <img
+                            loading="lazy"
+                            src={`https://www.cheapshark.com${store.images.logo}`}
+                            alt={store.storeName}
+                            className="h-12 w-auto object-contain mb-3 opacity-80 group-hover:opacity-100 transition-opacity"
+                        />
+                        <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                            {store.storeName}
+                        </p>
+                    </motion.div>
+                ))}
+            </div>
         </div>
     );
 }

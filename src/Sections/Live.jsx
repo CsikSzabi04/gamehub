@@ -27,7 +27,7 @@ export default function Live() { {/* Not Working, Work in progress */}
   }, [matches]);
 
   return (
-    <section id="matches" className="mb-8">
+    <section id="matches" className="mb-8" data-aos="fade-up">
       <h2 className="text-2xl font-semibold mb-4">Latest Esports Matches</h2>
       <div className="carousel-container overflow-hidden px-4 sm:px-10">
         <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>

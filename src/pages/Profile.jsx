@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Avatar, CircularProgress ,Paper ,Divider ,IconButton ,Tooltip} from '@mui/material';
 import { signOut, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestore } from '../../firebaseConfig';
-import {  doc,  getDoc} from 'firebase/firestore';
-import Logout from '@mui/icons-material/Logout';
-import Edit from '@mui/icons-material/Edit';
-import Email from '@mui/icons-material/Email';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import { doc, getDoc } from 'firebase/firestore';
 import Footer from '../Footer';
 import Header from '../Header';
+import { motion } from 'framer-motion';
+import { FaUser, FaEnvelope, FaCalendarAlt, FaEdit, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 
 export default function Profile({ setUser, username }) {
     const [userInfo, setUserInfo] = useState(null);
@@ -85,74 +82,160 @@ export default function Profile({ setUser, username }) {
 
     if (loading) {
         return (
-            <div className="flex flex-col min-h-screen bg-gray-900">
+            <div className="flex flex-col min-h-screen bg-[#030712]">
                 <Header />
-                    <div className="flex-grow flex items-center justify-center"><CircularProgress color="primary" size={60} /></div>
+                <div className="flex-grow flex items-center justify-center">
+                    <div className="flex flex-col items-center">
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full"
+                        />
+                        <p className="text-gray-400 mt-4">Loading profile...</p>
+                    </div>
+                </div>
                 <Footer />
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-900">
+        <div className="flex flex-col min-h-screen bg-[#030712]">
             <Header />
-            <main className="flex-grow flex items-center justify-center p-4 sm:p-8 ">
-                <Paper  className="w-full max-w-md p-6 sm:p-8 rounded-xl"sx={{ backgroundColor: '#1F2937', color: 'white', '& .MuiDivider-root': { backgroundColor: '#374151'}}}>
-                    <div className="flex flex-col items-center mb-6 ">
-                        <Avatar src={userInfo.photoURL} sx={{ width: 100, height: 100,fontSize: '3rem',bgcolor: 'primary.main'}} >
-                            {userInfo.photoURL ? null : userInfo.username.charAt(0).toUpperCase()}
-                        </Avatar>
-                        <Typography variant="h4" component="h1" className="mt-4 text-center font-bold">
-                            {userInfo.username}
-                        </Typography>
-                    </div>
-                    <Divider className="my-4 bg-gray-700" />
-
-                    <div className="space-y-4">
-                        <div className="flex items-center">
-                            <AccountCircle className="mr-2 text-gray-400" />
-                            <Typography variant="body1">
-                                <span className="text-gray-400">Username:</span> {userInfo.username}
-                            </Typography>
-                            <Tooltip title="Edit username">
-                                <IconButton size="small" className="ml-2" onClick={() => { setIsEditing(!isEditing); setNewUsername(userInfo.username); }} >
-                                    <Edit fontSize="small" />
-                                </IconButton>
-                            </Tooltip>
+            <main className="flex-grow flex items-center justify-center p-4 sm:p-8 pt-24">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full max-w-md"
+                >
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
+                        {/* Profile Header */}
+                        <div className="flex flex-col items-center mb-8">
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ type: "spring", stiffness: 200 }}
+                                className="relative"
+                            >
+                                {userInfo.photoURL ? (
+                                    <img 
+                                        src={userInfo.photoURL} 
+                                        alt="Profile" 
+                                        className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
+                                    />
+                                ) : (
+                                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center border-4 border-violet-500">
+                                        <FaUserCircle className="w-14 h-14 text-white" />
+                                    </div>
+                                )}
+                                <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => { setIsEditing(!isEditing); setNewUsername(userInfo.username); }}
+                                    className="absolute bottom-0 right-0 p-2 rounded-full bg-violet-500 text-white shadow-lg"
+                                >
+                                    <FaEdit className="w-4 h-4" />
+                                </motion.button>
+                            </motion.div>
+                            
+                            <motion.h1 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="text-2xl font-bold text-white mt-4"
+                            >
+                                {userInfo.username}
+                            </motion.h1>
                         </div>
 
+                        {/* Edit Username */}
                         {isEditing && (
-                            <div className="flex items-center space-x-2">
-                                <input type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} className="flex-grow p-2 bg-gray-700 rounded text-white"/>
-                                <Button  variant="contained"  size="small" onClick={handleUpdateUsername}> Save</Button>
-                            </div>
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10"
+                            >
+                                <p className="text-gray-400 text-sm mb-3">Edit Username</p>
+                                <div className="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        value={newUsername} 
+                                        onChange={(e) => setNewUsername(e.target.value)} 
+                                        className="flex-grow p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-violet-500"
+                                    />
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={handleUpdateUsername}
+                                        className="px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-medium"
+                                    >
+                                        Save
+                                    </motion.button>
+                                </div>
+                            </motion.div>
                         )}
 
-                        <div className="flex items-center">
-                            <Email className="mr-2 text-gray-400" />
-                            <Typography variant="body1">
-                                <span className="text-gray-400">Email:</span> {userInfo.email}
-                            </Typography>
+                        {/* User Info */}
+                        <div className="space-y-4">
+                            <div className="flex items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                                <div className="p-2 rounded-lg bg-violet-500/20 text-violet-400 mr-4">
+                                    <FaUser className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Username</p>
+                                    <p className="text-white font-medium">{userInfo.username}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 mr-4">
+                                    <FaEnvelope className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Email</p>
+                                    <p className="text-white font-medium">{userInfo.email}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center p-4 rounded-xl bg-white/5 border border-white/5">
+                                <div className="p-2 rounded-lg bg-pink-500/20 text-pink-400 mr-4">
+                                    <FaCalendarAlt className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Member since</p>
+                                    <p className="text-white font-medium">{new Date(userInfo.createdAt).toLocaleDateString()}</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="flex items-center">
-                            <Typography variant="body1" className="text-gray-400">
-                                Member since: {new Date(userInfo.createdAt).toLocaleDateString()}
-                            </Typography>
-                        </div>
+                        {/* Error Message */}
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center"
+                            >
+                                {error}
+                            </motion.div>
+                        )}
+
+                        {/* Logout Button */}
+                        <motion.button
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={handleLogout}
+                            className="w-full mt-8 py-4 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-semibold flex items-center justify-center gap-3 hover:bg-red-500/30 transition-all"
+                        >
+                            <FaSignOutAlt className="w-5 h-5" />
+                            Logout
+                        </motion.button>
                     </div>
-                    <Divider className="my-6 bg-gray-700" />
-
-                    <Button variant="contained" color="error" fullWidth startIcon={<Logout />} onClick={handleLogout} size="large" className="mt-4"  >Logout</Button>
-
-                    {error && (
-                        <Typography color="error" className="mt-4 text-center">
-                            {error}
-                        </Typography>
-                    )}
-                </Paper>
+                </motion.div>
             </main>
-
             <Footer />
         </div>
     );

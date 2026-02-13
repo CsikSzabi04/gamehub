@@ -4,11 +4,11 @@ import { UserContext } from './Features/UserContext.jsx';
 import { CiLogin } from "react-icons/ci";
 import { TiDelete } from "react-icons/ti";
 import { CgProfile, CgGames } from "react-icons/cg";
-import { FaStore, FaNewspaper, FaSearch, FaHeart, FaTimes } from "react-icons/fa";
+import { FaStore, FaNewspaper, FaSearch, FaHeart, FaTimes, FaDiscord, FaSteam } from "react-icons/fa";
 import { GoStarFill } from "react-icons/go";
 import { motion, AnimatePresence } from 'framer-motion';
-import Search from './Features/Search.jsx'; import { MdOutlineRateReview } from "react-icons/md";
-
+import Search from './Features/Search.jsx'; 
+import { MdOutlineRateReview } from "react-icons/md";
 
 export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     const [allGames, setAllGames] = useState([]);
@@ -97,137 +97,261 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
 
     return (
         <>
-            <header className="bg-gray-900/80 text-white shadow-lg sticky top-0 z-20">
-                <div className="header-container px-4 py-3 place-content-between">
-                    <div className="flex items-center justify-between ">
-                        <Link to="/" className="flex items-center space-x-2">
-                            <CgGames className="text-sky-500 text-3xl" />
-                            <motion.div className="flex" whileHover={{ scale: 1.05 }} >
-                                <h1 className="text-2xl font-bold">Game</h1>
-                                <h1 className="text-2xl font-bold text-sky-500">Data</h1>
-                                <h1 className="text-2xl font-bold">Hub</h1>
+            <header className="bg-[#030712]/90 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-16">
+                        {/* Logo */}
+                        <Link to="/" className="flex items-center space-x-3 group">
+                            <div className="relative">
+                                <CgGames className="text-3xl text-violet-500 group-hover:text-violet-400 transition-colors" />
+                                <div className="absolute -inset-1 bg-violet-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                            <motion.div className="flex items-center" whileHover={{ scale: 1.02 }}>
+                                <h1 className="text-2xl font-bold tracking-tight">Game</h1>
+                                <h1 className="text-2xl font-bold tracking-tight text-violet-500">Data</h1>
+                                <h1 className="text-2xl font-bold tracking-tight">Hub</h1>
                             </motion.div>
                         </Link>
 
-                        <div className="hidden md:flex flex-1 mx-8">
-                            <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
+                        {/* Search Bar - Desktop */}
+                        <div className="hidden md:flex flex-1 max-w-md mx-8">
+                            <div className="relative w-full">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <FaSearch className="h-4 w-4 text-gray-500" />
+                                </div>
+                                <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
+                            </div>
                         </div>
 
-                        <button className="md:hidden text-white text-2xl p-2" onClick={() => setMenuOpen(!menuOpen)}>
-                            {menuOpen ? <FaTimes /> : '☰'}
+                        {/* Mobile Menu Button */}
+                        <button 
+                            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                        >
+                            {menuOpen ? <FaTimes className="w-6 h-6" /> : <FaDiscord className="w-6 h-6" />}
                         </button>
 
-                        <nav className="hidden md:flex items-center space-x-6 float-right">
-                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors" onClick={() => setStoreVisible(true)}>
-                                <FaStore className="mr-1" /> Stores
+                        {/* Desktop Navigation */}
+                        <nav className="hidden md:flex items-center space-x-2">
+                            <motion.button 
+                                whileHover={{ scale: 1.05 }} 
+                                whileTap={{ scale: 0.95 }} 
+                                className="flex items-center px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
+                                onClick={() => setStoreVisible(true)}
+                            >
+                                <FaStore className="mr-2 text-violet-400" /> 
+                                <span>Stores</span>
                             </motion.button>
 
                             <a href="#news">
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors" >
-                                    <FaNewspaper className="mr-1" /> News
+                                <motion.button 
+                                    whileHover={{ scale: 1.05 }} 
+                                    whileTap={{ scale: 0.95 }} 
+                                    className="flex items-center px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
+                                >
+                                    <FaNewspaper className="mr-2 text-cyan-400" /> 
+                                    <span>News</span>
                                 </motion.button>
                             </a>
 
                             <Link to="/discover">
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors">
-                                    <FaSearch className="mr-1" /> Discover
+                                <motion.button 
+                                    whileHover={{ scale: 1.05 }} 
+                                    whileTap={{ scale: 0.95 }} 
+                                    className="flex items-center px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
+                                >
+                                    <FaSearch className="mr-2 text-pink-400" /> 
+                                    <span>Discover</span>
                                 </motion.button>
                             </Link>
 
                             <Link to="/review">
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center text-gray-300 hover:text-sky-400 transition-colors">
-                                    <MdOutlineRateReview  className="mr-1" /> Reviews
+                                <motion.button 
+                                    whileHover={{ scale: 1.05 }} 
+                                    whileTap={{ scale: 0.95 }} 
+                                    className="flex items-center px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
+                                >
+                                    <MdOutlineRateReview className="mr-2 text-amber-400" /> 
+                                    <span>Reviews</span>
                                 </motion.button>
                             </Link>
 
-
                             {user ? (
-                                <>
-                                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} className="text-sky-400" onClick={openFavModal} >
-                                        <GoStarFill size={20} />
+                                <div className="flex items-center space-x-3 ml-4">
+                                    <motion.button 
+                                        whileHover={{ scale: 1.1 }} 
+                                        whileTap={{ scale: 0.95 }} 
+                                        className="relative p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                        onClick={openFavModal}
+                                    >
+                                        <GoStarFill className="w-5 h-5 text-amber-400" />
+                                        {favorites.length > 0 && (
+                                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-500 rounded-full text-[10px] flex items-center justify-center">
+                                                {favorites.length}
+                                            </span>
+                                        )}
                                     </motion.button>
 
                                     <Link to="/profile">
-                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                                            <CgProfile className="text-2xl text-lime-400" />
+                                        <motion.div 
+                                            whileHover={{ scale: 1.1 }} 
+                                            whileTap={{ scale: 0.95 }}
+                                            className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-violet-500/30"
+                                        >
+                                            <CgProfile className="w-6 h-6 text-emerald-400" />
                                         </motion.div>
                                     </Link>
-                                </>
+                                </div>
                             ) : (
-                                <Link to="/login">
-                                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center bg-sky-600 hover:bg-sky-700 px-4 py-2 rounded-lg transition-colors">  <CiLogin className="mr-1" /> Login
+                                <Link to="/login" className="ml-4">
+                                    <motion.button 
+                                        whileHover={{ scale: 1.05 }} 
+                                        whileTap={{ scale: 0.95 }} 
+                                        className="flex items-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold text-sm shadow-lg shadow-violet-500/25 transition-all"
+                                    >  
+                                        <CiLogin className="mr-2" /> 
+                                        Login
                                     </motion.button>
                                 </Link>
                             )}
                         </nav>
                     </div>
+                </div>
 
+                {/* Mobile Menu */}
+                <AnimatePresence>
                     {menuOpen && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden mt-4 space-y-3" > <div className="mb-4">
-                            <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
-                        </div>
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0 }} 
+                            animate={{ opacity: 1, height: 'auto' }} 
+                            exit={{ opacity: 0, height: 0 }}
+                            className="md:hidden border-t border-white/5 bg-[#030712]/95 backdrop-blur-xl"
+                        >
+                            <div className="px-4 py-4 space-y-3">
+                                {/* Mobile Search */}
+                                <div className="relative mb-4">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FaSearch className="h-4 w-4 text-gray-500" />
+                                    </div>
+                                    <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
+                                </div>
 
-                            <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" onClick={() => setStoreVisible(true)} >
-                                <FaStore className="mr-2" /> Stores
-                            </motion.button>
-
-                            <Link to="#news" className="block">
-                                <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" >
-                                    <FaNewspaper className="mr-2" /> News
+                                <motion.button 
+                                    whileTap={{ scale: 0.95 }} 
+                                    className="flex items-center w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                    onClick={() => setStoreVisible(true)}
+                                >
+                                    <FaStore className="mr-3 text-violet-400" /> Stores
                                 </motion.button>
-                            </Link>
 
-                            <Link to="/discover" className="block">
-                                <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" >
-                                    <FaSearch className="mr-2" /> Discover
-                                </motion.button>
-                            </Link>
-
-                            <Link to="/review" className="block">
-                                <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" >
-                                    <MdOutlineRateReview className="mr-2" /> Reviews
-                                </motion.button>
-                            </Link>
-
-                            {user ? (
-                                <>
-                                    <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg" onClick={openFavModal}>
-                                        <GoStarFill className="mr-2 text-sky-400" /> Favorites
-                                    </motion.button>
-
-                                    <Link to="/profile" className="block">
-                                        <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-gray-800 rounded-lg">
-                                            <CgProfile className="mr-2 text-lime-400" /> Profile
-                                        </motion.button>
-                                    </Link>
-                                </>
-                            ) : (
-                                <Link to="/login" className="block">
-                                    <motion.button whileTap={{ scale: 0.95 }} className="flex items-center w-full p-3 bg-sky-600 rounded-lg" >
-                                        <CiLogin className="mr-2" /> Login
+                                <Link to="#news" className="block">
+                                    <motion.button 
+                                        whileTap={{ scale: 0.95 }} 
+                                        className="flex items-center w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                    >
+                                        <FaNewspaper className="mr-3 text-cyan-400" /> News
                                     </motion.button>
                                 </Link>
-                            )}
+
+                                <Link to="/discover" className="block">
+                                    <motion.button 
+                                        whileTap={{ scale: 0.95 }} 
+                                        className="flex items-center w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                    >
+                                        <FaSearch className="mr-3 text-pink-400" /> Discover
+                                    </motion.button>
+                                </Link>
+
+                                <Link to="/review" className="block">
+                                    <motion.button 
+                                        whileTap={{ scale: 0.95 }} 
+                                        className="flex items-center w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                    >
+                                        <MdOutlineRateReview className="mr-3 text-amber-400" /> Reviews
+                                    </motion.button>
+                                </Link>
+
+                                {user ? (
+                                    <>
+                                        <motion.button 
+                                            whileTap={{ scale: 0.95 }} 
+                                            className="flex items-center w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                            onClick={openFavModal}
+                                        >
+                                            <GoStarFill className="mr-3 text-amber-400" /> 
+                                            Favorites ({favorites.length})
+                                        </motion.button>
+
+                                        <Link to="/profile" className="block">
+                                            <motion.button 
+                                                whileTap={{ scale: 0.95 }} 
+                                                className="flex items-center w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border border-violet-500/20"
+                                            >
+                                                <CgProfile className="mr-3 text-emerald-400" /> Profile
+                                            </motion.button>
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Link to="/login" className="block">
+                                        <motion.button 
+                                            whileTap={{ scale: 0.95 }} 
+                                            className="flex items-center w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold"
+                                        >
+                                            <CiLogin className="mr-3" /> Login
+                                        </motion.button>
+                                    </Link>
+                                )}
+                            </div>
                         </motion.div>
                     )}
-                </div>
+                </AnimatePresence>
             </header>
 
+            {/* Stores Modal */}
             <AnimatePresence>
                 {modalStoreVisible && (
-                    <motion.div nitial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={() => setStoreVisible(false)}>
-                        <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()} > <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold text-sky-400">Game Stores</h3>
-                            <button onClick={() => setStoreVisible(false)} className="text-gray-400 hover:text-white" >
-                                <FaTimes size={20} />
-                            </button>
-                        </div>
+                    <motion.div 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0 }} 
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4"
+                        onClick={() => setStoreVisible(false)}
+                    >
+                        <motion.div 
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }} 
+                            animate={{ scale: 1, y: 0, opacity: 1 }} 
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto border border-white/10"
+                            onClick={e => e.stopPropagation()}
+                        > 
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
+                                    Game Stores
+                                </h3>
+                                <button 
+                                    onClick={() => setStoreVisible(false)} 
+                                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                                >
+                                    <FaTimes className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 {store.map((x, i) => (
-                                    <motion.div key={i} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="bg-gray-700 p-4 rounded-lg cursor-pointer text-center" onClick={() => openStoreUrl(x.storeName)} >
-                                        <img   loading="lazy"  src={`https://www.cheapshark.com${x.images.logo}`} alt={x.storeName} className="h-12 mx-auto mb-2 object-contain" />
-                                        <p className="text-white font-medium">{x.storeName}</p>
+                                    <motion.div 
+                                        key={i} 
+                                        whileHover={{ scale: 1.03, y: -2 }} 
+                                        whileTap={{ scale: 0.97 }}
+                                        className="bg-white/5 hover:bg-white/10 p-4 rounded-xl cursor-pointer text-center border border-white/5 hover:border-violet-500/30 transition-all"
+                                        onClick={() => openStoreUrl(x.storeName)}
+                                    >
+                                        <img   
+                                            loading="lazy"  
+                                            src={`https://www.cheapshark.com${x.images.logo}`} 
+                                            alt={x.storeName} 
+                                            className="h-12 mx-auto mb-3 object-contain" 
+                                        />
+                                        <p className="text-white font-medium text-sm">{x.storeName}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -236,29 +360,52 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                 )}
             </AnimatePresence>
 
+            {/* Favorites Modal */}
             <AnimatePresence>
                 {isFavModalOpen && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={closeFavModal} >
-                        <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-xl font-bold text-sky-400">Your Favorites</h3>
-                                <button onClick={closeFavModal} className="text-gray-400 hover:text-white">
-                                    <FaTimes size={20} />
+                    <motion.div 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0 }} 
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4"
+                        onClick={closeFavModal}
+                    >
+                        <motion.div 
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }} 
+                            animate={{ scale: 1, y: 0, opacity: 1 }} 
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto border border-white/10"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                                    Your Favorites
+                                </h3>
+                                <button 
+                                    onClick={closeFavModal} 
+                                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                                >
+                                    <FaTimes className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
 
-                            {favorites.length == 0 ? (
-                                <div className="text-center py-8">
-                                    <GoStarFill className="mx-auto text-gray-500 text-4xl mb-3" />
+                            {favorites.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <GoStarFill className="mx-auto text-gray-600 text-5xl mb-4" />
                                     <p className="text-gray-400">You don't have any favorite games yet.</p>
+                                    <p className="text-gray-500 text-sm mt-2">Click the star icon on any game to add it!</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
                                     {favorites.map((fav, i) => (
-                                        <motion.div key={i} whileHover={{ x: 5 }} className="bg-gray-700 p-4 rounded-lg flex  place-content-between" >
-                                            <p className="text-white font-medium  place-content-between">{fav.name}</p>
+                                        <motion.div 
+                                            key={i} 
+                                            whileHover={{ x: 5 }}
+                                            className="bg-white/5 p-4 rounded-xl flex items-center justify-between group"
+                                        >
+                                            <span className="text-white font-medium truncate pr-4">{fav.name}</span>
                                             <TiDelete
-                                                className="ml-2 w-5 h-5 cursor-pointer  place-content-between"
+                                                className="w-5 h-5 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex-shrink-0"
                                                 onClick={() => delFav(fav.gameId)}
                                             />
                                         </motion.div>
@@ -271,4 +418,17 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
             </AnimatePresence>
         </>
     );
+}
+
+function openStoreUrl(storeName) {
+    const storeUrls = {
+        'Steam': 'https://store.steampowered.com',
+        'GOG': 'https://www.gog.com',
+        'Epic Games': 'https://www.epicgames.com',
+        'Origin': 'https://www.origin.com',
+        'Uplay': 'https://store.ubi.com',
+        'Battle.net': 'https://www.blizzard.com',
+    };
+    const url = storeUrls[storeName] || 'https://www.cheapshark.com';
+    window.open(url, '_blank');
 }

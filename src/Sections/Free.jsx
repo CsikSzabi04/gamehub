@@ -39,7 +39,7 @@ export default function Free() {
     }
 
     return (
-        <section id="free-games" className="mb-8">
+        <section id="free-games" className="mb-8" data-aos="fade-up">
             <RotateFree games={games} showGameDetails={showGameDetails} name="Free Games" />
         </section>
     );
