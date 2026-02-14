@@ -85,7 +85,7 @@ export default function Body() {
             {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && componentsLoaded &&( <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
-                <div className="main-content flex h-screen ">
+                <div className="main-content w-full">
                     <div className='allSections'>      
                         <div data-aos="fade-up" data-aos-duration="1000">
                             <MainSection allGames={allGames} showGameDetails={showGameDetails} />

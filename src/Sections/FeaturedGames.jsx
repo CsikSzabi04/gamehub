@@ -30,7 +30,7 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
     }, [allGames]);
 
     return (
-        <div className="w-full mb-16">
+        <div className="w-full mb-8">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="relative">
@@ -48,7 +48,7 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.05 }}
-                            whileHover={{ y: -8 }}
+                            whileHover={{ y: -4, scale: 1.02 }}
                             onClick={() => showGameDetails(game)}
                             className="group relative overflow-hidden rounded-2xl cursor-pointer bg-white/5 border border-white/5 hover:border-violet-500/40 transition-all duration-300"
                         >
@@ -58,7 +58,7 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
                                     loading="lazy"
                                     src={game.background_image}
                                     alt={game.name}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    className="w-full h-full object-cover"
                                 />
                                 
                                 {/* Gradient Overlay */}

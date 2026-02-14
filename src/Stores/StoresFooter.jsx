@@ -30,7 +30,7 @@ export default function StoresFooter() {
     }
 
     return (
-        <div className="w-full mb-16">
+        <div className="w-full mb-8">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-6 px-2">
                 <div className="relative">

@@ -154,7 +154,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Platforms</p>
-                    <p className="text-sm text-white font-medium truncate">
+                    <p className="text-sm text-white font-medium">
                       {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}
                     </p>
                   </div>

@@ -185,9 +185,9 @@ export default function Discover() {
                                 <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                     {Array.isArray(allGames) && allGames.length > 0 ? (
                                         allGames.map((game) => (
-                                            <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                                            <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer group">
                                                 <img src={game.background_image} alt={game.name} className="game-image" />
-                                                <div className="game-details">
+                                                <div className="game-details group-hover:from-black">
                                                     <h3 className="text-lg font-bold mb-2 ">{game.name}</h3>
                                                     <div className="flex-grow"></div>
                                                     <div className="float-start"><p className="text-sm text-gray-400">Rating: {game.rating}/5</p></div>
@@ -206,9 +206,9 @@ export default function Discover() {
                             <div id="games-grid" className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {currentGames.length > 0 ? (
                                     currentGames.map((game) => (
-                                        <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                                        <div key={game.id} className="game-card hover:shadow-xl hover:scale-105 transition transform cursor-pointer group">
                                             <img src={game.thumbnail} alt={game.title} className="game-image" />
-                                            <div className="game-details">
+                                            <div className="game-details group-hover:from-black">
                                                 <h3 className="text-lg font-bold text-white">{game.title}</h3>
                                                 <div className="platforms text-sm text-gray-600">
                                                     <div className="flex-grow"></div>

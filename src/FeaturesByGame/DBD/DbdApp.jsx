@@ -2,23 +2,27 @@ import React, { useEffect, useState } from "react";
 import RotateDbd from "./RotateDbd.jsx";
 import DbdCards from "./DbdCards.jsx";
 import { Link } from "react-router-dom";
-import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowLeft, FaSkull, FaUserInjured, FaShieldAlt } from "react-icons/fa";
 import DbdKiller from "./DbdKiller.jsx";
 import "./DbdApp.css";
-import { useRef } from "react";
+
+// DBD API Base URL - Original backend
+const DBD_API = "https://gamehub-backend-zekj.onrender.com";
 
 export default function DbdApp() {
-    const [characters, setCharacters] = useState([]);
-    const [charactersK, setCharactersK] = useState([]);
+    const [survivors, setSurvivors] = useState([]);
+    const [killers, setKillers] = useState([]);
+    const [perks, setPerks] = useState([]);
     const [selectedCharacter, setSelectedCharacter] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+    const [activeTab, setActiveTab] = useState('survivors');
     const [scrollY, setScrollY] = useState(0);
-    const charactersSectionRef = useRef(null);
 
     useEffect(() => {
-        fetchCharacters();
+        fetchAllData();
+        
         const handleScroll = () => {
             setScrollY(window.scrollY);
         };
@@ -27,66 +31,84 @@ export default function DbdApp() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    async function fetchCharacters() {
+    async function fetchAllData() {
         try {
             setLoading(true);
-            const response = await fetch("https://gamehub-backend-zekj.onrender.com/characters");
-            const data = await response.json();
-            const formattedCharacters = data.map(character => ({
-                id: character.id,
-                name: character.name,
-                role: character.role,
-                difficulty: character.difficulty,
-                nationality: character.nationality,
-                dlc: character.dlc,
-                perks: character.perks,
-                overview: character.overview,
-                backstory: character.backstory,
-                gender: character.gender,
-                image: character.imgs,
-                licensed: character.dlc !== "Base game",
-                perks_names: character.perks,
-                perks_ids: character.perks.map((_, index) => character.id * 10 + index),
+            setLoadingProgress(10);
+            
+            // Fetch Survivors
+            const survRes = await fetch(`${DBD_API}/characters`);
+            const survData = await survRes.json();
+            setLoadingProgress(40);
+            
+            // Fetch Killers
+            const killRes = await fetch(`${DBD_API}/charactersK`);
+            const killData = await killRes.json();
+            setLoadingProgress(100);
+            
+            // No perks endpoint - skip
+            const perksData = [];
+            setLoadingProgress(100);
+            
+            // Format survivors
+            const formattedSurvivors = survData.map(s => ({
+                id: s._id,
+                name: s.name,
+                fullName: s.full_name || s.name,
+                role: s.role,
+                gender: s.gender,
+                nationality: s.nationality,
+                difficulty: s.difficulty,
+                dlc: s.dlc,
+                overview: s.overview,
+                lore: s.lore,
+                perks: s.perks || [],
+                image: s.icon?.portrait || s.icon?.preview_portrait,
+                isFree: s.is_free,
+                isPtb: s.is_ptb
             }));
-            setCharacters(formattedCharacters);
-
-            const responseK = await fetch("https://gamehub-backend-zekj.onrender.com/charactersK");
-            const dataK = await responseK.json();
-            const formattedCharactersK = dataK.map(killer => ({
-                id: killer.id,
-                name: killer.name,
-                fullName: killer.fullname,
+            
+            // Format killers
+            const formattedKillers = killData.map(k => ({
+                id: k._id,
+                name: k.name,
+                fullName: k.full_name,
                 role: "Killer",
-                difficulty: killer.difficulty,
-                nationality: killer.nationality,
-                realm: killer.realm,
-                power: killer.power,
-                powerAttackType: killer.powerAttackType,
-                weapon: killer.weapon,
-                moveSpeed: killer.moveSpeed,
-                terrorRadius: killer.terrorRadius,
-                height: killer.height,
-                dlc: killer.dlc,
-                perks: killer.perks,
-                overview: killer.overview,
-                backstory: killer.backstory,
-                gender: killer.gender,
-                image: killer.imgs,
-                licensed: killer.dlc !== "Base game",
-                perks_names: killer.perks,
-                perks_ids: killer.perks.map((_, index) => killer.id * 10 + index),
-                powerDescription: `${killer.power}: ${killer.powerAttackType}`,
-                stats: {
-                    speed: killer.moveSpeed,
-                    terrorRadius: killer.terrorRadius,
-                    height: killer.height
-                }
+                gender: k.gender,
+                nationality: k.nationality,
+                difficulty: k.difficulty,
+                realm: k.realm,
+                power: k.power,
+                weapon: k.weapon,
+                speed: k.speed,
+                terrorRadius: k.terror_radius,
+                height: k.height,
+                dlc: k.dlc,
+                overview: k.overview,
+                lore: k.lore,
+                perks: k.perks || [],
+                image: k.icon?.portrait || k.icon?.preview_portrait,
+                isFree: k.is_free,
+                isPtb: k.is_ptb
             }));
-            setCharactersK(formattedCharactersK);
+            
+            // Format perks
+            const formattedPerks = perksData.map(p => ({
+                id: p._id,
+                name: p.perk_name,
+                role: p.role,
+                description: p.description,
+                icon: p.icon,
+                teachLevel: p.teach_level,
+                isPtb: p.is_ptb
+            }));
+            
+            setSurvivors(formattedSurvivors);
+            setKillers(formattedKillers);
+            setPerks(formattedPerks);
             setLoading(false);
         } catch (error) {
-            console.error("Error fetching characters:", error);
-            setError(error.message);
+            console.error("Error fetching DBD data:", error);
             setLoading(false);
         }
     }
@@ -101,34 +123,197 @@ export default function DbdApp() {
         setSelectedCharacter(null);
     }
 
-    const opacity = Math.max(1 - scrollY / 200, 0); 
+    const opacity = Math.max(1 - scrollY / 300, 0.3);
 
-    if (loading) {return ( <div className="flex justify-center items-center h-screen bg-black"> <div className="text-red-600 text-xl animate-pulse">Loading characters from The Entity's realm...</div></div> ); }
+    if (loading) {
+        return (
+            <div className="dbd-loading">
+                <div className="dbd-loading-content">
+                    <div className="dbd-loading-icon">💀</div>
+                    <h2 className="dbd-loading-title">Entering The Fog...</h2>
+                    <div className="dbd-loading-bar">
+                        <div 
+                            className="dbd-loading-progress" 
+                            style={{ width: `${loadingProgress}%` }}
+                        ></div>
+                    </div>
+                    <p className="dbd-loading-text">Summoning characters from The Entity's realm...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="bg-black">
-            <section className="hero-section h-screen w-full flex items-center justify-center snap-start" style={{ opacity }}>
-                <div className="absolute inset-0 bg-[url('https://static.tumblr.com/maopbtg/E9Bmgtoht/splash.png')] opacity-20 mix-blend-overlay"></div>
-                <div className="relative row z-10 text-center">
-                    <h1 className="dbd-title  font-bold mb-4 animate-pulse">Dead by <br /> Daylight</h1>
-                    <img className="dbd-logo " src="dbdL.png" alt="Dead by Daylight logo" />
+        <div className="dbd-page">
+            {/* Hero Section */}
+            <section className="dbd-hero" style={{ opacity }}>
+                <div className="dbd-hero-overlay"></div>
+                <div className="dbd-fog-effect"></div>
+                
+                <div className="dbd-hero-content">
+                    <div className="dbd-logo-container">
+                        <h1 className="dbd-main-title">DEAD BY</h1>
+                        <h1 className="dbd-main-title dbd-title-outline">DAYLIGHT</h1>
+                    </div>
+                    <p className="dbd-subtitle">Choose your fate. Survive or hunt.</p>
+                    
+                    <div className="dbd-hero-stats">
+                        <div className="dbd-stat">
+                            <FaUserInjured className="dbd-stat-icon" />
+                            <span className="dbd-stat-value">{survivors.length}</span>
+                            <span className="dbd-stat-label">Survivors</span>
+                        </div>
+                        <div className="dbd-stat">
+                            <FaSkull className="dbd-stat-icon" />
+                            <span className="dbd-stat-value">{killers.length}</span>
+                            <span className="dbd-stat-label">Killers</span>
+                        </div>
+                        <div className="dbd-stat">
+                            <FaShieldAlt className="dbd-stat-icon" />
+                            <span className="dbd-stat-value">{perks.length}</span>
+                            <span className="dbd-stat-label">Perks</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="dbd-scroll-indicator">
+                    <span></span>
                 </div>
             </section>
-            <div ref={charactersSectionRef} className="bg-black py-12 px-4 sm:px-6 lg:px-8  snap-start"></div>
-            <section id="characters"   className="bg-black py-12 px-4 sm:px-6 lg:px-8 min-h-screen snap-start">
-                <div className="max-w-[90%] mx-auto">
-                    <h2 className="text-4xl md:text-6xl font-extrabold text-red-600 mb-10 text-center" > Dead by Daylight </h2>
-                    <p className="text-gray-400 text-center mb-8 text-lg"> Explore the survivors and killers of The Entity's realm</p>
-                    <Link to="/">
-                        <button type="button" className="mb-10 flex items-center bg-gray-800 hover:bg-red-900 text-white px-4 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-red-500/30">
-                            <FaArrowLeftLong /> <span className="ml-3">Home</span>
-                        </button>
-                    </Link>
-                    <RotateDbd characters={characters} showCharacterDetails={showCharacterDetails} />
-                    <DbdKiller killers={charactersK} showKillerDetails={showCharacterDetails} />
-                    {modalVisible && selectedCharacter && (<DbdCards selectedCharacter={selectedCharacter} closeModal={closeModal} />)}
+
+            {/* Navigation Tabs */}
+            <nav className="dbd-nav">
+                <div className="dbd-nav-container">
+                    <button 
+                        className={`dbd-nav-tab ${activeTab === 'survivors' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('survivors')}
+                    >
+                        <FaUserInjured />
+                        <span>Survivors</span>
+                    </button>
+                    <button 
+                        className={`dbd-nav-tab ${activeTab === 'killers' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('killers')}
+                    >
+                        <FaSkull />
+                        <span>Killers</span>
+                    </button>
+                    <button 
+                        className={`dbd-nav-tab ${activeTab === 'perks' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('perks')}
+                    >
+                        <FaShieldAlt />
+                        <span>Perks</span>
+                    </button>
+                </div>
+            </nav>
+
+            {/* Content Section */}
+            <section className="dbd-content">
+                <div className="dbd-content-container">
+                    {/* Back Button */}
+                    <div className="dbd-back-section">
+                        <Link to="/" className="dbd-back-btn">
+                            <FaArrowLeft />
+                            <span>Back to Hub</span>
+                        </Link>
+                    </div>
+
+                    {/* Survivors Tab */}
+                    {activeTab === 'survivors' && (
+                        <div className="dbd-tab-content">
+                            <div className="dbd-section-header">
+                                <h2 className="dbd-section-title dbd-survivors-title">
+                                    <FaUserInjured /> Survivors
+                                </h2>
+                                <p className="dbd-section-subtitle">
+                                    Every survivor has unique perks and abilities. Choose wisely.
+                                </p>
+                            </div>
+                            <RotateDbd 
+                                characters={survivors} 
+                                showCharacterDetails={showCharacterDetails} 
+                            />
+                        </div>
+                    )}
+
+                    {/* Killers Tab */}
+                    {activeTab === 'killers' && (
+                        <div className="dbd-tab-content">
+                            <div className="dbd-section-header">
+                                <h2 className="dbd-section-title dbd-killers-title">
+                                    <FaSkull /> Killers
+                                </h2>
+                                <p className="dbd-section-subtitle">
+                                    Each killer has their own power and playstyle. Embrace the hunt.
+                                </p>
+                            </div>
+                            <DbdKiller 
+                                killers={killers} 
+                                showKillerDetails={showCharacterDetails} 
+                            />
+                        </div>
+                    )}
+
+                    {/* Perks Tab */}
+                    {activeTab === 'perks' && (
+                        <div className="dbd-tab-content">
+                            <div className="dbd-section-header">
+                                <h2 className="dbd-section-title">
+                                    <FaShieldAlt /> All Perks
+                                </h2>
+                                <p className="dbd-section-subtitle">
+                                    Browse all available perks for survivors and killers.
+                                </p>
+                            </div>
+                            <div className="dbd-perks-grid">
+                                {perks.slice(0, 50).map((perk) => (
+                                    <div 
+                                        key={perk.id} 
+                                        className={`dbd-perk-card ${perk.role === 'Survivor' ? 'dbd-survivor-perk' : 'dbd-killer-perk'}`}
+                                    >
+                                        <div className="dbd-perk-icon">
+                                            {perk.icon ? (
+                                                <img src={perk.icon} alt={perk.name} />
+                                            ) : (
+                                                <FaShieldAlt />
+                                            )}
+                                        </div>
+                                        <div className="dbd-perk-info">
+                                            <h3>{perk.name}</h3>
+                                            <span className={`dbd-perk-role ${perk.role === 'Survivor' ? 'survivor' : 'killer'}`}>
+                                                {perk.role}
+                                            </span>
+                                            <p>{perk.description?.substring(0, 100)}...</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
+
+            {/* Modal */}
+            {modalVisible && selectedCharacter && (
+                <DbdCards 
+                    selectedCharacter={selectedCharacter} 
+                    closeModal={closeModal} 
+                />
+            )}
+
+            {/* Footer */}
+            <footer className="dbd-footer">
+                <div className="dbd-footer-content">
+                    <div className="dbd-footer-logo">💀 Dead by Daylight</div>
+                    <p className="dbd-footer-text">
+                        This is a fan-made website. Dead by Daylight™ is a trademark of Behaviour Interactive Inc.
+                    </p>
+                    <p className="dbd-footer-copyright">
+                        Not affiliated with Behaviour Interactive. All rights reserved.
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 }

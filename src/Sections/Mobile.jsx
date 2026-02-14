@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Mobile() {
     return (
-        <section id="mobile" className="mb-[8%] mt-[7%]" data-aos="fade-up">
+        <section id="mobile" className="mb-6 mt-6" data-aos="fade-up">
             <h1 className="text-2xl font-semibold mb-4 text-center">Game Data Hub Mobile</h1>
             <div className="container mx-auto py-8 px-4">
                 <div className="flex flex-wrap justify-center gap-8">

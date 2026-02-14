@@ -26,7 +26,7 @@ export default function MainSection({ allGames, showGameDetails }) {
   const currentGame = randomGames[currentFeaturedIndex];
 
   return (
-    <div className="relative w-full mb-16">
+    <div className="relative w-full mb-8">
       {/* Hero Section */}
       <section className="relative overflow-hidden rounded-3xl">
         {/* Background Image */}
@@ -156,7 +156,7 @@ export default function MainSection({ allGames, showGameDetails }) {
                 loading="lazy"
                 src={game.background_image}
                 alt={game.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#030712] to-transparent"></div>
               

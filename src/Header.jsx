@@ -45,6 +45,18 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     }, []);
 
     const [isFavModalOpen, setIsFavModalOpen] = useState(false);
+
+    // Disable body scroll when modal is open
+    useEffect(() => {
+        if (modalStoreVisible || isFavModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [modalStoreVisible, isFavModalOpen]);
     function openFavModal() {
         setIsFavModalOpen(true);
     }
@@ -140,7 +152,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                                 onClick={() => setStoreVisible(true)}
                             >
                                 <FaStore className="mr-2 text-violet-400" /> 
-                                <span>Stores</span>
+                                <span>Stores </span>
                             </motion.button>
 
                             <a href="#news">
@@ -307,8 +319,8 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                 </AnimatePresence>
             </header>
 
-            {/* Stores Modal */}
-            <AnimatePresence>
+                            {/* Stores Modal */}
+                            <AnimatePresence>
                 {modalStoreVisible && (
                     <motion.div 
                         initial={{ opacity: 0 }} 
@@ -321,39 +333,84 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                             initial={{ scale: 0.9, y: 20, opacity: 0 }} 
                             animate={{ scale: 1, y: 0, opacity: 1 }} 
                             exit={{ scale: 0.9, y: 20, opacity: 0 }}
-                            className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto border border-white/10"
+                            className="bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-3xl p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto overflow-x-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 custom-scrollbar"
                             onClick={e => e.stopPropagation()}
                         > 
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
-                                    Game Stores
-                                </h3>
+                            <div className="flex justify-between items-center mb-8">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-3 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-xl">
+                                        <FaStore className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-white">
+                                            Game Stores
+                                        </h3>
+                                        <p className="text-gray-400 text-sm">Find the best deals on your favorite games</p>
+                                    </div>
+                                </div>
                                 <button 
                                     onClick={() => setStoreVisible(false)} 
-                                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                                    className="p-3 rounded-xl bg-white/5 hover:bg-violet-500/20 transition-all border border-white/10 hover:border-violet-500/30"
                                 >
-                                    <FaTimes className="w-5 h-5 text-gray-400" />
+                                    <FaTimes className="w-6 h-6 text-gray-300" />
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                {store.map((x, i) => (
-                                    <motion.div 
-                                        key={i} 
-                                        whileHover={{ scale: 1.03, y: -2 }} 
-                                        whileTap={{ scale: 0.97 }}
-                                        className="bg-white/5 hover:bg-white/10 p-4 rounded-xl cursor-pointer text-center border border-white/5 hover:border-violet-500/30 transition-all"
-                                        onClick={() => openStoreUrl(x.storeName)}
-                                    >
-                                        <img   
-                                            loading="lazy"  
-                                            src={`https://www.cheapshark.com${x.images.logo}`} 
-                                            alt={x.storeName} 
-                                            className="h-12 mx-auto mb-3 object-contain" 
-                                        />
-                                        <p className="text-white font-medium text-sm">{x.storeName}</p>
-                                    </motion.div>
-                                ))}
+                            {/* Featured Stores */}
+                            <div className="mb-6">
+                                <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Popular Stores</h4>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                    {store.slice(0, 8).map((x, i) => (
+                                        <motion.div 
+                                            key={i} 
+                                            whileHover={{ scale: 1.05, y: -4 }} 
+                                            whileTap={{ scale: 0.95 }}
+                                            className="bg-gradient-to-br from-violet-500/10 to-cyan-500/10 hover:from-violet-500/20 hover:to-cyan-500/20 p-4 rounded-2xl cursor-pointer border border-violet-500/20 hover:border-violet-500/50 transition-all group"
+                                            onClick={() => openStoreUrl(x.storeName, store)}
+                                        >
+                                            <div className="relative mb-3">
+                                                <img   
+                                                    loading="lazy"  
+                                                    src={`https://www.cheapshark.com${x.images.logo}`} 
+                                                    alt={x.storeName} 
+                                                    className="h-14 mx-auto object-contain" 
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg blur-lg"></div>
+                                            </div>
+                                            <p className="text-white font-semibold text-center text-sm">{x.storeName}</p>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* All Stores */}
+                            <div>
+                                <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">All Stores</h4>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                                    {store.slice(8).map((x, i) => (
+                                        <motion.div 
+                                            key={i} 
+                                            whileHover={{ scale: 1.05, y: -2 }} 
+                                            whileTap={{ scale: 0.95 }}
+                                            className="bg-white/5 hover:bg-white/10 p-3 rounded-xl cursor-pointer text-center border border-white/5 hover:border-violet-500/30 transition-all"
+                                            onClick={() => openStoreUrl(x.storeName, store)}
+                                        >
+                                            <img   
+                                                loading="lazy"  
+                                                src={`https://www.cheapshark.com${x.images.logo}`} 
+                                                alt={x.storeName} 
+                                                className="h-10 mx-auto mb-2 object-contain" 
+                                            />
+                                            <p className="text-gray-300 font-medium text-xs truncate">{x.storeName}</p>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-white/10">
+                                <p className="text-center text-gray-500 text-sm">
+                                    Click on any store to visit their website and find amazing game deals! 🎮
+                                </p>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -420,15 +477,31 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     );
 }
 
-function openStoreUrl(storeName) {
+function openStoreUrl(storeName, storeData) {
     const storeUrls = {
         'Steam': 'https://store.steampowered.com',
         'GOG': 'https://www.gog.com',
-        'Epic Games': 'https://www.epicgames.com',
+        'Epic Games Store': 'https://store.epicgames.com',
         'Origin': 'https://www.origin.com',
-        'Uplay': 'https://store.ubi.com',
+        'Uplay': 'https://www.ubisoft.com',
         'Battle.net': 'https://www.blizzard.com',
+        'Microsoft Store': 'https://www.xbox.com',
+        'Humble Bundle': 'https://www.humblebundle.com',
+        'GreenManGaming': 'https://www.greenmangaming.com',
+        'Amazon Games': 'https://www.amazon.com/gaming',
+        'GameStop': 'https://www.gamestop.com',
+        'Best Buy': 'https://www.bestbuy.com',
+        'Itch.io': 'https://itch.io',
+        'Kongregate': 'https://www.kongregate.com',
+        'Newegg': 'https://www.newegg.com',
     };
-    const url = storeUrls[storeName] || 'https://www.cheapshark.com';
-    window.open(url, '_blank');
+    
+    if (storeUrls[storeName]) {
+        window.open(storeUrls[storeName], '_blank');
+    } else {
+        // Fallback to CheapShark for other stores
+        const storeItem = storeData?.find(s => s.storeName === storeName);
+        const storeId = storeItem?.storeID || 1;
+        window.open(`https://www.cheapshark.com/redirect?storeID=${storeId}`, '_blank');
+    }
 }

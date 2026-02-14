@@ -45,7 +45,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
     };
 
     return (
-        <div className="relative group mb-12">
+        <div className="relative group mb-8">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-6 px-2">
                 <div className="relative">
@@ -68,7 +68,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.05 }}
-                                whileHover={{ y: -8 }}
+                                whileHover={{ y: -8, scale: 1.02 }}
                                 onClick={() => showGameDetails(x)}
                                 className="game-card carousel-item w-[220px] sm:w-[260px] md:w-[300px] flex-shrink-0 cursor-pointer bg-white/5 border border-white/5 hover:border-violet-500/40 transition-all duration-300 rounded-2xl overflow-hidden"
                             >
@@ -78,7 +78,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
                                         loading="lazy"
                                         src={x.background_image}
                                         alt={x.name}
-                                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                        className="w-full h-full object-cover"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent opacity-80"></div>
                                     

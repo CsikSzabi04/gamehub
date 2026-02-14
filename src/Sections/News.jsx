@@ -58,7 +58,7 @@ export default function News() {
  
 
   return (
-    <section id="news" className="mb-8 px-4 relative" data-aos="fade-up">
+    <section id="news" className="mb-6 px-4 relative" data-aos="fade-up">
       <h2 className="text-2xl font-semibold mb-4">Latest Steam News</h2>
       <div className="relative group">
         <button onClick={prevItem} className="absolute -left-5 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-label="Previous news">
