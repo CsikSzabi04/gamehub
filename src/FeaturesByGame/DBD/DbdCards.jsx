@@ -36,7 +36,7 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                     <div className="flex flex-col lg:flex-row">
                         <div className="relative w-full lg:w-2/5 min-h-64 lg:min-h-[400px]">
                             {!imageLoaded && <div className="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center"><span className="text-gray-500">Loading image...</span></div>}
-                            <img src={selectedCharacter.image} alt={selectedCharacter.name} className={`w-full h-full object-cover ${imageLoaded ? 'block' : 'hidden'} ${isKiller ? 'brightness-90 contrast-110' : 'brightness-100'}`} onLoad={() => setImageLoaded(true)} onError={(e) => { e.target.src = isKiller ? '/images/killer-placeholder.png' : '/images/survivor-placeholder.png'; setImageLoaded(true);}}/>
+                            <img src={selectedCharacter.image} alt={selectedCharacter.name} className={`w-full h-full object-cover ${imageLoaded ? 'block' : 'hidden'} ${isKiller ? 'brightness-90 contrast-110' : 'brightness-100'}`} onLoad={() => setImageLoaded(true)} onError={(e) => { e.target.src = isKiller ? '/images/killer-placeholder.png' : '/images/survivor-placeholder.png'; setImageLoaded(true);}} loading="lazy"/>
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
                                 <h2 className="text-2xl md:text-3xl font-bold text-white">{selectedCharacter.name}</h2>
                                 <div className="flex items-center mt-1">
@@ -89,7 +89,7 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                                                     <motion.div  initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-800/70 p-4 rounded-lg border border-gray-700">
                                                         <div className="flex items-center mb-3">
                                                             {perkDetails.icon && (
-                                                                <img src={perkDetails.icon} alt={perkDetails.name} className="w-12 h-12 object-contain mr-3" />
+                                                                <img src={perkDetails.icon} alt={perkDetails.name} className="w-12 h-12 object-contain mr-3" loading="lazy" />
                                                             )}
                                                             <h4 className={`text-xl font-bold text-${roleColor}-400`}>{perkDetails.name}</h4>
                                                         </div>

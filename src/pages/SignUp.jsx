@@ -78,6 +78,7 @@ export default function Register({ auth, setUsername, username }) {
                 src="./gaming.png" 
                 alt="Signup Illustration" 
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent"></div>
               

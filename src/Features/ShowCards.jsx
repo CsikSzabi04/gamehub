@@ -36,16 +36,11 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   }, [user, fav]);
 
   useEffect(() => {
-    if (favok.length >= 0 && selectedGame) {
-      for (let o of favok) {
-        if (o.gameId != selectedGame.id) {
-          setFav(false)
-        } else {
-          setFav(true)
-        }
-      }
+    if (selectedGame && favok.length >= 0) {
+      const isFavorite = favok.some(o => o.gameId === selectedGame.id);
+      setFav(isFavorite);
     }
-  }, [selectedGame, fav]);
+  }, [selectedGame, favok]);
 
 
   async function addFav() {
@@ -119,6 +114,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
                 src={selectedGame.background_image} 
                 alt={selectedGame.name} 
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
               

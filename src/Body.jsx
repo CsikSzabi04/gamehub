@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
 import './body.css';
+import React, { useEffect, useState } from "react";
 import Rotate from "./Rotate/Rotate.jsx"
 import ShowCards from './Features/ShowCards.jsx';
 import FeaturedGames from '././Sections/FeaturedGames.jsx'; 
@@ -19,6 +19,7 @@ import GamingNews from './Sections/GamingNews.jsx';
 import StartUp from './Features/StartUp.jsx';
 import ReviewsOpenMain from './Sections/ReviewsOpenMain.jsx';
 import DBD_Movies from './FeaturesByGame/DBD_Movies.jsx';
+import LazySection from './Components/LazySection.jsx';
 
 
 export default function Body() {
@@ -35,6 +36,12 @@ export default function Body() {
     const [searchTrue, setSearchTrue] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [componentsLoaded, setComponentsLoaded] = useState(false);
+
+    // Check if this is a first load (not navigation from within the app)
+    const [isFirstLoad, setIsFirstLoad] = useState(() => {
+        const hasVisited = sessionStorage.getItem('hasVisited');
+        return !hasVisited;
+    });
 
     useEffect(() => {
         async function fetchFeaturedGames() {
@@ -82,66 +89,68 @@ export default function Body() {
 
     return (
         <div>
-            {!isLoaded && <StartUp  onLoaded={() => setIsLoaded(true)} /> } {isLoaded && componentsLoaded &&( <>
+            {isFirstLoad && !isLoaded ? (
+                <StartUp onLoaded={() => { setIsLoaded(true); sessionStorage.setItem('hasVisited', 'true'); }} />
+            ) : (
+            <>
             <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
             {searchTrue == false ? (
                 <div className="main-content w-full">
                     <div className='allSections'>      
-                        <div data-aos="fade-up" data-aos-duration="1000">
+                        <LazySection>
                             <MainSection allGames={allGames} showGameDetails={showGameDetails} />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
-                            <StoresFooter />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                        </LazySection>
+                        
+                        <LazySection>
                             <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                        </LazySection>
+                        <LazySection>
                             <Free />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                        </LazySection>
+                        <LazySection>
                             <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
+                        </LazySection>
+                        <LazySection>
                             <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+                        </LazySection>
+                        <LazySection>
                             <Discounted />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="700">
+                        </LazySection>
+                        <LazySection>
                             <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
+                        </LazySection>
+                        <LazySection>
                             <Mobile />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="900">
+                        </LazySection>
+                        <LazySection>
                             <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1000">
+                        </LazySection>
+                        <LazySection>
                             <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
-                        </div>
-                        <div id='news' data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1100">
+                        </LazySection>
+                        <LazySection>
                             <News />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1200">
+                        </LazySection>
+                        <LazySection>
                             <Loot />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1300">
+                        </LazySection>
+                        <LazySection>
                             <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1400">
+                        </LazySection>
+                        <LazySection>
                             <DBD_Movies />
-                        </div>
-                        <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1500">
+                        </LazySection>
+                        <LazySection>
                             <GamingNews />
-                        </div>
+                        </LazySection>
                        
                         <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
                     </div>
                     <Footer />
                 </div>
             ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
-            </>) }
+            </>
+            )}
         </div>
     );
 }

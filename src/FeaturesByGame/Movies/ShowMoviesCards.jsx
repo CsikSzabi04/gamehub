@@ -36,7 +36,7 @@ export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisibl
                 <button onClick={closeModal} className="absolute top-4 mb-5 right-4 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-2 transition-all duration-200 hover:bg-opacity-75"><FaTimes className="text-xl" /> </button>
                 <div className="flex flex-col md:flex-row">
                     <div className="relative w-full md:w-1/3">
-                        <img src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}alt={selectedMovie.title}  className="w-full h-full object-cover"/>
+                        <img src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}alt={selectedMovie.title}  className="w-full h-full object-cover" loading="lazy"/>
                     </div>
                     <div className="w-full md:w-2/3 p-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{selectedMovie.title}</h2>

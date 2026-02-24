@@ -66,12 +66,7 @@ export default function Footer() {
                     <div>
                         <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
                         <ul className="space-y-3">
-                            <li>
-                                <a href="/" className="text-gray-400 hover:text-violet-400 transition-colors text-sm flex items-center group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-violet-500/50 mr-3 group-hover:bg-violet-400 transition-colors"></span>
-                                    Home
-                                </a>
-                            </li>
+                  
                             <li>
                                 <a href="/discover" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm flex items-center group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50 mr-3 group-hover:bg-cyan-400 transition-colors"></span>

@@ -274,7 +274,7 @@ export default function DbdApp() {
                                     >
                                         <div className="dbd-perk-icon">
                                             {perk.icon ? (
-                                                <img src={perk.icon} alt={perk.name} />
+                                                <img src={perk.icon} alt={perk.name} loading="lazy" />
                                             ) : (
                                                 <FaShieldAlt />
                                             )}

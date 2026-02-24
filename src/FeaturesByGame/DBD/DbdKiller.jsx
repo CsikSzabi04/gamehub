@@ -98,6 +98,7 @@ export default function DbdKiller({ killers, showKillerDetails }) {
                                         src={killer.image || killer.imgs}   
                                         alt={killer.name}  
                                         className="w-full h-64 md:h-72 object-cover object-top"
+                                        loading="lazy"
                                         onError={(e) => { e.target.src = '/images/killer-placeholder.png'; }}
                                     />
                                     <div className="p-4">

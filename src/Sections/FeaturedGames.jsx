@@ -18,7 +18,13 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
         }
     };
 
-    const [randomGames, setRandomGames] = React.useState(getRandomGames());
+    const [randomGames, setRandomGames] = React.useState([]);
+
+    React.useEffect(() => {
+        if (allGames && allGames.length > 0) {
+            setRandomGames(getRandomGames());
+        }
+    }, [allGames]);
 
     React.useEffect(() => {
         const handleResize = () => {
@@ -41,7 +47,11 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
 
             {/* Games Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-                {randomGames.length > 0 ? (
+                {!allGames || allGames.length === 0 ? (
+                    <div className="col-span-full flex items-center justify-center py-20">
+                        <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                ) : randomGames.length > 0 ? (
                     randomGames.map((game, index) => (
                         <motion.div
                             key={game.id}
@@ -108,12 +118,7 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
                     ))
                 ) : (
                     <div className="col-span-full flex items-center justify-center py-20">
-                        <div className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
-                                <span className="text-3xl">🎮</span>
-                            </div>
-                            <p className="text-gray-400">No games found.</p>
-                        </div>
+                        <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin" />
                     </div>
                 )}
             </div>

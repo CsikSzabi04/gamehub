@@ -122,6 +122,7 @@ export default function Profile({ setUser, username }) {
                                         src={userInfo.photoURL} 
                                         alt="Profile" 
                                         className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
+                                        loading="lazy"
                                     />
                                 ) : (
                                     <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center border-4 border-violet-500">

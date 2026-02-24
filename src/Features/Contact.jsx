@@ -127,6 +127,7 @@ export default function Contact() {
     };
 
     const [favorites, setFavorites] = useState([]);
+    const [error, setError] = useState("");
     const { user } = useContext(UserContext);
 
 

@@ -141,6 +141,7 @@ export default function Login({ auth, setUser }) {
                 src="./gaming.png" 
                 alt="Login Illustration" 
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent"></div>
               

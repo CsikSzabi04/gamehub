@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import RotateDiscounted from "../Rotate/RotateDiscounted.jsx";
-import DiscountedShowCards from "../Features/DiscountedShowCards.jsx";
 
 export default function Discounted() {
     const [freeGames, setFreeGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         fetchFreeGames();
@@ -31,20 +28,13 @@ export default function Discounted() {
         }
     }
 
-    function showGameDetails(game) {
-        setSelectedGame(game);
-        setModalVisible(true);
-    }
-
-    function closeModal() {
-        setModalVisible(false);
-        setSelectedGame(null);
-    }
-
     return (
-        <section id="free-games" className="mb-8" data-aos="fade-up">
-            <RotateDiscounted  games={freeGames}  showGameDetails={showGameDetails}  name="Discounted Games" />
-            {modalVisible && selectedGame && ( <DiscountedShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible}/>)}
+        <section id="discounted-games" className="mb-8" data-aos="fade-up">
+            <RotateDiscounted 
+                games={freeGames} 
+                showGameDetails={() => {}} 
+                name="Discounted Games" 
+            />
         </section>
     );
 }

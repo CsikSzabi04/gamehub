@@ -61,7 +61,7 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
                     <div className="carousel flex space-x-4" ref={carouselRef} style={{ width: `${movies.length * 2 * itemWidth}px` }}>
                         {movies.concat(movies).map((movie, index) => (
                             <div key={`${movie.id}-${index}`} className="movies carousel-item  flex flex-col justify-between" style={{ width: `${itemWidth}px` }} onClick={() => showMovieDetails(movie)}>
-                                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="movie-image " />
+                                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="movie-image " loading="lazy" />
                                 <div className="movie-details mt-10">
                                     <h3 className="text-lg font-bold mb-2">{movie.title}</h3>
                                     <p className="text-sm text-gray-400">Release: {movie.release_date}</p>

@@ -37,7 +37,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
   }, [user, fav]);
 
   useEffect(() => {
-    if (favok.length >= 0 && selectedGame) {
+    if (selectedGame && favok) {
       const isFavorite = favok.some(o => o.gameId === selectedGame.gameID);
       setFav(isFavorite);
     }

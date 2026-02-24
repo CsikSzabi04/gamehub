@@ -67,8 +67,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
     useEffect(() => {
         if (!user?.uid) return;
 
-        let isMounted = true; 
-        const controller = new AbortController();
+        let isMounted = true;
 
         async function getFavorites() {
             try {
@@ -79,20 +78,16 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                 console.error("Error fetching favorites:", error);
             }
         }
+
         getFavorites();
-        if (user) {
-            getFavorites();
-            const intervalId = setInterval(getFavorites, 1000);
-            return () => clearInterval(intervalId);
-        }
+        const intervalId = setInterval(getFavorites, 1000);
 
         return () => {
             isMounted = false;
             clearInterval(intervalId);
-            controller.abort(); 
         };
         
-    }, [user, favorites]);
+    }, [user?.uid]);
 
     async function delFav(id) {
         console.log(id)
@@ -129,7 +124,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                         <div className="hidden md:flex flex-1 max-w-md mx-8">
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FaSearch className="h-4 w-4 text-gray-500" />
+                                    
                                 </div>
                                 <Search games={games} setGames={setGames} setSearchTrue={setSearchTrue} />
                             </div>
@@ -155,18 +150,7 @@ export default function Header({ searchTrue, setGames, setSearchTrue, games }) {
                                 <span>Stores </span>
                             </motion.button>
 
-                            <a href="#news">
-                                <motion.button 
-                                    whileHover={{ scale: 1.05 }} 
-                                    whileTap={{ scale: 0.95 }} 
-                                    className="flex items-center px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
-                                >
-                                    <FaNewspaper className="mr-2 text-cyan-400" /> 
-                                    <span>News</span>
-                                </motion.button>
-                            </a>
-
-                            <Link to="/discover">
+                                       <Link to="/discover">
                                 <motion.button 
                                     whileHover={{ scale: 1.05 }} 
                                     whileTap={{ scale: 0.95 }} 

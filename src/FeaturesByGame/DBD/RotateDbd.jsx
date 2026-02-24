@@ -97,6 +97,7 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
                                         src={character.image || character.imgs}  
                                         alt={character.name} 
                                         className="w-full h-64 md:h-72 object-cover object-top"
+                                        loading="lazy"
                                     />
                                     <div className="p-4">
                                         <h3 className="dbd-character-name">{character.name}</h3>

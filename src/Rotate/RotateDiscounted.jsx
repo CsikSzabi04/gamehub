@@ -1,88 +1,144 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import '../body.css';
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { FaExternalLinkAlt } from "react-icons/fa";
 
 export default function RotateDiscounted({ games, showGameDetails, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const carouselRef = useRef(null);
-    const itemWidth = 400;
 
     useEffect(() => {
-        const totalItems = games.length;
+        if (!games.length || !carouselRef.current) return;
+        
         const intervalTime = 15000;
-        const carousel = carouselRef.current;
-
+        
         const rotateInterval = setInterval(() => {
             setCurrentIndex(prevIndex => {
-                const newIndex = (prevIndex + 1) % totalItems;
-                gsap.to(carousel, {
-                    x: -newIndex * itemWidth,
-                    duration: 1.5,
-                    ease: "power2.inOut",
-                    overwrite: true
-                });
+                const newIndex = (prevIndex + 1) % games.length;
                 return newIndex;
             });
         }, intervalTime);
+
         return () => clearInterval(rotateInterval);
     }, [games]);
 
+    useEffect(() => {
+        if (carouselRef.current && games.length > 0) {
+            gsap.to(carouselRef.current, {
+                x: -currentIndex * 320,
+                duration: 1,
+                ease: "power2.inOut"
+            });
+        }
+    }, [currentIndex, games.length]);
+
     function nextItem() {
-        const carousel = carouselRef.current;
-        const newIndex = (currentIndex + 2) % games.length;
-        gsap.to(carousel, {
-            x: -newIndex * 500,
-            duration: 0.5,
-            ease: "power2.inOut",
-            overwrite: true
-        });
+        const newIndex = (currentIndex + 1) % games.length;
         setCurrentIndex(newIndex);
-    };
+    }
 
     function prevItem() {
-        const carousel = carouselRef.current;
-        const newIndex = (currentIndex - 2 + games.length) % games.length;
-        gsap.to(carousel, {
-            x: -newIndex * 500,
-            duration: 0.5,
-            ease: "power2.inOut",
-            overwrite: true
-        });
+        const newIndex = (currentIndex - 1 + games.length) % games.length;
         setCurrentIndex(newIndex);
-    };
+    }
+
+    if (!games || games.length === 0) {
+        return (
+            <div className="bg-gray-900 rounded-lg p-6">
+                <h2 className="text-2xl font-semibold mb-4 text-white">{name}</h2>
+                <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="relative" data-aos="fade-up">
-            <section id="free-games" className="mb-8 s">
-                <h2 className="text-2xl font-semibold mb-4">{name} 💸</h2>
-                <div className="carousel-container overflow-hidden relative">
-                    <div className="carousel flex space-x-4" ref={carouselRef} style={{ width: `${games.length * 2 * itemWidth}px` }}>
-                        {games.concat(games).map((game, index) => (
-                          <div key={`${game.id}-${index}`} className="game-carda carousel-item min-h-[20%] max-h-[80%] flex flex-col justify-between cursor-pointer hover:scale-[1.02] transition-all duration-300 group/card" style={{ width: `${itemWidth}px` }} onClick={() => showGameDetails(game)}>                                <div className="relative overflow-hidden rounded-md md:rounded-lg h-32 sm:h-36 md:h-40">
-                                    <img  loading="lazy"  src={game.background_image} alt={game.name} className="game-image w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:from-black/80"></div>
-                                </div>
-                                <div className="game-details p-2 sm:p-3 md:p-4 bg-gray-800/80 rounded-b-md md:rounded-b-lg flex flex-col justify-between min-h-[120px]">
-                                    <div>
-                                        <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 sm:mb-2 text-white line-clamp-1">{game.name}</h3>
-                                        <p className="text-xs sm:text-sm text-gray-300">Original: {(game.originalPrice * 1.3).toFixed(2)} USD</p>
-                                        <p className="text-xs sm:text-sm text-gray-300">Discount: {game.discountPrice} USD</p>
+        <div className="bg-gray-900 rounded-lg p-4 md:p-6" data-aos="fade-up">
+            <h2 className="text-2xl font-semibold mb-4 text-white">{name}</h2>
+            
+            <div className="relative">
+                <button 
+                    onClick={prevItem} 
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full transition-colors -translate-x-2 md:translate-x-0"
+                    aria-label="Previous game"
+                >
+                    <FaAngleLeft size={20} />
+                </button>
+
+                <div className="overflow-hidden mx-8">
+                    <div 
+                        ref={carouselRef} 
+                        className="flex transition-transform duration-500 ease-out"
+                        style={{ width: `${games.length * 320}px` }}
+                    >
+                        {games.map((game, index) => (
+                            <div 
+                                key={`${game.id}-${index}`} 
+                                className="w-72 md:w-80 flex-shrink-0 px-2"
+                            >
+                                <div 
+                                    className="bg-gray-800 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/20 group"
+                                    onClick={() => showGameDetails(game)}
+                                >
+                                    <div className="relative h-36 md:h-40 overflow-hidden">
+                                        <img 
+                                            loading="lazy"
+                                            src={game.background_image} 
+                                            alt={game.name} 
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-transparent" />
+                                        <div className="absolute right-2 top-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                            SALE
+                                        </div>
                                     </div>
-                                    <div className="mt-2">
-                                        <p className="text-xs sm:text-sm text-gray-300">Deal Status: <span className="text-green-500">{game.Status}</span></p>
+
+                                    <div className="p-3 md:p-4">
+                                        <h3 className="text-white font-bold text-sm md:text-base line-clamp-1 mb-2">
+                                            {game.name}
+                                        </h3>
+                                        
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-gray-500 line-through text-xs">
+                                                ${(game.originalPrice * 1.3).toFixed(2)}
+                                            </span>
+                                            <span className="text-green-500 font-bold text-sm">
+                                                ${game.discountPrice}
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-2">
+                                            <span className="text-green-500 text-xs">
+                                                {game.Status || "Active"}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-            </section>
-            <div className="d">
-                <button onClick={prevItem} className="absolute left-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full arr"><FaAngleLeft /> </button>
-                <button onClick={nextItem} className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full arr" ><FaChevronRight /> </button>
+
+                <button 
+                    onClick={nextItem} 
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full transition-colors translate-x-2 md:translate-x-0"
+                    aria-label="Next game"
+                >
+                    <FaChevronRight size={20} />
+                </button>
+            </div>
+
+            <div className="flex justify-center mt-4 gap-2">
+                {games.slice(0, 10).map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                            currentIndex === index ? 'bg-violet-500' : 'bg-gray-600 hover:bg-gray-500'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
             </div>
         </div>
     );

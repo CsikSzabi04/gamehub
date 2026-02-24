@@ -45,7 +45,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
     };
 
     return (
-        <div className="relative group mb-8">
+        <div className="relative mb-8">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-6 px-2">
                 <div className="relative">
@@ -93,7 +93,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
                                     {/* External Link */}
                                     <Link 
                                         to={`/allreview/${x.id}`}
-                                        className="absolute top-3 left-3 z-20 p-2 rounded-lg bg-black/60 hover:bg-violet-600 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                        className="absolute top-3 left-3 z-20 p-2 rounded-lg bg-black/60 hover:bg-violet-600 opacity-0 hover:opacity-100 transition-all duration-300"
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <FaExternalLinkAlt className="w-3 h-3 text-white" />
@@ -118,7 +118,7 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
                                 </div>
 
                                 {/* Bottom Accent */}
-                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-cyan-500 transform scale-x-0 hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                             </motion.div>
                         ))}
                     </div>
@@ -126,16 +126,16 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA, k 
             </div>
 
             {/* Navigation Controls */}
-            <div className="controls opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="controls flex justify-between items-center absolute inset-0 pointer-events-none">
                 <button 
                     onClick={prevItem} 
-                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                    className="pointer-events-auto ml-2 md:ml-4 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
                 >
                     <FaAngleLeft className="text-xl" />
                 </button>
                 <button 
                     onClick={nextItem} 
-                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                    className="pointer-events-auto mr-2 md:mr-4 p-3 rounded-full bg-white/10 border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/30 text-white shadow-lg transition-all duration-300 hover:scale-110 backdrop-blur-sm"
                 >
                     <FaChevronRight className="text-xl" />
                 </button>

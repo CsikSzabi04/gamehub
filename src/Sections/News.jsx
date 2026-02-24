@@ -67,11 +67,17 @@ export default function News() {
         <div className="relative overflow-hidden">
           <div className="carousel flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
             {newsItems.map((news) => (
-              <div key={news.id} className="game-card carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                <div className="bg-gray-800 p-4 rounded-md shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+              <a 
+                key={news.id} 
+                href={news.game_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 block no-underline"
+              >
+                <div className="bg-gray-800 p-4 rounded-md shadow-lg h-full flex flex-col">
                   <div className="relative mb-4 overflow-hidden rounded-md">
                     {news.thumbnail && (
-                      <img  loading="lazy"  src={news.thumbnail} alt={news.title} className="h-48 w-full object-cover hover:scale-105 transition-transform duration-500" />
+                      <img loading="lazy" src={news.thumbnail} alt={news.title} className="h-48 w-full object-cover hover:scale-110 transition-transform duration-500" />
                     )}
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{news.title}</h3>
@@ -79,10 +85,9 @@ export default function News() {
                   <div className="mt-auto">
                     <p className="text-xs text-gray-500 mt-2">{`Publisher: ${news.publisher}`}</p>
                     <p className="text-xs text-gray-500 mt-1">{`Release Date: ${news.release_date}`}</p>
-                    <a href={news.game_url} target="_blank" rel="noopener noreferrer" className="inline-block text-blue-500 hover:text-blue-400 text-sm mt-3 transition-colors duration-200"> Read More</a>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
