@@ -6,9 +6,11 @@
   "proxy": "https://api.steampowered.com",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "snapshot": "node scripts/snapshot.mjs",
+    "build": "node scripts/snapshot.mjs && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

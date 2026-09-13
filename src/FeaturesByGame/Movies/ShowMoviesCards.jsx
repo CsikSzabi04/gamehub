@@ -25,15 +25,16 @@ export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisibl
     }, [modalVisible]);
 
     if (!selectedMovie) return null;
-    const truncatedOverview = selectedMovie.overview.length > 150 ? `${selectedMovie.overview.substring(0, 150)}...` : selectedMovie.overview;
+    const overview = selectedMovie.overview || '';
+    const truncatedOverview = overview.length > 150 ? `${overview.substring(0, 150)}...` : overview;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-900 rounded-xl overflow-hidden w-full max-w-2xl relative  max-h-[80%]  overflow-y-auto">
                 <div className="absolute -bottom-2 -right-2 p-2 bg-yellow-500 text-gray-900 font-bold rounded-full w-12 h-12 flex items-center justify-center z-10 border-2 border-white shadow-lg">
                     {selectedMovie.vote_average?.toFixed(1)}
                 </div>
-                <button onClick={closeModal} className="absolute top-4 mb-5 right-4 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-2 transition-all duration-200 hover:bg-opacity-75"><FaTimes className="text-xl" /> </button>
+                <button onClick={closeModal} className="absolute top-4 mb-5 right-4 text-white hover:text-gray-300 z-10 bg-black/50 rounded-full p-2 transition-all duration-200 hover:bg-black/75"><FaTimes className="text-xl" /> </button>
                 <div className="flex flex-col md:flex-row">
                     <div className="relative w-full md:w-1/3">
                         <img src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}alt={selectedMovie.title}  className="w-full h-full object-cover" loading="lazy"/>
@@ -55,7 +56,7 @@ export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisibl
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             <div className="bg-gray-800 p-3 rounded-lg">
                                 <span className="text-gray-400 text-sm">Popularity: </span>
-                                <span className="text-gray-300 ml-2  font-medium">{selectedMovie.popularity.toFixed(2)}</span>
+                                <span className="text-gray-300 ml-2  font-medium">{Number(selectedMovie.popularity ?? 0).toFixed(2)}</span>
                             </div>
                             <div className="bg-gray-800 p-3 rounded-lg">
                                 <span className="text-gray-400 text-sm">Vote Count: </span>

@@ -1,9 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, lazy, Suspense } from 'react';
 import { UserContext } from '../Features/UserContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdDeleteForever, MdClose, MdStar, MdCalendarToday, MdGamepad, MdStore, MdRateReview } from "react-icons/md";
 import { motion, AnimatePresence } from 'framer-motion';
+
+const SteamInsights = lazy(() => import('../Hub/SteamInsights.jsx'));
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
   const { user } = useContext(UserContext);
@@ -25,6 +27,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   useEffect(() => {
     async function getFavok() {
+      if (!user?.uid) return;
       const resp = await fetch(`https://gamehub-backend-zekj.onrender.com/getFav?userId=${user.uid}`);
       const json = await resp.json();
       setFavok(json);
@@ -82,157 +85,107 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   if (!selectedGame) return null;
 
+  const platforms = selectedGame.platforms?.map(p => p.platform.name).join(", ");
+  const stores = selectedGame.stores?.map(s => s.store.name) || [];
+
   return (
     <AnimatePresence>
       {modalVisible && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75"
           onClick={closeModal}
         >
-          <motion.div 
-            initial={{ scale: 0.9, y: 20, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.9, y: 20, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-2xl"
+          <motion.div
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 12, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-2xl max-h-[92svh] sm:max-h-[90vh] overflow-y-auto overscroll-contain custom-scrollbar rounded-t-2xl sm:rounded-2xl bg-[#111319] border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
           >
-            {/* Close Button */}
-            <button 
-              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+            <button
+              className="gh-icon-btn absolute top-3 right-3 z-10 !bg-black/60"
               onClick={closeModal}
+              aria-label="Close"
             >
-              <MdClose className="w-5 h-5 text-white" />
+              <MdClose className="w-5 h-5" />
             </button>
 
-            {/* Hero Image */}
-            <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl">
-              <img 
-                src={selectedGame.background_image} 
-                alt={selectedGame.name} 
+            <div className="relative aspect-[16/9] sm:aspect-[16/8] overflow-hidden rounded-t-2xl bg-[#171a22]">
+              <img
+                src={selectedGame.background_image}
+                alt={selectedGame.name}
                 className="w-full h-full object-cover"
-                loading="lazy"
+                decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-              
-              {/* Rating Badge */}
-              {selectedGame.rating && (
-                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm font-bold flex items-center gap-1">
-                  <MdStar className="text-sm" />
-                  {selectedGame.rating}/5
-                </div>
-              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#111319] via-transparent to-transparent"></div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 md:p-8 -mt-12 relative">
-              {/* Title */}
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">{selectedGame.name}</h2>
+            <div className="px-4 sm:px-6 md:px-8 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-6 md:pb-8 -mt-8 sm:-mt-10 relative">
+              <h2 className="!mb-0 text-xl sm:text-2xl md:text-3xl font-extrabold text-white break-words">{selectedGame.name}</h2>
 
-              {/* Meta Info Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="p-2 rounded-lg bg-violet-500/20 text-violet-400">
-                    <MdCalendarToday className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Release Date</p>
-                    <p className="text-sm text-white font-medium">{selectedGame.released || 'TBA'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
-                    <MdGamepad className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Platforms</p>
-                    <p className="text-sm text-white font-medium">
-                      {selectedGame.platforms ? selectedGame.platforms.map(p => p.platform.name).join(", ") : "?"}
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#a1a6b3]">
+                {selectedGame.rating ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MdStar className="text-amber-400" />
+                    <span className="font-semibold text-white">{selectedGame.rating}</span> / 5
+                  </span>
+                ) : null}
+                <span className="inline-flex items-center gap-1.5">
+                  <MdCalendarToday className="text-[#6b7080]" />
+                  {selectedGame.released || 'TBA'}
+                </span>
               </div>
 
-              {/* Stores */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
-                  <MdStore className="w-4 h-4" />
-                  Available Stores
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedGame.stores ? (
-                    selectedGame.stores.map((store, i) => (
-                      <span 
-                        key={i} 
-                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm"
-                      >
-                        {store.store.name}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500 text-sm">No stores available</span>
-                  )}
+              <dl className="mt-6 divide-y divide-white/[0.06] border-y border-white/[0.06]">
+                <div className="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-1 sm:gap-4 py-3">
+                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdGamepad /> Platforms</dt>
+                  <dd className="text-sm text-[#d4d7de]">{platforms || '—'}</dd>
                 </div>
-              </div>
+                <div className="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-1 sm:gap-4 py-3">
+                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdStore /> Stores</dt>
+                  <dd className="text-sm text-[#d4d7de]">{stores.length ? stores.join(', ') : 'No stores available'}</dd>
+                </div>
+              </dl>
 
-              {/* Genres/Tags */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-400 mb-3">Genres & Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedGame.tags?.slice(0, 8).map((g, i) => (
-                    <span 
-                      key={i} 
-                      className="px-3 py-1.5 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm"
-                    >
-                      {g.name}
-                    </span>
+              {selectedGame.tags?.length > 0 && (
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {selectedGame.tags.slice(0, 8).map((g, i) => (
+                    <span key={i} className="gh-chip">{g.name}</span>
                   ))}
-                </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                  {error}
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
-                {/* Reviews Button */}
-                <Link
-                  to={`/allreview/${selectedGame.id}`}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all"
-                >
-                  <MdRateReview className="w-5 h-5" />
-                  Reviews
-                </Link>
+              <Suspense fallback={null}>
+                <SteamInsights name={selectedGame.name} />
+              </Suspense>
 
+              {error && (
+                <p className="mt-5 text-sm text-red-400">{error}</p>
+              )}
+
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 {fav ? (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={delFav}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-semibold hover:bg-red-500/30 transition-all"
-                  >
-                    <MdDeleteForever className="w-5 h-5" />
-                    Remove
-                  </motion.button>
+                  <button onClick={delFav} className="gh-btn gh-btn-secondary flex-1 !h-11">
+                    <MdDeleteForever className="w-5 h-5 text-[#f87171]" />
+                    Remove from favorites
+                  </button>
                 ) : (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={addFav}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
-                  >
+                  <button onClick={addFav} className="gh-btn gh-btn-primary flex-1 !h-11">
                     <IoAddCircleOutline className="w-5 h-5" />
-                    Add to Favorites
-                  </motion.button>
+                    Add to favorites
+                  </button>
                 )}
+                <Link to={`/allreview/${selectedGame.id}`} className="gh-btn gh-btn-secondary flex-1 !h-11">
+                  <MdRateReview className="w-5 h-5" />
+                  Game page & reviews
+                </Link>
               </div>
             </div>
           </motion.div>

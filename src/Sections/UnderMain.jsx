@@ -1,4 +1,38 @@
 import { useState, useEffect } from "react";
+import { BsStarFill } from "react-icons/bs";
+import { releaseYear } from "../Components/GameCard.jsx";
+import { rawgImg } from "../Components/rawgImage.js";
+
+function Tile({ game, onClick, large }) {
+    return (
+        <div
+            role="button"
+            tabIndex={0}
+            onClick={() => onClick(game)}
+            onKeyDown={(e) => { if (e.key === 'Enter') onClick(game); }}
+            className={`group relative overflow-hidden rounded-xl bg-[#111319] cursor-pointer ${large ? 'min-h-[260px] md:min-h-0' : 'min-h-[140px]'}`}
+        >
+            <img
+                loading="lazy"
+                decoding="async"
+                src={rawgImg(game.background_image, large ? 1280 : 640)}
+                alt={game.name}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+            <div className={`absolute inset-x-0 bottom-0 ${large ? 'p-5 md:p-6' : 'p-3.5'}`}>
+                <h3 className={`font-semibold text-white truncate ${large ? 'text-xl md:text-2xl' : 'text-sm'}`}>{game.name}</h3>
+                <div className="mt-1 flex items-center gap-3 text-xs text-[#c9ccd4]">
+                    <span>{releaseYear(game.released)}</span>
+                    <span className="inline-flex items-center gap-1">
+                        <BsStarFill className="text-amber-400 text-[10px]" />
+                        {Number(game.rating ?? 0).toFixed(1)}
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function MainSection({ allGames, showGameDetails }) {
     const [randomGames, setRandomGames] = useState([]);
@@ -8,50 +42,20 @@ export default function MainSection({ allGames, showGameDetails }) {
     }, [allGames]);
 
     return (
-        <div className="container mx-auto bg-gray-900 p-4 mt-6 mb-6" data-aos="fade-up">
-            <section id="featured-games" className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-4">Featured Games</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {randomGames.length > 0 ? (
-                        <>
-                            <div className="md:col-span-1 flex flex-col gap-4">
-                                {randomGames.slice(1).map((game) => (
-                                    <div key={game.id} className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group flex-1" onClick={() => showGameDetails(game)} >
-                                        <div className="relative h-24 w-full">
-                                    <img  loading="lazy"  src={game.background_image} alt={game.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2 group-hover:from-black">
-                                                <h3 className="text-sm font-semibold text-white truncate">{game.name}</h3>
-                                                <div className="flex justify-between text-xs text-gray-300 mt-1">
-                                                    <span>{game.released}</span>
-                                                    <span className="bg-blue-900/50 px-1.5 py-0.5 rounded-full">
-                                                        {game.rating.toFixed(1)}/5
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div key={randomGames[0].id} className="md:col-span-2 rounded-lg overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group" onClick={() => showGameDetails(randomGames[0])}>
-                                <div className="relative h-64 md:h-80 w-full">
-                                    <img  loading="lazy"  src={randomGames[0].background_image} alt={randomGames[0].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 group-hover:from-black">
-                                        <h3 className="text-xl font-bold text-white">{randomGames[0].name}</h3>
-                                        <div className="flex justify-between text-sm text-gray-300 mt-1">
-                                            <span>Released: {randomGames[0].released}</span>
-                                            <span className="bg-blue-900/50 px-2 py-1 rounded-full text-white">
-                                                {randomGames[0].rating.toFixed(1)}/5
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        <p className="text-white col-span-full text-center py-8">Loading featured games...</p>
-                    )}
+        <div className="mb-12">
+            <h2 className="gh-section-title !mb-4">More to explore</h2>
+            {randomGames.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-3 gap-3 md:h-[440px]">
+                    <div className="md:col-span-2 md:row-span-3 grid">
+                        <Tile game={randomGames[0]} onClick={showGameDetails} large />
+                    </div>
+                    {randomGames.slice(1).map((game) => (
+                        <Tile key={game.id} game={game} onClick={showGameDetails} />
+                    ))}
                 </div>
-            </section>
+            ) : (
+                <div className="h-[440px] rounded-xl bg-[#111319] animate-pulse" />
+            )}
         </div>
     );
 }

@@ -2,12 +2,36 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/mainrounded.png"/>
-    <meta name="google-site-verification" content="161OSjPYsB7qQC_ZA8tR_-FYrCGDYRWYVwxh_gq-1rc" />
-    <meta name="description" content="Game Data Hub - Your one-stop hub for discovering and tracking your favorite games. Stay updated with news, multiplayer games, and more. The ultimate gaming companion. Discover, track, and stay updated with your favorite games.">
-    <script src="https://cdn.tailwindcss.com"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game Data Hub</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png"/>
+    <meta name="google-site-verification" content="161OSjPYsB7qQC_ZA8tR_-FYrCGDYRWYVwxh_gq-1rc" />
+    <meta name="description" content="Game Data Hub - Your one-stop hub for discovering and tracking your favorite games. Stay updated with news, multiplayer games, and more. The ultimate gaming companion. Discover, track, and stay updated with your favorite games.">
+    <meta name="theme-color" content="#0a0b0f" />
+    <style>html,body{background:#0a0b0f;color:#eceef2}</style>
+
+    <link rel="preconnect" href="https://gamehub-backend-zekj.onrender.com" crossorigin />
+    <link rel="preconnect" href="https://media.rawg.io" />
+    <link rel="dns-prefetch" href="https://api.rawg.io" />
+    <link rel="preconnect" href="https://wsrv.nl" />
+
+    <!-- Inter + Manrope are self-hosted (src/fonts.css); no extra connection to Google Fonts -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script>
+      // Start the main API request in parallel with the JS bundle download (picked up by apiCache.js)
+      (function () {
+        if (location.pathname !== '/') return;
+        var url = 'https://gamehub-backend-zekj.onrender.com/fetch-games';
+        try {
+          if (localStorage.getItem('gdh-api:v1:' + url)) return;
+          window.__gdhPrefetch = {};
+          window.__gdhPrefetch[url] = fetch(url);
+          window.__gdhPrefetch['/api-snapshot/fetch-games.json'] = fetch('/api-snapshot/fetch-games.json');
+        } catch (e) {}
+      })();
+    </script>
   </head>
 <body class="text-white font-sans relative back">
   <div id="root"></div>

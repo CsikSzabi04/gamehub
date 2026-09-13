@@ -1,26 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FaHome, FaGamepad } from 'react-icons/fa'
+import { FaHome } from 'react-icons/fa'
+import { CgGames } from 'react-icons/cg'
 
 export default function Notfound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center" data-aos="fade-up">
-      <div className="text-center">
-        <div className="relative mb-8">
-          <h1 className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" style={{WebkitTextStroke: '2px rgba(99, 102, 241, 0.3)'}}>
-            404
-          </h1>
-          <FaGamepad className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-indigo-400 opacity-50" />
-        </div>
-        <h2 className="text-3xl font-bold text-white mb-4">Page Not Found</h2>
-        <p className="text-gray-400 mb-8 text-lg">
-          Oops! The page you're looking for seems to have wandered off into the gaming void.
-        </p>
-        <Link to="/" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-indigo-500/25">
-          <FaHome className="mr-2" />
-          Back to Home
-        </Link>
-      </div>
+    <div className="min-h-[100svh] flex flex-col items-center justify-center px-6 py-12 text-center">
+      <Link to="/" className="mb-10 inline-flex items-center gap-2" aria-label="Game Data Hub home">
+        <CgGames className="text-3xl text-[#8b5cf6]" />
+      </Link>
+      <p className="gh-eyebrow mb-3">Error 404</p>
+      <h1 className="text-[clamp(4.5rem,22vw,9rem)] font-extrabold leading-none text-white tracking-tight">404</h1>
+      <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">Page Not Found</h2>
+      <p className="mt-3 max-w-md text-[#a1a6b3] sm:text-lg">
+        Oops! The page you&apos;re looking for seems to have wandered off into the gaming void.
+      </p>
+      <Link to="/" className="gh-btn gh-btn-primary !h-11 !px-5 mt-8">
+        <FaHome />
+        Back to Home
+      </Link>
     </div>
   )
 }

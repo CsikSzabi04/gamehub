@@ -5,22 +5,23 @@ import { FaEnvelope, FaLock, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Header from '../Header';
 
-export default function Login({ auth, setUser }) {
+export default function Login({ auth }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
 
+
   async function login() {
+    if (isLoading) return;
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setEmail(''); 
+      setEmail('');
       setPassword('');
       setLoginError(false);
-      window.location.href = "/";
+      navigate("/");
     } catch (error) {
       console.log("Login error: ", error.code);
       setLoginError(true);
@@ -45,7 +46,7 @@ export default function Login({ auth, setUser }) {
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12">
               {/* Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-cyan-500 mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#1e222c] text-[#a78bfa] mb-4">
                   <FaGamepad className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Welcome Back</h1>
@@ -103,7 +104,7 @@ export default function Login({ auth, setUser }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={login}
                   disabled={isLoading}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold text-lg shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="gh-btn gh-btn-primary w-full !h-12 text-base"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -120,12 +121,12 @@ export default function Login({ auth, setUser }) {
               </div>
 
               {/* Sign Up Link */}
-              <p className="text-center text-gray-400 mt-8">
-                Don't have an account?{' '}
-                <Link to="/signup" className="text-violet-400 hover:text-violet-300 font-semibold transition-colors">
-                  Sign up now
-                </Link>
-              </p>
+        <p className="text-center text-gray-400 mt-8">
+          Don&apos;t have an account?{' '}
+          <Link to="/signup" className="text-violet-400 hover:text-violet-300 font-semibold transition-colors">
+            Sign up now
+          </Link>
+        </p>
             </div>
           </motion.div>
 
@@ -138,7 +139,7 @@ export default function Login({ auth, setUser }) {
           >
             <div className="relative rounded-3xl overflow-hidden h-[500px]">
               <img 
-                src="./gaming.png" 
+                src="/gaming.webp"
                 alt="Login Illustration" 
                 className="w-full h-full object-cover"
                 loading="lazy"

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { FaExternalLinkAlt, FaPlay, FaInfoCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { BsStarFill } from "react-icons/bs";
+import { releaseYear } from "../Components/GameCard.jsx";
+import { rawgImg } from "../Components/rawgImage.js";
+
+const ROTATE_MS = 10000;
 
 export default function MainSection({ allGames, showGameDetails }) {
   const [randomGames, setRandomGames] = useState([]);
@@ -18,181 +22,121 @@ export default function MainSection({ allGames, showGameDetails }) {
         setCurrentFeaturedIndex((prevIndex) =>
           (prevIndex + 1) % randomGames.length
         );
-      }, 10000);
+      }, ROTATE_MS);
       return () => clearInterval(interval);
     }
-  }, [randomGames]);
+  }, [randomGames, currentFeaturedIndex]);
 
   const currentGame = randomGames[currentFeaturedIndex];
 
-  return (
-    <div className="relative w-full mb-8">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl">
-        {/* Background Image */}
-        <AnimatePresence mode="wait">
-          {currentGame && (
-            <motion.div
-              key={currentGame.id}
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="relative h-[500px] md:h-[600px] w-full"
-            >
-              {/* Image */}
-              <img 
-                src={currentGame.background_image} 
-                alt={currentGame.name} 
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/60 to-transparent"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/80 to-transparent"></div>
-              
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="max-w-2xl"
-                >
-                  {/* Featured Badge */}
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm font-medium mb-4">
-                    <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
-                    Featured Game
-                  </div>
-                  
-                  {/* Title */}
-                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                    {currentGame.name}
-                  </h2>
-                  
-                  {/* Meta Info */}
-                  <div className="flex flex-wrap items-center gap-4 mb-6">
-                    {currentGame.released && (
-                      <div className="flex items-center gap-2 text-gray-400 text-sm">
-                        <span className="w-4 h-4 rounded bg-white/10 flex items-center justify-center text-xs">📅</span>
-                        {currentGame.released}
-                      </div>
-                    )}
-                    {currentGame.rating && (
-                      <div className="flex items-center gap-2 text-amber-400 text-sm font-semibold">
-                        <span className="text-lg">★</span>
-                        {currentGame.rating}/5
-                      </div>
-                    )}
-                    {currentGame.genres?.[0] && (
-                      <div className="px-3 py-1 rounded-lg bg-white/10 border border-white/10 text-gray-300 text-sm">
-                        {currentGame.genres[0].name}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex flex-wrap gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => showGameDetails(currentGame)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
-                    >
-                      <FaPlay className="text-sm" />
-                      View Details
-                    </motion.button>
-                    
-                    <Link to={`/allreview/${currentGame.id}`}>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-all"
-                      >
-                        <FaExternalLinkAlt className="text-sm" />
-                        Reviews
-                      </motion.button>
-                    </Link>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Slide Indicators */}
-        {randomGames.length > 0 && (
-          <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 flex gap-2">
-            {randomGames.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentFeaturedIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentFeaturedIndex
-                    ? 'w-8 bg-violet-500'
-                    : 'bg-white/30 hover:bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+  if (!currentGame) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-12">
+        <div className="lg:col-span-9 h-[420px] md:h-[520px] rounded-2xl bg-[#111319] animate-pulse" />
+        <div className="hidden lg:flex lg:col-span-3 flex-col gap-2">
+          {[...Array(4)].map((_, i) => <div key={i} className="flex-1 rounded-xl bg-[#111319]" />)}
+        </div>
+      </div>
+    );
+  }
 
-      {/* Side Cards Grid */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        {randomGames.slice(1).map((game, index) => (
-          <motion.div
-            key={game.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ scale: 1.02, y: -4 }}
-            onClick={() => showGameDetails(game)}
-            className="group relative overflow-hidden rounded-2xl cursor-pointer bg-white/5 border border-white/5 hover:border-violet-500/30 transition-all"
-          >
-            {/* Image */}
-            <div className="relative h-32 md:h-40">
-              <img
-                loading="lazy"
-                src={game.background_image}
-                alt={game.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#030712] to-transparent"></div>
-              
-              {/* Rating Badge */}
-              {game.rating && (
-                <div className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold">
-                  ★ {game.rating}
-                </div>
-              )}
-              
-              {/* External Link Icon */}
-              <Link 
-                to={`/allreview/${game.id}`} 
-                className="absolute top-3 left-3 p-2 rounded-lg bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <FaExternalLinkAlt className="w-3 h-3 text-white" />
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-12">
+      {/* Hero */}
+      <section className="!mb-0 lg:col-span-9 relative overflow-hidden rounded-2xl bg-[#111319] h-[420px] md:h-[520px]">
+        <img
+          key={currentGame.id}
+          src={rawgImg(currentGame.background_image, 1280)}
+          srcSet={`${rawgImg(currentGame.background_image, 640)} 640w, ${rawgImg(currentGame.background_image, 1280)} 1280w`}
+          sizes="(min-width: 1024px) 75vw, 100vw"
+          alt={currentGame.name}
+          fetchPriority="high"
+          decoding="async"
+          className="animate-fadeIn absolute inset-0 w-full h-full object-cover"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0b0f] via-[#0a0b0f]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0b0f]/80 via-transparent to-transparent" />
+
+        <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
+          <div key={currentGame.id} className="animate-fadeInUp max-w-xl">
+            <p className="gh-eyebrow !text-[#c9ccd4] mb-3">Featured</p>
+            <h2 className="!mb-0 text-3xl md:text-5xl font-extrabold text-white leading-[1.05]">
+              {currentGame.name}
+            </h2>
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#c9ccd4]">
+              {currentGame.rating ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <BsStarFill className="text-amber-400 text-xs" />
+                  <span className="font-semibold text-white">{currentGame.rating}</span>
+                </span>
+              ) : null}
+              <span>{releaseYear(currentGame.released)}</span>
+              {currentGame.genres?.slice(0, 2).map(g => (
+                <span key={g.id || g.name} className="text-[#a1a6b3]">{g.name}</span>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button onClick={() => showGameDetails(currentGame)} className="gh-btn gh-btn-light !h-11 !px-5">
+                View details
+              </button>
+              <Link to={`/allreview/${currentGame.id}`} className="gh-btn !h-11 !px-5 bg-white/10 text-white hover:bg-white/20">
+                Reviews
               </Link>
             </div>
-            
-            {/* Content */}
-            <div className="p-4">
-              <h3 className="text-white font-semibold text-sm md:text-base truncate mb-2">
-                {game.name}
-              </h3>
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{game.released || 'TBA'}</span>
-                {game.genres?.[0] && (
-                  <span className="px-2 py-0.5 rounded bg-white/5 text-gray-400">
-                    {game.genres[0].name}
-                  </span>
-                )}
+          </div>
+        </div>
+
+        {/* Mobile indicators */}
+        <div className="lg:hidden absolute top-4 right-4 flex gap-1.5">
+          {randomGames.map((_, index) => (
+            <button
+              key={index}
+              aria-label={`Show featured game ${index + 1}`}
+              onClick={() => setCurrentFeaturedIndex(index)}
+              className={`h-1 rounded-full transition-all duration-300 ${index === currentFeaturedIndex ? 'w-6 bg-white' : 'w-3 bg-white/40'}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Queue */}
+      <div className="hidden lg:flex lg:col-span-3 flex-col gap-2">
+        {randomGames.map((game, index) => {
+          const active = index === currentFeaturedIndex;
+          return (
+            <button
+              key={game.id}
+              onClick={() => setCurrentFeaturedIndex(index)}
+              className={`relative flex-1 flex items-center gap-3 p-2.5 rounded-xl text-left overflow-hidden transition-colors ${active ? 'bg-[#1e222c]' : 'hover:bg-[#111319]'}`}
+            >
+              <img
+                loading="lazy"
+                decoding="async"
+                src={rawgImg(game.background_image, 200)}
+                alt=""
+                width="96"
+                height="128"
+                className="h-full max-h-28 w-20 flex-shrink-0 rounded-lg object-cover"
+              />
+              <div className="min-w-0">
+                <p className={`text-sm font-semibold leading-snug line-clamp-2 ${active ? 'text-white' : 'text-[#a1a6b3]'}`}>{game.name}</p>
+                <p className="text-xs text-[#6b7080] mt-1">{releaseYear(game.released)}</p>
               </div>
-            </div>
-          </motion.div>
-        ))}
+              {active && (
+                <motion.span
+                  key={`progress-${currentFeaturedIndex}`}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: ROTATE_MS / 1000, ease: 'linear' }}
+                  className="absolute bottom-0 left-0 right-0 h-0.5 origin-left bg-white/30"
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

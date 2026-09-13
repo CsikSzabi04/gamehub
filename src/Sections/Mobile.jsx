@@ -2,37 +2,40 @@ import React from 'react';
 
 export default function Mobile() {
     return (
-        <section id="mobile" className="mb-6 mt-6" data-aos="fade-up">
-            <h1 className="text-2xl font-semibold mb-4 text-center text-white">Game Data Hub Mobile</h1>
-            <div className="container mx-auto py-8 px-4">
-                <div className="flex flex-wrap justify-center gap-8">
-                    {/* Left image - no hover effect */}
-                    <div data-aos="fade-right" data-aos-delay="0" className="flex flex-col items-center w-[45%] p-4 bg-transparent rounded-lg">
-                        <img loading="lazy" src="./installimg.png" alt="Game Data Hub Mobile" className="w-[100%] h-[100%] object-cover mb-4" />
-                        <p className="text-center text-gray-400 text-base">
-                            Games Data Hub Mobile: More games, new look, and free game giveaways! Store app available globally on Android, and on iPhone and iPad in the EU.
-                        </p>
-                    </div>
-
-                    {/* Right image - QR code with zoom effect */}
-                    <div
-                        data-aos="fade-left"
-                        data-aos-delay="200"
-                        className="flex flex-col items-center w-[45%] p-4 bg-transparent rounded-lg group"
-                    >
-                        <div className="overflow-hidden rounded-lg w-full">
+        <section id="mobile" className="!mb-12">
+            <div className="gh-surface overflow-hidden grid grid-cols-1 lg:grid-cols-5">
+                <div className="lg:col-span-3 p-5 sm:p-10 flex flex-col justify-center">
+                    <p className="gh-eyebrow mb-3">Mobile app</p>
+                    <h2 className="!mb-0 text-2xl sm:text-3xl font-extrabold text-white">Game Data Hub on your phone</h2>
+                    <p className="mt-3 text-[#a1a6b3] leading-relaxed max-w-lg">
+                        More games, a new look and free game giveaways. Available globally on Android, and on iPhone and iPad in the EU.
+                    </p>
+                    <p className="mt-2 text-sm text-[#6b7080] leading-relaxed max-w-lg">
+                        Discover new releases, exclusive content and community features in the Game Data Hub Store.
+                    </p>
+                    <div className="mt-6 hidden md:flex items-center gap-4">
+                        <div className="group rounded-xl bg-white p-2 flex-shrink-0 overflow-hidden">
                             <img
                                 src="./qrcode.png"
-                                alt="Game Data Hub Store"
-                                className="w-full h-auto object-contain mb-4 transition-transform duration-300 ease-in-out group-hover:scale-[1.6]"
+                                alt="QR code for the Game Data Hub Store"
                                 loading="lazy"
+                                decoding="async"
+                                width="96"
+                                height="96"
+                                className="h-24 w-24 object-contain transition-transform duration-300 group-hover:scale-110"
                             />
                         </div>
-
-                        <p className="text-center text-gray-400 text-base">
-                            Discover new game releases, exclusive content, and community features in the Game Data Hub Store. Join now to explore amazing gaming experiences!
-                        </p>
+                        <p className="text-sm text-[#a1a6b3]">Scan the code with your phone<br />to open the store page.</p>
                     </div>
+                </div>
+                <div className="lg:col-span-2 bg-[#171a22] flex items-center justify-center pt-6 px-6 max-h-[260px] sm:max-h-[340px] lg:max-h-none overflow-hidden">
+                    <img
+                        loading="lazy"
+                        decoding="async"
+                        src="./installimg.png"
+                        alt="Game Data Hub Mobile"
+                        className="w-full max-w-xs sm:max-w-sm object-contain object-top"
+                    />
                 </div>
             </div>
         </section>

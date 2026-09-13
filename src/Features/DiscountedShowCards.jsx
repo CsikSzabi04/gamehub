@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../Features/UserContext.jsx';
 import { IoAddCircleOutline } from "react-icons/io5";
-import { MdDeleteForever, MdClose, MdStar, MdStore, MdShoppingCart } from "react-icons/md";
+import { MdDeleteForever, MdClose, MdStore } from "react-icons/md";
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DiscountedShowCards({ selectedGame, closeModal, modalVisible }) {
@@ -91,109 +91,68 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
   return (
     <AnimatePresence>
       {modalVisible && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75"
           onClick={closeModal}
         >
-          <motion.div 
-            initial={{ scale: 0.9, y: 20, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.9, y: 20, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-2xl"
+          <motion.div
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 12, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-xl max-h-[92svh] sm:max-h-[90vh] overflow-y-auto overscroll-contain custom-scrollbar rounded-t-2xl sm:rounded-2xl bg-[#111319] border border-white/[0.08] shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
           >
-            <button 
-              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
-              onClick={closeModal}
-            >
-              <MdClose className="w-5 h-5 text-white" />
+            <button className="gh-icon-btn absolute top-3 right-3 z-10 !bg-black/60" onClick={closeModal} aria-label="Close">
+              <MdClose className="w-5 h-5" />
             </button>
 
-            <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl">
-              <img 
-                src={selectedGame.background_image} 
-                alt={selectedGame.name} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-              
-              {discountPercent > 0 && (
-                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-bold flex items-center gap-1">
-                  <MdShoppingCart className="text-sm" />
-                  -{discountPercent}% OFF
-                </div>
-              )}
+            <div className="aspect-[16/9] overflow-hidden rounded-t-2xl bg-[#171a22]">
+              <img src={selectedGame.background_image} alt={selectedGame.name} className="w-full h-full object-cover" decoding="async" />
             </div>
 
-            <div className="p-6 md:p-8 -mt-12 relative">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">{selectedGame.name}</h2>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="p-2 rounded-lg bg-gray-500/20 text-gray-400">
-                    <MdStore className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Original Price</p>
-                    <p className="text-sm text-gray-400 line-through">${originalPrice.toFixed(2)}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/20 border border-green-500/30">
-                  <div className="p-2 rounded-lg bg-green-500/30 text-green-400">
-                    <MdShoppingCart className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Discounted Price</p>
-                    <p className="text-lg text-green-400 font-bold">${discountedPrice.toFixed(2)}</p>
-                  </div>
-                </div>
+            <div className="p-4 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-6">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="!mb-0 text-xl sm:text-2xl font-extrabold text-white">{selectedGame.name}</h2>
+                {discountPercent > 0 && (
+                  <span className="flex-shrink-0 rounded-md bg-emerald-500/15 px-2 py-1 text-sm font-bold text-emerald-400">-{discountPercent}%</span>
+                )}
               </div>
 
-              <div className="mb-6">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
-                    <MdStar className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Deal Status</p>
-                    <p className="text-sm text-green-400 font-medium">{selectedGame.Status || "Active"}</p>
-                  </div>
-                </div>
+              <div className="mt-4 flex items-baseline gap-3">
+                <span className="text-3xl font-bold text-white">${discountedPrice.toFixed(2)}</span>
+                <span className="text-base text-[#6b7080] line-through">${originalPrice.toFixed(2)}</span>
               </div>
 
-              {error && (
-                <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
+              <div className="mt-4 flex items-center gap-2 text-sm text-[#a1a6b3]">
+                <MdStore className="text-[#6b7080]" />
+                Epic Games Store
+                <span className="text-[#3a3f4b]">·</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  {String(selectedGame.Status || "Active").toLowerCase().replace(/^./, c => c.toUpperCase())}
+                </span>
+              </div>
 
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
+              {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+
+              <div className="mt-6 pt-5 border-t border-white/[0.06]">
                 {fav ? (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={delFav}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-semibold hover:bg-red-500/30 transition-all"
-                  >
-                    <MdDeleteForever className="w-5 h-5" />
-                    Remove
-                  </motion.button>
+                  <button onClick={delFav} className="gh-btn gh-btn-secondary w-full !h-11">
+                    <MdDeleteForever className="w-5 h-5 text-[#f87171]" />
+                    Remove from favorites
+                  </button>
                 ) : (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={addFav}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
-                  >
+                  <button onClick={addFav} className="gh-btn gh-btn-primary w-full !h-11">
                     <IoAddCircleOutline className="w-5 h-5" />
-                    Add to Favorites
-                  </motion.button>
+                    Add to favorites
+                  </button>
                 )}
               </div>
             </div>

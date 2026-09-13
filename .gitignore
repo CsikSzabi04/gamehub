@@ -1,0 +1,19 @@
+# Dependencies & build output
+node_modules/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs & local tool output
+*.log
+lint-results.txt
+coverage/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

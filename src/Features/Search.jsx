@@ -1,53 +1,70 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { motion } from 'framer-motion';
 
-export default function Search({ setGames, games, setSearchTrue }) {
+export async function searchRawgGames(query, maxPrice = 500) {
+  const response = await fetch(
+    `https://api.rawg.io/api/games?key=984255fceb114b05b5e746dc24a8520a&search=${encodeURIComponent(query)}`
+  );
+  if (!response.ok) throw new Error(`RAWG request failed: ${response.status}`);
+  const data = await response.json();
+  const gamesWithPrices = (data.results || []).map(game => ({
+    ...game,
+    external: game.name,
+    thumb: game.background_image,
+    gameID: game.id,
+    playtime: game.playtime,
+    rating: game.rating,
+    rating_top: game.rating_top,
+    ratings_count: game.ratings_count,
+    metacritic: game.metacritic,
+    esrb_rating: game.esrb_rating?.name ?? "Not rated",
+    cheapest: Math.floor(Math.random() * 100) + 10,
+    cheapestDealID: Math.random().toString(36).substring(7),
+  }));
+
+  return gamesWithPrices.filter(
+    (game) => parseFloat(game.cheapest) <= parseFloat(maxPrice)
+  );
+}
+
+export default function Search({ setGames, setSearchTrue }) {
   const [query, setQuery] = useState("");
-  const [maxPrice, setMaxPrice] = useState(500);
+  const [maxPrice] = useState(500);
   const [error, setError] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
+
+  // Pages that don't own the search results (Discover, Review, Login...) don't pass setGames.
+  // There the search sends the user to the home page, which runs the search itself.
+  const canShowResults = typeof setGames === "function";
 
   useEffect(() => {
-    if (query && query.length >= 2) {
-      const debounceTimer = setTimeout(() => {
-        searchGames();
-      }, 500);
-      return () => clearTimeout(debounceTimer);
-    }
+    if (!canShowResults || query.trim().length < 2) return;
+    const debounceTimer = setTimeout(() => {
+      searchGames();
+    }, 500);
+    return () => clearTimeout(debounceTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, maxPrice]);
 
   async function searchGames() {
-    if (!query.trim()) return;
-    
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    if (!canShowResults) {
+      navigate("/", { state: { search: trimmed } });
+      return;
+    }
+
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://api.rawg.io/api/games?key=984255fceb114b05b5e746dc24a8520a&search=${query}`
-      );
-      const data = await response.json();
-      const gamesWithPrices = data.results.map(game => ({
-        ...game,
-        external: game.name,
-        thumb: game.background_image,
-        gameID: game.id,
-        playtime: game.playtime,
-        rating: game.rating,
-        rating_top: game.rating_top,
-        ratings_count: game.ratings_count,
-        metacritic: game.metacritic,
-        esrb_rating: game.esrb_rating?.name ?? "Not rated",
-        cheapest: Math.floor(Math.random() * 100) + 10,
-        cheapestDealID: Math.random().toString(36).substring(7),
-      }));
-
-      const filteredGames = gamesWithPrices.filter(
-        (game) => parseFloat(game.cheapest) <= parseFloat(maxPrice)
-      );
-
+      const filteredGames = await searchRawgGames(trimmed, maxPrice);
       setGames(filteredGames);
-      setSearchTrue(true);
+      setSearchTrue?.(true);
+      setError(null);
     } catch (err) {
       console.error("Error fetching games:", err);
       setError("Something went wrong. Please try again.");
@@ -83,7 +100,7 @@ export default function Search({ setGames, games, setSearchTrue }) {
         />
       </div>
       {error && (
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-2 text-red-400 text-sm"

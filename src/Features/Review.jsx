@@ -5,7 +5,7 @@ import Header from '../Header.jsx';
 import './Features.css'
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaStar, FaSearch, FaPen, FaUser } from 'react-icons/fa';
+import { FaStar, FaSearch, FaUser } from 'react-icons/fa';
 
 export default function Review() {
     const [allGames, setAllGames] = useState([]);
@@ -81,7 +81,11 @@ export default function Review() {
         <>
             <div className='min-h-screen'>
                 <Header />
-                <div className="max-w-7xl mx-auto p-6 md:p-8 pt-24">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-10">
+                    <div className="mb-8">
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white">Community reviews</h1>
+                        <p className="mt-2 text-[#a1a6b3]">Read what players think, or share your own take on a game.</p>
+                    </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Left Side - Write Review */}
                         <motion.div 
@@ -89,35 +93,30 @@ export default function Review() {
                             animate={{ opacity: 1, x: 0 }}
                             className="lg:col-span-1"
                         >
-                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sticky top-24">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="p-3 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-500">
-                                        <FaPen className="w-5 h-5 text-white" />
-                                    </div>
-                                    <h2 className="text-xl font-bold text-white">Write a Review</h2>
-                                </div>
+                            <div className="gh-surface p-5 lg:sticky lg:top-24">
+                                <h2 className="!mb-4 text-base font-semibold text-white">Write a review</h2>
 
                                 {/* Search Game */}
                                 <div className="relative mb-4">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <FaSearch className="w-4 h-4 text-gray-500" />
+                                        <FaSearch className="w-3.5 h-3.5 text-[#6b7080]" />
                                     </div>
                                     <input
                                         type="text"
                                         placeholder="Search for a game..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
+                                        className="gh-input !pl-10"
                                     />
                                 </div>
 
                                 {/* Search Results */}
                                 {searchTerm && filteredGames.length > 0 && (
-                                    <div className="max-h-48 overflow-y-auto bg-white/5 border border-white/10 rounded-xl mb-4">
+                                    <div className="max-h-48 overflow-y-auto bg-[#171a22] border border-white/[0.08] rounded-lg mb-4 -mt-2">
                                         {filteredGames.slice(0, 5).map(game => (
                                             <div 
                                                 key={game.id} 
-                                                className="py-3 px-4 text-white cursor-pointer hover:bg-white/10 border-b border-white/5 last:border-b-0 transition-colors"
+                                                className="py-2.5 px-3 text-sm text-[#d4d7de] cursor-pointer hover:bg-white/[0.05] hover:text-white transition-colors"
                                                 onClick={() => showGameDetails(game)}
                                             >
                                                 {game.name}
@@ -131,10 +130,10 @@ export default function Review() {
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="mb-6 p-4 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-violet-500/30"
+                                        className="mb-4 px-3 py-2.5 rounded-lg bg-[#171a22] border-l-2 border-[#8b5cf6]"
                                     >
-                                        <p className="text-sm text-gray-400 mb-1">Selected Game</p>
-                                        <p className="text-white font-semibold">{selectedGame.name}</p>
+                                        <p className="gh-eyebrow mb-0.5">Selected game</p>
+                                        <p className="text-sm text-white font-semibold">{selectedGame.name}</p>
                                     </motion.div>
                                 )}
 
@@ -144,17 +143,18 @@ export default function Review() {
                                     value={reviewText}
                                     onChange={(e) => setReviewText(e.target.value)}
                                     rows={4}
-                                    className="w-full mb-4 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all resize-none"
+                                    className="gh-input mb-4 resize-none"
                                 />
 
                                 {/* Rating Stars */}
-                                <div className="flex gap-2 mb-6">
+                                <div className="flex items-center gap-1 mb-5">
+                                    <span className="text-sm text-[#a1a6b3] mr-2">Rating</span>
                                     {[1, 2, 3, 4, 5].map(star => (
                                         <motion.button
                                             key={star}
                                             whileHover={{ scale: 1.2 }}
                                             whileTap={{ scale: 0.9 }}
-                                            className={`text-2xl transition-colors ${rating >= star ? 'text-amber-400' : 'text-gray-600 hover:text-amber-300'}`}
+                                            className={`text-2xl leading-none transition-colors ${rating >= star ? 'text-amber-400' : 'text-[#2a2e38] hover:text-amber-300/70'}`}
                                             onClick={() => setRating(star)}
                                         >
                                             ★
@@ -168,9 +168,9 @@ export default function Review() {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handleReviewSubmit}
                                     disabled={!reviewText || rating === 0}
-                                    className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-semibold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="gh-btn gh-btn-primary w-full !h-11"
                                 >
-                                    Submit Review
+                                    Post review
                                 </motion.button>
                             </div>
                         </motion.div>
@@ -181,34 +181,31 @@ export default function Review() {
                             animate={{ opacity: 1, x: 0 }}
                             className="lg:col-span-2"
                         >
-                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="p-3 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500">
-                                        <FaStar className="w-5 h-5 text-white" />
-                                    </div>
-                                    <h2 className="text-xl font-bold text-white">Community Reviews</h2>
+                            <div>
+                                <div className="flex items-baseline justify-between mb-4">
+                                    <h2 className="gh-section-title !mb-0">Latest reviews</h2>
+                                    <span className="text-sm text-[#6b7080]">{reviews.length} total</span>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {reviews.length > 0 ? (
                                         reviews.map((review, index) => (
                                             <motion.div
                                                 key={index}
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: index * 0.05 }}
-                                                whileHover={{ y: -4 }}
-                                                className="group bg-white/5 border border-white/5 hover:border-violet-500/30 rounded-2xl p-5 transition-all"
+                                                transition={{ delay: Math.min(index, 6) * 0.04 }}
+                                                className="group gh-surface p-5 hover:border-white/[0.16] transition-colors"
                                             >
                                                 <Link to={`/reviews/${review.gameId}`} className="block">
                                                     <div className="flex items-start justify-between mb-3">
                                                         <div>
-                                                            <h3 className="text-white font-semibold group-hover:text-violet-300 transition-colors">
+                                                            <h3 className="text-base font-semibold text-white group-hover:underline underline-offset-4 decoration-white/30">
                                                                 {review.gameName}
                                                             </h3>
                                                             <div className="flex items-center gap-2 mt-1">
-                                                                <FaUser className="w-3 h-3 text-gray-500" />
-                                                                <span className="text-gray-500 text-sm">{review.email}</span>
+                                                                <FaUser className="w-2.5 h-2.5 text-[#6b7080]" />
+                                                                <span className="text-[#6b7080] text-xs truncate">{review.email}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -217,23 +214,23 @@ export default function Review() {
                                                         {[...Array(5)].map((_, i) => (
                                                             <span 
                                                                 key={i} 
-                                                                className={`text-lg ${i < review.rating ? 'text-amber-400' : 'text-gray-600'}`}
+                                                                className={`text-sm ${i < review.rating ? 'text-amber-400' : 'text-[#2a2e38]'}`}
                                                             >
                                                                 ★
                                                             </span>
                                                         ))}
                                                     </div>
                                                     
-                                                    <p className="text-gray-400 text-sm line-clamp-3">
+                                                    <p className="text-[#c9ccd4] text-sm leading-relaxed line-clamp-3">
                                                         {review.review}
                                                     </p>
                                                 </Link>
                                             </motion.div>
                                         ))
                                     ) : (
-                                        <div className="col-span-full text-center py-12">
-                                            <FaStar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                                            <p className="text-gray-400">No reviews yet. Be the first to write one!</p>
+                                        <div className="col-span-full gh-surface text-center py-12">
+                                            <FaStar className="w-6 h-6 text-[#3a3f4b] mx-auto mb-3" />
+                                            <p className="text-sm">No reviews yet. Be the first to write one.</p>
                                         </div>
                                     )}
                                 </div>

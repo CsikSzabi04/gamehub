@@ -1,7 +1,30 @@
 @import "tailwindcss";
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;color: #fff; overflow-x: hidden;  scroll-behavior: smooth; }
-::-webkit-scrollbar {width: 10px;height: 8px;}
-::-webkit-scrollbar-track { background: #00060f; }
-::-webkit-scrollbar-thumb { background-color: rgba(102, 102, 102, 0.582);  border-radius: 10px; border: 2px solid rgba(0, 0, 0, 0.2); }
-::-webkit-scrollbar-thumb:hover { background-color: rgba(0, 21, 80, 0.8);  }
-::-webkit-scrollbar-thumb:active { background-color: rgb(3, 15, 65); }
+@import "./fonts.css";
+/* Old build output contains class-like strings; don't generate CSS for it */
+@source not "../dist";
+
+/*
+  Tailwind v4 compatibility with the v3 defaults the design was built on
+  (the site used to run the v3 Play CDN). From the official v4 upgrade guide.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #eceef2; background: #0a0b0f; overflow-x: hidden; scroll-behavior: smooth; }

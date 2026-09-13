@@ -16,7 +16,7 @@ export default function Movies() {
             const response = await fetch("https://gamehub-backend-zekj.onrender.com/movies");
             const data = await response.json();
             
-            const formattedMovies = data.results.map(movie => ({
+            const formattedMovies = (data?.results || []).map(movie => ({
                 id: movie.id,
                 title: movie.title || movie.name,
                 backdrop_path: movie.backdrop_path,

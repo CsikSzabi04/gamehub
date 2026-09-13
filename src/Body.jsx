@@ -1,84 +1,89 @@
 import './body.css';
-import React, { useEffect, useState } from "react";
-import Rotate from "./Rotate/Rotate.jsx"
-import ShowCards from './Features/ShowCards.jsx';
-import FeaturedGames from '././Sections/FeaturedGames.jsx'; 
-import SearchFind from './Features/SearchFind.jsx';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
+import FeaturedGames from '././Sections/FeaturedGames.jsx';
 import MainSection from './Sections/MainSection.jsx';
-import UnderMain from './Sections/UnderMain.jsx';
-import StoresFooter from './Stores/StoresFooter.jsx';
-import Free from '././Sections/Free.jsx'; 
-import Loot from '././Sections/Loot.jsx';
-import News from './Sections/News.jsx';
-import Discounted from '././Sections/Discounted.jsx';
-import "tailwindcss";
-import Mobile from './Sections/Mobile.jsx';
-import Footer from './Footer.jsx';
 import Header from './Header.jsx';
-import GamingNews from './Sections/GamingNews.jsx';
-import StartUp from './Features/StartUp.jsx';
-import ReviewsOpenMain from './Sections/ReviewsOpenMain.jsx';
-import DBD_Movies from './FeaturesByGame/DBD_Movies.jsx';
 import LazySection from './Components/LazySection.jsx';
+import { API_BASE, useApi } from './Components/apiCache.js';
+import { searchRawgGames } from './Features/Search.jsx';
 
+// Above the fold (Header, hero, featured grid) is in the main bundle.
+// Everything below is split into chunks that load as the user scrolls towards them.
+const Rotate = lazy(() => import("./Rotate/Rotate.jsx"));
+const Free = lazy(() => import('././Sections/Free.jsx'));
+const Discounted = lazy(() => import('././Sections/Discounted.jsx'));
+const ReviewsOpenMain = lazy(() => import('./Sections/ReviewsOpenMain.jsx'));
+const Mobile = lazy(() => import('./Sections/Mobile.jsx'));
+const News = lazy(() => import('./Sections/News.jsx'));
+const Loot = lazy(() => import('././Sections/Loot.jsx'));
+const UnderMain = lazy(() => import('./Sections/UnderMain.jsx'));
+const DBD_Movies = lazy(() => import('./FeaturesByGame/DBD_Movies.jsx'));
+const GamingNews = lazy(() => import('./Sections/GamingNews.jsx'));
+const Footer = lazy(() => import('./Footer.jsx'));
+const ShowCards = lazy(() => import('./Features/ShowCards.jsx'));
+const SearchFind = lazy(() => import('./Features/SearchFind.jsx'));
+// Live data from the hub APIs (Steam charts, deals, speedruns, game universes)
+const LivePlayers = lazy(() => import('./Hub/LivePlayers.jsx'));
+const DealsHub = lazy(() => import('./Hub/DealsHub.jsx'));
+const ComingSoon = lazy(() => import('./Hub/ComingSoon.jsx'));
+const CommunityTrends = lazy(() => import('./Hub/CommunityTrends.jsx'));
+const SpeedrunFeed = lazy(() => import('./Hub/SpeedrunFeed.jsx'));
+const UniverseStrip = lazy(() => import('./Hub/UniverseStrip.jsx'));
+
+const GAMES_URL = `${API_BASE}/fetch-games`;
+const toGames = data => (Array.isArray(data?.games) ? data.games : []);
+const EMPTY = [];
+
+const hasTag = (game, text) => game.tags?.some(tag => tag.name.toLowerCase().includes(text));
+const hasGenre = (game, text) => game.genres?.some(genre => genre.name.toLowerCase().includes(text));
+
+// The cached/snapshot list is usually replaced by an identical live list a moment later.
+// Keep the first array while the game IDs are unchanged, so the hero and cards don't reshuffle.
+function useStableGames(games) {
+    const ref = useRef({ key: '', games: EMPTY });
+    const key = games.map(g => g.id).join(',');
+    if (key !== ref.current.key) ref.current = { key, games };
+    return ref.current.games;
+}
 
 export default function Body() {
-    const [allGames, setAllGames] = useState([]);
-    const [multiplayerGames, setMultiplayerGames] = useState([]);
-    const [actionGames, setActionGames] = useState([]);
-    const [scifi, setScifi] = useState([]);
-    const [exploration, setExplore] = useState([]);
+    const { data: liveGames = EMPTY } = useApi(GAMES_URL, toGames);
+    const allGames = useStableGames(liveGames);
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalMounted, setModalMounted] = useState(false);
     const [games, setGames] = useState([]);
-    const [store, setStore] = useState([])
-    const [modalStoreVisible, setStoreVisible] = useState(false);
     const [searchTrue, setSearchTrue] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [componentsLoaded, setComponentsLoaded] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    // Check if this is a first load (not navigation from within the app)
-    const [isFirstLoad, setIsFirstLoad] = useState(() => {
-        const hasVisited = sessionStorage.getItem('hasVisited');
-        return !hasVisited;
-    });
-
+    // A search started from another page navigates here with the query in the router state
+    const pendingSearch = location.state?.search;
     useEffect(() => {
-        async function fetchFeaturedGames() {
-            try {
-                const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
-                const data = await response.json();
-                setAllGames(data.games);
-                setComponentsLoaded(true);
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        }
-        fetchFeaturedGames();
-    }, []);
+        if (!pendingSearch) return;
+        searchRawgGames(pendingSearch)
+            .then(results => {
+                setGames(results);
+                setSearchTrue(true);
+            })
+            .catch(err => console.error("Error fetching games:", err));
+        // Clear the state so a refresh / back navigation doesn't repeat the search
+        navigate(location.pathname, { replace: true, state: null });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pendingSearch]);
 
-
-    useEffect(() => {
-        if (allGames.length > 0) {
-            categorizeGames();
-        } setStoreVisible(false);
-         window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }, [allGames]);
-
-
-    function categorizeGames() {
-        setMultiplayerGames(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("multiplayer"))));
-        setActionGames(allGames.filter(game => game.genres?.some(genre => genre.name.toLowerCase().includes("action"))));
-        setScifi(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("sci-fi"))));
-        setExplore(allGames.filter(game => game.tags?.some(tag => tag.name.toLowerCase().includes("exploration"))));
-    }
+    const categories = useMemo(() => ({
+        multiplayer: allGames.filter(game => hasTag(game, "multiplayer")),
+        action: allGames.filter(game => hasGenre(game, "action")),
+        scifi: allGames.filter(game => hasTag(game, "sci-fi")),
+        exploration: allGames.filter(game => hasTag(game, "exploration")),
+    }), [allGames]);
 
     function showGameDetails(game) {
         const requirements = game.platforms?.map(p => p.requirements_en?.minimum).join(", ");
         setSelectedGame({ ...game, requirements });
+        setModalMounted(true);
         setModalVisible(true);
     }
 
@@ -89,44 +94,51 @@ export default function Body() {
 
     return (
         <div>
-            {isFirstLoad && !isLoaded ? (
-                <StartUp onLoaded={() => { setIsLoaded(true); sessionStorage.setItem('hasVisited', 'true'); }} />
-            ) : (
-            <>
-            <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games}/>
+            <Header searchTrue={searchTrue} setSearchTrue={setSearchTrue} setGames={setGames} games={games} />
             {searchTrue == false ? (
                 <div className="main-content w-full">
-                    <div className='allSections'>      
+                    <div className='allSections'>
+                        <MainSection allGames={allGames} showGameDetails={showGameDetails} />
+                        <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+
                         <LazySection>
-                            <MainSection allGames={allGames} showGameDetails={showGameDetails} />
-                        </LazySection>
-                        
-                        <LazySection>
-                            <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
+                            <LivePlayers />
                         </LazySection>
                         <LazySection>
                             <Free />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={multiplayerGames} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} k={200}/>
+                            <DealsHub />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={actionGames} showGameDetails={showGameDetails} name={"Action games"}  intervalTimeA={6800} k={220}/>
+                            <Rotate games={categories.multiplayer} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} />
+                        </LazySection>
+                        <LazySection>
+                            <Rotate games={categories.action} showGameDetails={showGameDetails} name={"Action games"} intervalTimeA={6800} />
                         </LazySection>
                         <LazySection>
                             <Discounted />
                         </LazySection>
                         <LazySection>
-                            <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails}/>
+                            <ComingSoon />
+                        </LazySection>
+                        <LazySection>
+                            <ReviewsOpenMain allGames={allGames} showGameDetails={showGameDetails} />
                         </LazySection>
                         <LazySection>
                             <Mobile />
                         </LazySection>
-                        <LazySection>
-                            <Rotate games={scifi} showGameDetails={showGameDetails} name={"Sci-fi games"}  intervalTimeA={8000} k={240}/>
+                        <LazySection placeholder={false}>
+                            <CommunityTrends />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} k={250}/>
+                            <UniverseStrip />
+                        </LazySection>
+                        <LazySection>
+                            <Rotate games={categories.scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} intervalTimeA={8000} />
+                        </LazySection>
+                        <LazySection>
+                            <Rotate games={categories.exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} />
                         </LazySection>
                         <LazySection>
                             <News />
@@ -135,7 +147,10 @@ export default function Body() {
                             <Loot />
                         </LazySection>
                         <LazySection>
-                            <UnderMain allGames={allGames} showGameDetails={showGameDetails}/>
+                            <SpeedrunFeed />
+                        </LazySection>
+                        <LazySection>
+                            <UnderMain allGames={allGames} showGameDetails={showGameDetails} />
                         </LazySection>
                         <LazySection>
                             <DBD_Movies />
@@ -143,13 +158,23 @@ export default function Body() {
                         <LazySection>
                             <GamingNews />
                         </LazySection>
-                       
-                        <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
+
+                        {modalMounted && (
+                            <Suspense fallback={null}>
+                                <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
+                            </Suspense>
+                        )}
                     </div>
-                    <Footer />
+                    <LazySection placeholder={false}>
+                        <Footer />
+                    </LazySection>
                 </div>
-            ) : <div className='rights '> <SearchFind games={games} setGames={setGames} /> </div>}
-            </>
+            ) : (
+                <div className='rights '>
+                    <Suspense fallback={<div className="min-h-[50vh]" />}>
+                        <SearchFind games={games} setGames={setGames} />
+                    </Suspense>
+                </div>
             )}
         </div>
     );

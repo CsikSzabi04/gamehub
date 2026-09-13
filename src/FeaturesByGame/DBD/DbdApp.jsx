@@ -5,9 +5,10 @@ import { Link } from "react-router-dom";
 import { FaArrowLeft, FaSkull, FaUserInjured, FaShieldAlt } from "react-icons/fa";
 import DbdKiller from "./DbdKiller.jsx";
 import "./DbdApp.css";
+import { API_BASE, cachedFetch } from "../../Components/apiCache.js";
 
 // DBD API Base URL - Original backend
-const DBD_API = "https://gamehub-backend-zekj.onrender.com";
+const DBD_API = API_BASE;
 
 export default function DbdApp() {
     const [survivors, setSurvivors] = useState([]);
@@ -36,14 +37,11 @@ export default function DbdApp() {
             setLoading(true);
             setLoadingProgress(10);
             
-            // Fetch Survivors
-            const survRes = await fetch(`${DBD_API}/characters`);
-            const survData = await survRes.json();
-            setLoadingProgress(40);
-            
-            // Fetch Killers
-            const killRes = await fetch(`${DBD_API}/charactersK`);
-            const killData = await killRes.json();
+            // Survivors and killers in parallel, from the persistent cache when available
+            const [survData, killData] = await Promise.all([
+                cachedFetch(`${DBD_API}/characters`, { maxAge: 24 * 60 * 60 * 1000 }),
+                cachedFetch(`${DBD_API}/charactersK`, { maxAge: 24 * 60 * 60 * 1000 }),
+            ]);
             setLoadingProgress(100);
             
             // No perks endpoint - skip
@@ -52,7 +50,7 @@ export default function DbdApp() {
             
             // Format survivors
             const formattedSurvivors = survData.map(s => ({
-                id: s._id,
+                id: s._id ?? s.id,
                 name: s.name,
                 fullName: s.full_name || s.name,
                 role: s.role,
@@ -63,14 +61,14 @@ export default function DbdApp() {
                 overview: s.overview,
                 lore: s.lore,
                 perks: s.perks || [],
-                image: s.icon?.portrait || s.icon?.preview_portrait,
+                image: s.icon?.portrait || s.icon?.preview_portrait || s.imgs,
                 isFree: s.is_free,
                 isPtb: s.is_ptb
             }));
             
             // Format killers
             const formattedKillers = killData.map(k => ({
-                id: k._id,
+                id: k._id ?? k.id,
                 name: k.name,
                 fullName: k.full_name,
                 role: "Killer",
@@ -87,7 +85,7 @@ export default function DbdApp() {
                 overview: k.overview,
                 lore: k.lore,
                 perks: k.perks || [],
-                image: k.icon?.portrait || k.icon?.preview_portrait,
+                image: k.icon?.portrait || k.icon?.preview_portrait || k.imgs,
                 isFree: k.is_free,
                 isPtb: k.is_ptb
             }));
@@ -137,7 +135,7 @@ export default function DbdApp() {
                             style={{ width: `${loadingProgress}%` }}
                         ></div>
                     </div>
-                    <p className="dbd-loading-text">Summoning characters from The Entity's realm...</p>
+                            <p className="dbd-loading-text">Summoning characters from The Entity&apos;s realm...</p>
                 </div>
             </div>
         );

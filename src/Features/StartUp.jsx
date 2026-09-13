@@ -16,20 +16,9 @@ export default function StartUp({ onLoaded }) {
     const [currentSlogan, setCurrentSlogan] = useState(0);
 
     useEffect(() => {
-        // Progress simulation
+        // Progress simulation (state updaters must stay pure, the "finished" side effects live in the effect below)
         const interval = setInterval(() => {
-            setProgress(prev => {
-                const increment = Math.random() * 15 + 5;
-                const newProgress = Math.min(prev + increment, 100);
-                
-                if (newProgress >= 100) {
-                    clearInterval(interval);
-                    setLoading(false);
-                    setTimeout(() => setShowWelcome(true), 300);
-                    return 100;
-                }
-                return newProgress;
-            });
+            setProgress(prev => Math.min(prev + Math.random() * 15 + 5, 100));
         }, 400);
 
         // Slogan rotation
@@ -44,12 +33,20 @@ export default function StartUp({ onLoaded }) {
         
     }, [slogans]);
 
+    const finished = progress >= 100;
+    useEffect(() => {
+        if (!finished) return;
+        setLoading(false);
+        const timeout = setTimeout(() => setShowWelcome(true), 300);
+        return () => clearTimeout(timeout);
+    }, [finished]);
+
     function handleEnter() {
         setShowWelcome(false);
         setTimeout(() => {
             onLoaded();
         }, 500);
-    };
+    }
 
     return (
         <div className={`fixed inset-0 flex flex-col justify-center items-center bg-[#030712] z-50 transition-all duration-700 ${!loading && !showWelcome ? 'opacity-0 pointer-events-none' : ''}`}>
@@ -160,7 +157,7 @@ export default function StartUp({ onLoaded }) {
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
                                 transition={{ duration: 0.3 }}
-                                className="h-full rounded-full bg-gradient-to-r from-violet-600 via-purple-500 to-cyan-500"
+                                className="h-full rounded-full bg-[#8b5cf6]"
                             />
                         </div>
                     </div>
@@ -218,7 +215,7 @@ export default function StartUp({ onLoaded }) {
                             className="text-4xl md:text-6xl font-bold mb-6"
                         >
                             <span className="text-white">Welcome to </span>
-                            <span className="bg-gradient-to-r from-violet-500 to-cyan-500 bg-clip-text text-transparent">
+                            <span className="text-[#8b5cf6]">
                                 GameDataHub
                             </span>
                         </motion.h1>
@@ -249,7 +246,7 @@ export default function StartUp({ onLoaded }) {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleEnter}
-                            className="group relative px-10 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 rounded-2xl text-white font-semibold text-lg shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all"
+                            className="group relative gh-btn gh-btn-primary !h-12 !px-10 text-base"
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 Start Exploring

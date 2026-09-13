@@ -5,6 +5,7 @@ export default function RotateLoot({ giveaways, showGiveawayDetails, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
+        if (!giveaways?.length) return;
         const interval = setInterval(() => setCurrentIndex(i => (i + 1) % giveaways.length), 8000);
         return () => clearInterval(interval);
     }, [giveaways]);
@@ -12,7 +13,7 @@ export default function RotateLoot({ giveaways, showGiveawayDetails, name }) {
     return (
         <div className="bg-gray-600/20 sm:p-10 rounded-lg mt-15" data-aos="fade-up">
             <section id="loot-giveaways" className="mb-2 p-6 s">
-                <h2 className="text-2xl font-semibold mb-4">{name} 💰</h2>
+                <h2 className="text-2xl font-semibold mb-4">{name}</h2>
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex transition-transform duration-1000 ease-in-out" style={{ transform: `translateX(-${currentIndex * 320}px)` }}>
                         {giveaways.map((giveaway) => (

@@ -1,80 +1,82 @@
-import React, { useState, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
+import React, { useState, useEffect } from "react";
+import { BsBoxArrowUpRight } from "react-icons/bs";
+import SectionHeader from "../Components/SectionHeader.jsx";
+
+// Card width as a percentage of the track, matching w-[80%] sm:w-1/2 md:w-1/3 lg:w-1/4
+function getCardPercent() {
+    if (window.innerWidth >= 1024) return 25;
+    if (window.innerWidth >= 768) return 100 / 3;
+    if (window.innerWidth >= 640) return 50;
+    return 80;
+}
 
 export default function RotateFree({ games, showGameDetails, name }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const carouselRef = useRef(null);
+    const [cardPercent, setCardPercent] = useState(getCardPercent);
 
     useEffect(() => {
-        if (!games.length || !carouselRef.current) return;
-        
-        const intervalTime = 20000;
-        const rotateInterval = setInterval(() => {
-            setCurrentIndex(prevIndex => {
-                const newIndex = (prevIndex + 1) % games.length;
-                gsap.to(carouselRef.current, {
-                    x: -newIndex * 1000,
-                    duration: 1.5,
-                    ease: "power2.inOut",
-                    overwrite: true
-                });
-                return newIndex;
-            });
-        }, intervalTime);
+        const handleResize = () => setCardPercent(getCardPercent());
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
+    // Stop before the last full page so the track never scrolls into empty space
+    const maxIndex = Math.max(0, games.length - Math.floor(100 / cardPercent));
+
+    useEffect(() => {
+        if (!games.length) return;
+        const rotateInterval = setInterval(() => {
+            setCurrentIndex(prevIndex => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
+        }, 20000);
         return () => clearInterval(rotateInterval);
-    }, [games]);
+    }, [games, maxIndex]);
 
     const nextItem = () => {
-        const newIndex = (currentIndex + 1) % games.length;
-        setCurrentIndex(newIndex);
-        gsap.to(carouselRef.current, {
-            x: -newIndex * 1000,
-            duration: 0.5,
-            ease: "power2.inOut",
-            overwrite: true
-        });
+        if (!games.length) return;
+        setCurrentIndex(prevIndex => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
     };
 
     const prevItem = () => {
-        const newIndex = (currentIndex - 1 + games.length) % games.length;
-        setCurrentIndex(newIndex);
-        gsap.to(carouselRef.current, {
-            x: -newIndex * 1000,
-            duration: 0.5,
-            ease: "power2.inOut",
-            overwrite: true
-        });
+        if (!games.length) return;
+        setCurrentIndex(prevIndex => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
     };
 
     return (
-        <section id="free-games" data-aos="fade-up" className="mb-6 px-4 relative bg-gray-900 p-4 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4 text-white">{name}</h2>
-            <div className="relative group pl-2 pr-2">
-                <button onClick={prevItem} className="absolute -left-4 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"  aria-label="Previous game"  > <FaAngleLeft size={20} /> </button>
-                <div className="relative overflow-hidden">
-                    <div ref={carouselRef} className="carousel flex transition-transform duration-500 ease-out">
-                        {games.map((game) => (
-                            <div key={game.id} className="carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                                <div className="bg-gray-800 p-4 rounded-md shadow-lg h-full flex flex-col cursor-pointer" onClick={() => showGameDetails(game)}>
-                                    <div className="relative mb-4 overflow-hidden rounded-md">
-                                        <img loading="lazy" src={game.thumbnail} alt={game.title} className="h-48 w-full object-cover hover:scale-110 transition-transform duration-500" />
+        <div className="relative">
+            <SectionHeader title={name} subtitle="Free-to-play titles worth trying" onPrev={prevItem} onNext={nextItem} />
+            <div className="gh-scroller relative overflow-hidden -mx-2">
+                <div
+                    className="gh-track flex transition-transform duration-700 ease-in-out"
+                    style={{ transform: `translateX(-${Math.min(currentIndex, maxIndex) * cardPercent}%)` }}
+                >
+                    {games.map((game) => (
+                        <div key={game.id} className="flex-none w-[78%] sm:w-[46%] md:w-1/3 lg:w-1/4 px-2">
+                            <div
+                                className="game-card group h-full flex flex-col"
+                                onClick={() => showGameDetails(game)}
+                            >
+                                <div className="aspect-[16/9] overflow-hidden bg-[#171a22]">
+                                    <img loading="lazy" decoding="async" src={game.thumbnail} alt={game.title} width="365" height="206" className="h-full w-full object-cover" />
+                                </div>
+                                <div className="p-4 flex flex-col flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        {game.genre && <span className="gh-chip !py-0.5 !text-[11px]">{game.genre}</span>}
+                                        <span className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400">Free</span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{game.title}</h3>
-                                    <p className="text-sm text-gray-400 mb-4 line-clamp-3">{game.short_description}</p>
-                                    <div className="mt-auto">
-                                        <p className="text-xs text-gray-500 mt-2">Released: {new Date(game.release_date).toLocaleDateString()}</p>
-                                        <p className="text-xs text-gray-500 mt-1">Platform: {game.platform}</p>
-                                        <button className="inline-block text-blue-500 hover:text-blue-400 text-sm mt-3 transition-colors duration-200">View Details</button>
+                                    <h3 className="text-[15px] font-semibold text-white line-clamp-1">{game.title}</h3>
+                                    <p className="text-sm text-[#8a8f9c] mt-1.5 line-clamp-2">{game.short_description}</p>
+                                    <div className="mt-auto pt-4 flex items-center justify-between text-xs text-[#6b7080]">
+                                        <span className="truncate">{game.platform}</span>
+                                        <span className="inline-flex items-center gap-1 text-[#c9ccd4] group-hover:text-white">
+                                            Play <BsBoxArrowUpRight className="text-[10px]" />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-                <button onClick={nextItem} className="absolute -right-4 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-label="Next game"><FaChevronRight size={20} /></button>
             </div>
-        </section>
+        </div>
     );
 }

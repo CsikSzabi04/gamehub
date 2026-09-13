@@ -1,106 +1,82 @@
-import { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { FaAngleLeft,  FaChevronRight } from "react-icons/fa6";
-import gsap from "gsap";
+import React, { useState, useEffect } from "react";
+import { API_BASE, useApi } from "../Components/apiCache.js";
+import SectionHeader, { SectionLoader } from "../Components/SectionHeader.jsx";
 
+const toNews = data => (Array.isArray(data) ? data : []);
+
+// Card width as a percentage of the track, matching w-[80%] sm:w-1/2 md:w-1/3 lg:w-1/4
+function getCardPercent() {
+  if (window.innerWidth >= 1024) return 25;
+  if (window.innerWidth >= 768) return 100 / 3;
+  if (window.innerWidth >= 640) return 50;
+  return 80;
+}
 
 export default function News() {
-  const [newsItems, setNewsItems] = useState([]);
+  const { data: newsItems, loading } = useApi(`${API_BASE}/news`, toNews);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardPercent, setCardPercent] = useState(getCardPercent);
 
   useEffect(() => {
-    async function fetchNews() {
-      try {
-        const response = await axios.get("https://gamehub-backend-zekj.onrender.com/news");
-        setNewsItems(response.data);
-      } catch (err) {
-        console.error("Error fetching news:", err);
-      }
-    }
-    fetchNews();
+    const handleResize = () => setCardPercent(getCardPercent());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-     const carouselRef = useRef(null);
- 
-     useEffect(() => {
-      if (!newsItems.length || !carouselRef.current) return;
-         const totalItems = newsItems.length;
-         const intervalTime = 20000;
- 
-         const gamesToShow = [...newsItems, ...newsItems];
- 
-         const carousel = carouselRef.current;
-         const totalItemsToShow = gamesToShow.length;
- 
-         const rotateInterval = setInterval(() => {
-             setCurrentIndex(prevIndex => {
-                 const newIndex = (prevIndex + 2) % totalItems;
-                 gsap.to(carousel, {
-                     x: -newIndex * 1000,
-                     duration: 1.5,
-                     ease: "power2.inOut",
-                     overwrite: true
-                 });
-                 return newIndex;
-             });
-         }, intervalTime);
- 
-         return () => clearInterval(rotateInterval);
-     }, [newsItems]);
- 
-     const nextItem = () => {
-         setCurrentIndex(prevIndex => (prevIndex + 1) % newsItems.length);
-     };
- 
-     const prevItem = () => {
-         setCurrentIndex(prevIndex => (prevIndex - 1 + newsItems.length) % newsItems.length);
-     };
- 
+  const total = Array.isArray(newsItems) ? newsItems.length : 0;
+  const maxIndex = Math.max(0, total - Math.floor(100 / cardPercent));
+
+  useEffect(() => {
+    if (!total) return;
+    const rotateInterval = setInterval(() => {
+      setCurrentIndex(prevIndex => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
+    }, 20000);
+    return () => clearInterval(rotateInterval);
+  }, [total, maxIndex]);
+
+  const nextItem = () => setCurrentIndex(prevIndex => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
+  const prevItem = () => setCurrentIndex(prevIndex => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
 
   return (
-    <section id="news" className="mb-6 px-4 relative" data-aos="fade-up">
-      <h2 className="text-2xl font-semibold mb-4">Latest Steam News</h2>
-      <div className="relative group">
-        <button onClick={prevItem} className="absolute -left-5 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-label="Previous news">
-          <FaAngleLeft size={20} />
-        </button>
-        <div className="relative overflow-hidden">
-          <div className="carousel flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-            {newsItems.map((news) => (
-              <a 
-                key={news.id} 
-                href={news.game_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="carousel-item flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 block no-underline"
-              >
-                <div className="bg-gray-800 p-4 rounded-md shadow-lg h-full flex flex-col">
-                  <div className="relative mb-4 overflow-hidden rounded-md">
-                    {news.thumbnail && (
-                      <img loading="lazy" src={news.thumbnail} alt={news.title} className="h-48 w-full object-cover hover:scale-110 transition-transform duration-500" />
-                    )}
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{news.title}</h3>
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-3">{news.short_description}</p>
-                  <div className="mt-auto">
-                    <p className="text-xs text-gray-500 mt-2">{`Publisher: ${news.publisher}`}</p>
-                    <p className="text-xs text-gray-500 mt-1">{`Release Date: ${news.release_date}`}</p>
-                  </div>
+    <section id="news" className="!mb-12">
+      {loading || !newsItems ? (
+        <SectionLoader title="Latest Steam news" height="h-[320px]" />
+      ) : (
+        <>
+          <SectionHeader title="Latest Steam news" onPrev={prevItem} onNext={nextItem} />
+          <div className="gh-scroller relative overflow-hidden -mx-2">
+            <div
+              className="gh-track flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${Math.min(currentIndex, maxIndex) * cardPercent}%)` }}
+            >
+              {newsItems.map((news) => (
+                <div key={news.id} className="flex-none w-[78%] sm:w-[46%] md:w-1/3 lg:w-1/4 px-2">
+                  <a
+                    href={news.game_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="game-card group h-full flex flex-col"
+                  >
+                    <div className="aspect-[16/9] overflow-hidden bg-[#171a22]">
+                      {news.thumbnail && (
+                        <img loading="lazy" decoding="async" src={news.thumbnail} alt="" width="365" height="206" className="h-full w-full object-cover" />
+                      )}
+                    </div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="text-[15px] font-semibold text-white line-clamp-2">{news.title}</h3>
+                      <p className="text-sm text-[#8a8f9c] mt-1.5 line-clamp-3">{news.short_description}</p>
+                      <div className="mt-auto pt-4 flex items-center justify-between gap-3 text-xs text-[#6b7080]">
+                        <span className="truncate">{news.publisher}</span>
+                        <span className="flex-shrink-0">{news.release_date}</span>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-        <button onClick={nextItem} className="absolute -right-5 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-label="Next news">
-          <FaChevronRight size={20} />
-        </button>
-      </div>
-
-      <div className="flex justify-center mt-4 space-x-2">
-        {newsItems.map((_, index) => (
-          <button key={index} onClick={() => setCurrentIndex(index)} className={`w-2 h-2 rounded-full ${currentIndex == index ? 'bg-white' : 'bg-gray-600'}`} aria-label={`Go to news ${index + 1}`} />
-        ))}
-      </div>
+        </>
+      )}
     </section>
   );
 }

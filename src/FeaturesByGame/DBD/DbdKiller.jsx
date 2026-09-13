@@ -70,7 +70,7 @@ export default function DbdKiller({ killers, showKillerDetails }) {
     };
 
     const goToIndex = (index) => {
-        setCurrentIndex(Math.min(index, killers.length - itemsToShow.current));
+        setCurrentIndex(Math.max(0, Math.min(index, killers.length - itemsToShow.current)));
     };
 
     return (
@@ -99,15 +99,15 @@ export default function DbdKiller({ killers, showKillerDetails }) {
                                         alt={killer.name}  
                                         className="w-full h-64 md:h-72 object-cover object-top"
                                         loading="lazy"
-                                        onError={(e) => { e.target.src = '/images/killer-placeholder.png'; }}
+                                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.visibility = 'hidden'; }}
                                     />
                                     <div className="p-4">
                                         <h3 className="dbd-character-name">{killer.name}</h3>
                                         <div className="dbd-character-details">
                                             <span className="dbd-character-tag">{killer.difficulty}</span>
-                                            <span className="dbd-character-tag">{killer.moveSpeed}</span>
-                                            <span className="dbd-character-tag">{killer.weapon}</span>
-                                            {killer.licensed && <span className="dbd-character-tag text-yellow-500">DLC</span>}
+                                            {killer.speed && <span className="dbd-character-tag">{killer.speed}</span>}
+                                            {killer.weapon && <span className="dbd-character-tag">{killer.weapon}</span>}
+                                            {killer.dlc && <span className="dbd-character-tag text-yellow-500">DLC</span>}
                                         </div>
                                         <p className="dbd-character-desc line-clamp-2">{killer.overview}</p>
                                     </div>

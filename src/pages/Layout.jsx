@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Button, ButtonGroup, Chip } from '@mui/material'
+import { Button, Chip } from '@mui/material'
 
 export default function Layout({user, logout, auth}) {
     const { pathname } = useLocation();

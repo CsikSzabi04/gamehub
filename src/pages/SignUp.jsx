@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { setDoc, doc } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig.js';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -8,8 +8,8 @@ import { FaEnvelope, FaLock, FaUser, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Header from '../Header.jsx';
 
-export default function Register({ auth, setUsername, username }) {
-  const [localUsername, setLocalUsername] = useState(username || '');
+export default function Register({ auth }) {
+  const [localUsername, setLocalUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,23 +18,8 @@ export default function Register({ auth, setUsername, username }) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Sync local username with prop
-  useEffect(() => {
-    if (username) {
-      setLocalUsername(username);
-    }
-  }, [username]);
-
-  // Update parent state when username changes
-  const handleUsernameChange = (e) => {
-    const value = e.target.value;
-    setLocalUsername(value);
-    if (setUsername) {
-      setUsername(value);
-    }
-  };
-
-  async function handleRegister(){
+  async function handleRegister() {
+    if (isLoading) return;
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -47,9 +32,9 @@ export default function Register({ auth, setUsername, username }) {
 
     setIsLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setSuccess(true);
-      await addDoc(collection(firestore, "usernames"), { username: localUsername });
+      await setDoc(doc(firestore, "users", userCredential.user.uid), { username: localUsername });
       setError('');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
@@ -67,21 +52,21 @@ export default function Register({ auth, setUsername, username }) {
       <div className="min-h-screen flex items-center justify-center p-4 pt-20">
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Side - Image */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="hidden md:block order-2 md:order-1"
           >
             <div className="relative rounded-3xl overflow-hidden h-[500px]">
-              <img 
-                src="./gaming.png" 
-                alt="Signup Illustration" 
+              <img
+                src="/gaming.webp"
+                alt="Signup Illustration"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent"></div>
-              
+
               {/* Overlay Content */}
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <h2 className="text-2xl font-bold text-white mb-2">Join Our Community</h2>
@@ -91,7 +76,7 @@ export default function Register({ auth, setUsername, username }) {
           </motion.div>
 
           {/* Right Side - Form */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -100,7 +85,7 @@ export default function Register({ auth, setUsername, username }) {
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12">
               {/* Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#1e222c] text-[#a78bfa] mb-4">
                   <FaGamepad className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Create Account</h1>
@@ -119,8 +104,8 @@ export default function Register({ auth, setUsername, username }) {
                     required
                     placeholder="Username"
                     value={localUsername}
-                    onChange={handleUsernameChange}
-                    onKeyDown={(e) => {if (e.key === "Enter") handleRegister();}}
+                    onChange={(e) => setLocalUsername(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleRegister(); }}
                     className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
                   />
                 </div>
@@ -136,7 +121,7 @@ export default function Register({ auth, setUsername, username }) {
                     placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => {if (e.key === "Enter") handleRegister();}}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleRegister(); }}
                     className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
                   />
                 </div>
@@ -152,7 +137,7 @@ export default function Register({ auth, setUsername, username }) {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={(e) => {if (e.key === "Enter") handleRegister();}}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleRegister(); }}
                     className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
                   />
                 </div>
@@ -168,7 +153,7 @@ export default function Register({ auth, setUsername, username }) {
                     placeholder="Confirm Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    onKeyDown={(e) => {if (e.key === "Enter") handleRegister();}}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleRegister(); }}
                     className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
                   />
                 </div>
@@ -200,7 +185,7 @@ export default function Register({ auth, setUsername, username }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleRegister}
                   disabled={isLoading}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-violet-600 text-white font-semibold text-lg shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="gh-btn gh-btn-primary w-full !h-12 text-base"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

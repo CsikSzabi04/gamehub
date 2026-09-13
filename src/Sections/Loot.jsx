@@ -1,125 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaExternalLinkAlt } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import SectionHeader, { SectionLoader } from "../Components/SectionHeader.jsx";
+import { API_BASE, useApi } from "../Components/apiCache.js";
+
+function toGiveaways(data) {
+    if (!Array.isArray(data)) return [];
+    return data.map((giveaway) => ({
+        id: giveaway.id,
+        title: giveaway.title,
+        description: giveaway.description,
+        thumbnail: giveaway.thumbnail,
+        platforms: giveaway.platforms,
+        instructions: giveaway.instructions,
+        openGiveawayUrl: giveaway.open_giveaway_url,
+        gamerPowerUrl: giveaway.gamerpower_url,
+        publishedDate: giveaway.published_date,
+        status: giveaway.status,
+    }));
+}
 
 export default function Giveaways() {
-    const [giveaways, setGiveaways] = useState([]);
+    const { data: giveaways, loading } = useApi(`${API_BASE}/loot`, toGiveaways);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
-    const cardsToShow = 4;
+    // Cards per view from md (w-1/4, lg:w-1/5); below md the row is a native swipe scroller
+    const cardsToShow = typeof window !== "undefined" && window.innerWidth >= 1024 ? 5 : 4;
 
     useEffect(() => {
-        fetchGiveaways();
-    }, []);
-
-    async function fetchGiveaways() {
-        try {
-            const response = await fetch("https://gamehub-backend-zekj.onrender.com/loot");
-            const data = await response.json();
-
-            const giveawaysData = data.map((giveaway) => ({
-                id: giveaway.id,
-                title: giveaway.title,
-                description: giveaway.description,
-                thumbnail: giveaway.thumbnail,
-                platforms: giveaway.platforms,
-                instructions: giveaway.instructions,
-                openGiveawayUrl: giveaway.open_giveaway_url,
-                gamerPowerUrl: giveaway.gamerpower_url,
-                publishedDate: giveaway.published_date,
-                status: giveaway.status,
-            }));
-
-            setGiveaways(giveawaysData);
-        } catch (error) {
-            console.error("Error fetching giveaways:", error);
-        }
-    }
-
-    useEffect(() => {
+        if (!giveaways?.length) return;
         const interval = setInterval(() => {
             if (!isAnimating) {
                 setCurrentIndex(prev => (prev + 1) % Math.max(1, giveaways.length - cardsToShow + 1));
             }
         }, 20000);
         return () => clearInterval(interval);
-    }, [giveaways.length, isAnimating]);
+    }, [giveaways?.length, isAnimating]);
 
     function showGiveawayDetails(giveaway) {
         window.open(giveaway.openGiveawayUrl, "_blank");
     }
 
     function nextItem() {
-        if (isAnimating) return;
+        if (isAnimating || !giveaways) return;
         setIsAnimating(true);
         setCurrentIndex(prev => (prev + 1) % Math.max(1, giveaways.length - cardsToShow + 1));
         setTimeout(() => setIsAnimating(false), 500);
     }
 
     function prevItem() {
-        if (isAnimating) return;
+        if (isAnimating || !giveaways) return;
         setIsAnimating(true);
-        setCurrentIndex(prev => (prev - 1 + (giveaways.length - cardsToShow + 1)) % (giveaways.length - cardsToShow + 1));
+        const positions = Math.max(1, giveaways.length - cardsToShow + 1);
+        setCurrentIndex(prev => (prev - 1 + positions) % positions);
         setTimeout(() => setIsAnimating(false), 500);
     }
+
     return (
-        <div className="w-full py-8 px-4" data-aos="fade-up">
-            <div className="max-w-7xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                    <span className="text-3xl">Loot</span> Giveaways
-                </h2>
-                
-                {!giveaways.length ? (
-                    <div className="text-center py-12 bg-gray-800/50 rounded-xl">
-                        <div className="animate-pulse">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
-                                <span className="text-3xl">Giveaways</span>
-                            </div>
-                            <p className="text-gray-400">Loading giveaways...</p>
-                        </div>
+        <div className="w-full mb-12">
+            {loading || !giveaways ? (
+                <SectionLoader title="Loot giveaways" height="h-[230px]" />
+            ) : giveaways.length === 0 ? (
+                <>
+                    <h2 className="gh-section-title !mb-4">Loot giveaways</h2>
+                    <div className="gh-surface text-center py-12">
+                        <p className="text-sm">No giveaways available at the moment.</p>
                     </div>
-                ) : (
-                    <div className="relative">
-                        <button onClick={prevItem} className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-1 sm:p-2 rounded-full transition-all duration-200 hover:scale-110" disabled={currentIndex == 0}>
-                            <FaChevronLeft className="text-xs sm:text-sm" />
-                        </button>
-                
-                        <div className="relative overflow-hidden px-6 sm:px-8">
-                            <div className="flex transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]" style={{ transform: `translateX(-${currentIndex * (100 / cardsToShow)}%)` }}>
-                                {giveaways.map((giveaway) => {
-                                    const displayedPlatforms = giveaway.platforms.split(',').slice(0, 3).join(',');
-                                    const hasMorePlatforms = giveaway.platforms.split(',').length > 3;
-                                    return (
-                                        <div key={giveaway.id} className="flex-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 p-1 sm:p-2 min-w-[50%] sm:min-w-[33.33%] md:min-w-[25%] lg:min-w-[20%]">
-                                            <div className="bg-gray-800 p-2 sm:p-3 rounded-md shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer h-full hover:-translate-y-1" onClick={() => showGiveawayDetails(giveaway)}>
-                                                <div className="relative mb-2 sm:mb-3 h-20 sm:h-28 md:h-32 lg:h-36 overflow-hidden rounded-md">
-                                                    <img loading="lazy" src={giveaway.thumbnail} alt={giveaway.title} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
-                                                </div>
-                                                <h3 className="text-xs sm:text-sm font-bold mb-1 line-clamp-1">{giveaway.title}</h3>
-                                                <p className="text-xxs sm:text-xs text-gray-400 mb-1 sm:mb-2 line-clamp-2">{giveaway.description}</p>
-                                                <div className="flex justify-between items-center">
-                                                    <div className="flex items-center">
-                                                        <span className="text-xxs sm:text-xs bg-gray-700 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded transition-all duration-200 hover:bg-gray-600">
-                                                            {displayedPlatforms}
-                                                            {hasMorePlatforms && (
-                                                                <span className="text-gray-400 ml-1">+{giveaway.platforms.split(',').length - 3}</span>
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                    <FaExternalLinkAlt className="text-blue-400 text-xxs sm:text-xs transition-all duration-200 hover:text-blue-300" />
+                </>
+            ) : (
+                <>
+                    <SectionHeader title="Loot giveaways" subtitle="Free keys, DLC and in-game items" onPrev={prevItem} onNext={nextItem} />
+                    <div className="gh-scroller relative overflow-hidden -mx-1.5">
+                        <div className="gh-track flex transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]" style={{ transform: `translateX(-${currentIndex * (100 / cardsToShow)}%)` }}>
+                            {giveaways.map((giveaway) => {
+                                const platforms = (giveaway.platforms || '').split(',').map(p => p.trim()).filter(Boolean);
+                                return (
+                                    <div key={giveaway.id} className="flex-none w-[44%] sm:w-[30%] md:w-1/4 lg:w-1/5 px-1.5">
+                                        <div className="game-card group h-full flex flex-col" onClick={() => showGiveawayDetails(giveaway)}>
+                                            <div className="aspect-[16/10] overflow-hidden bg-[#171a22]">
+                                                <img loading="lazy" decoding="async" src={giveaway.thumbnail} alt={giveaway.title} width="300" height="188" className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="p-3 flex flex-col flex-1">
+                                                <h3 className="text-sm font-semibold text-white line-clamp-1">{giveaway.title}</h3>
+                                                <p className="text-xs text-[#8a8f9c] mt-1 line-clamp-2">{giveaway.description}</p>
+                                                <div className="mt-auto pt-3 flex items-center justify-between gap-2">
+                                                    <span className="text-[11px] text-[#6b7080] truncate">
+                                                        {platforms.slice(0, 2).join(', ')}
+                                                        {platforms.length > 2 && ` +${platforms.length - 2}`}
+                                                    </span>
+                                                    <FaExternalLinkAlt className="flex-shrink-0 text-[10px] text-[#6b7080] group-hover:text-white transition-colors" />
                                                 </div>
                                             </div>
                                         </div>
-                                    );
-                                })}
-                            </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                
-                        <button onClick={nextItem} className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-10 bg-gray-800 hover:bg-gray-700 text-white p-1 sm:p-2 rounded-full transition-all duration-200 hover:scale-110" disabled={currentIndex >= giveaways.length - cardsToShow}>
-                            <FaChevronRight className="text-xs sm:text-sm" />
-                        </button>
                     </div>
-                )}
-            </div>
+                </>
+            )}
         </div>
     );
 }

@@ -1,0 +1,22 @@
+# Netlify cache headers. Without these every file is revalidated on every visit (max-age=0).
+
+# Vite build output: file names contain a content hash, so they never change
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Mirrored game artwork (scripts/snapshot.mjs): content-addressed or stable RAWG paths
+/img-cache/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+# Build-time API snapshots: always check for a newer build (the app refreshes from the live API anyway)
+/api-snapshot/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.webp
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+/favicon-64.png
+  Cache-Control: public, max-age=604800

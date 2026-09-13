@@ -35,7 +35,7 @@ export default function StoresFooter() {
             <div className="flex items-center justify-between mb-6 px-2">
                 <div className="relative">
                     <h2 className="text-xl md:text-2xl font-bold text-white">Popular Stores</h2>
-                    <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full"></div>
+                    
                 </div>
             </div>
 

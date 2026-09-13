@@ -10,6 +10,7 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
 
     useEffect(() => {
         const totalItems = movies.length;
+        if (!totalItems) return;
         const intervalTime = 15000;
         const carousel = carouselRef.current;
 
@@ -29,10 +30,11 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
     }, [movies]);
 
     function nextItem() {
+        if (!movies.length) return;
         const carousel = carouselRef.current;
         const newIndex = (currentIndex + 2) % movies.length;
         gsap.to(carousel, {
-            x: -newIndex * 500,
+            x: -newIndex * itemWidth,
             duration: 0.5,
             ease: "power2.inOut",
             overwrite: true
@@ -41,10 +43,11 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
     }
 
     function prevItem() {
+        if (!movies.length) return;
         const carousel = carouselRef.current;
         const newIndex = (currentIndex - 2 + movies.length) % movies.length;
         gsap.to(carousel, {
-            x: -newIndex * 500,
+            x: -newIndex * itemWidth,
             duration: 0.5,
             ease: "power2.inOut",
             overwrite: true

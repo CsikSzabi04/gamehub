@@ -69,7 +69,7 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
     };
 
     const goToIndex = (index) => {
-        setCurrentIndex(Math.min(index, characters.length - itemsToShow.current));
+        setCurrentIndex(Math.max(0, Math.min(index, characters.length - itemsToShow.current)));
     };
 
     return (
@@ -104,7 +104,7 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
                                         <div className="dbd-character-details">
                                             <span className="dbd-character-tag">{character.difficulty}</span>
                                             <span className="dbd-character-tag">{character.gender}</span>
-                                            {character.licensed && <span className="dbd-character-tag text-yellow-500">DLC</span>}
+                                            {character.dlc &&<span className="dbd-character-tag text-yellow-500">DLC</span>}
                                         </div>
                                         <p className="dbd-character-desc line-clamp-2">{character.overview}</p>
                                     </div>
