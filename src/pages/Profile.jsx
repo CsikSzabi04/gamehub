@@ -17,6 +17,8 @@ import Footer from '../Footer';
 import Header from '../Header';
 import EditProfileModal from '../Components/profile/EditProfileModal.jsx';
 import ProfileQuickLinks from '../Components/profile/ProfileQuickLinks.jsx';
+import MyPcCard from '../Components/profile/MyPcCard.jsx';
+import PlatformConnections from '../Components/profile/PlatformConnections.jsx';
 import { challengeBadgesXp } from '../challenges/challenges.js';
 import LanguageSwitcher from '../Components/LanguageSwitcher.jsx';
 import { translate, useT } from '../i18n/index.jsx';
@@ -192,6 +194,28 @@ function FavoriteTile({ fav, image }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
             <FaHeart className="absolute top-3 right-3 w-4 h-4 text-pink-500 drop-shadow" />
             <p className="absolute bottom-0 left-0 right-0 p-3 text-sm font-semibold text-white truncate">{fav.name}</p>
+        </Link>
+    );
+}
+
+function MiniReview({ review, image }) {
+    return (
+        <Link to={`/reviews/${review.gameId}`} className="group flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-white/[0.04] transition-colors min-w-0">
+            <GameThumb image={image} name={review.gameName} className="w-12 h-9 rounded-lg shrink-0" />
+            <div className="min-w-0 flex-1">
+                <p className="text-sm text-white font-medium truncate group-hover:text-violet-300 transition-colors">{review.gameName}</p>
+                <Stars value={review.rating} />
+            </div>
+        </Link>
+    );
+}
+
+function MiniFavorite({ fav, image }) {
+    return (
+        <Link to={`/reviews/${fav.gameId}`} title={fav.name} className="group relative block rounded-xl overflow-hidden aspect-[4/3] border border-white/10">
+            <GameThumb image={image} name={fav.name} className="absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
+            <p className="absolute bottom-0 left-0 right-0 px-1.5 pb-1 text-[10px] font-semibold text-white truncate">{fav.name}</p>
         </Link>
     );
 }
@@ -663,31 +687,9 @@ export default function Profile({ setUser }) {
                                             )}
                                         </Card>
 
-                                        <Card className="p-6">
-                                            <SectionTitle accent={accent} action={reviews.length > 3 && <ViewAll onClick={() => setTab('reviews')} />}>
-                                                {t('profile.recentReviews')}
-                                            </SectionTitle>
-                                            {activityLoading ? <SkeletonList /> : reviews.length === 0 ? (
-                                                <EmptyState icon={FaPen} title={t('profile.noReviews')} text={t('profile.firstReviewXp')} cta={<CtaLink to="/review" gradient={gradient}>{t('profile.writeReview')}</CtaLink>} />
-                                            ) : (
-                                                <div className="space-y-3">
-                                                    {sortedReviews.slice(0, 3).map((r, i) => <ReviewItem key={i} review={r} image={imageFor(r.gameId)} />)}
-                                                </div>
-                                            )}
-                                        </Card>
+                                        <MyPcCard Card={Card} SectionTitle={SectionTitle} accent={accent} gradient={gradient} />
 
-                                        <Card className="p-6">
-                                            <SectionTitle accent={accent} action={favorites.length > 6 && <ViewAll onClick={() => setTab('favorites')} />}>
-                                                {t('profile.favoriteGames')}
-                                            </SectionTitle>
-                                            {activityLoading ? <SkeletonGrid /> : favorites.length === 0 ? (
-                                                <EmptyState icon={FaHeart} title={t('profile.noFavorites')} text={t('profile.noFavoritesHint')} cta={<CtaLink to="/discover" gradient={gradient}>{t('profile.discoverGames')}</CtaLink>} />
-                                            ) : (
-                                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                                    {favorites.slice(0, 6).map((f, i) => <FavoriteTile key={i} fav={f} image={imageFor(f.gameId, f.background_image)} />)}
-                                                </div>
-                                            )}
-                                        </Card>
+                                        <PlatformConnections Card={Card} SectionTitle={SectionTitle} accent={accent} />
                                     </>
                                 )}
 
@@ -829,6 +831,40 @@ export default function Profile({ setUser }) {
                                     </li>
                                 ))}
                             </ul>
+                        </Card>
+
+                        <Card className="p-5">
+                            <SectionTitle accent={accent} action={reviews.length > 0 && <ViewAll onClick={() => setTab('reviews')} />}>
+                                {t('profileExtras.recentReviewsShort')}
+                            </SectionTitle>
+                            {activityLoading ? (
+                                <div className="space-y-2">{[0, 1, 2].map(i => <div key={i} className="h-10 rounded-xl bg-white/[0.04] animate-pulse" />)}</div>
+                            ) : reviews.length === 0 ? (
+                                <p className="text-sm text-gray-500">
+                                    {t('profile.noReviews')} <Link to="/review" className="text-violet-300 hover:text-white">{t('profile.writeReview')}</Link>
+                                </p>
+                            ) : (
+                                <div className="space-y-1">
+                                    {sortedReviews.slice(0, 3).map((r, i) => <MiniReview key={i} review={r} image={imageFor(r.gameId)} />)}
+                                </div>
+                            )}
+                        </Card>
+
+                        <Card className="p-5">
+                            <SectionTitle accent={accent} action={favorites.length > 0 && <ViewAll onClick={() => setTab('favorites')} />}>
+                                {t('profileExtras.favoritesShort')}
+                            </SectionTitle>
+                            {activityLoading ? (
+                                <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map(i => <div key={i} className="aspect-[4/3] rounded-xl bg-white/[0.04] animate-pulse" />)}</div>
+                            ) : favorites.length === 0 ? (
+                                <p className="text-sm text-gray-500">
+                                    {t('profile.noFavorites')} <Link to="/discover" className="text-violet-300 hover:text-white">{t('profile.discoverGames')}</Link>
+                                </p>
+                            ) : (
+                                <div className="grid grid-cols-3 gap-2">
+                                    {favorites.slice(0, 6).map((f, i) => <MiniFavorite key={i} fav={f} image={imageFor(f.gameId, f.background_image)} />)}
+                                </div>
+                            )}
                         </Card>
                     </aside>
                 </div>

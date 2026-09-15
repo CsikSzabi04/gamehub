@@ -6,7 +6,7 @@
 // Synced from the signed-in user's profile (AppRuntime). Private profiles have no mirror.
 import { firestore } from '../lib/firebase.js';
 
-const FIELDS = ['username', 'accent', 'bannerPreset', 'bio', 'playing', 'platforms', 'genres', 'xp', 'level', 'bestStreak', 'streak', 'lastActiveDate', 'libraryStats', 'challengeBadges', 'socials'];
+const FIELDS = ['username', 'accent', 'bannerPreset', 'bio', 'playing', 'platforms', 'genres', 'xp', 'level', 'bestStreak', 'streak', 'lastActiveDate', 'libraryStats', 'challengeBadges', 'socials', 'gamingAccounts'];
 
 /** 64px JPEG thumbnail of a data-URL / URL avatar (a few KB instead of up to ~150 KB). */
 export function makeAvatarThumb(src, size = 96) {

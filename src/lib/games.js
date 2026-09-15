@@ -10,6 +10,9 @@ export function parseGameKey(key) {
     const text = String(key || '');
     const match = /^(steam|gog|rawg)-(\d+)$/.exec(text);
     if (match) return { source: match[1], id: match[2] };
+    // Imported console titles (no in-site game page): xbox-<titleId>, psn-<titleId>
+    const consoleMatch = /^(xbox|psn)-([A-Za-z0-9_]+)$/.exec(text);
+    if (consoleMatch) return { source: consoleMatch[1], id: consoleMatch[2] };
     if (/^\d+$/.test(text)) return { source: 'rawg', id: text };
     return null;
 }
@@ -19,6 +22,7 @@ export function gameHref(key) {
     const parsed = parseGameKey(key);
     if (!parsed) return '/';
     if (parsed.source === 'rawg') return `/searchreview/${parsed.id}`;
+    if (parsed.source === 'xbox' || parsed.source === 'psn') return '/library';
     return `/game/${parsed.source}/${parsed.id}`;
 }
 
