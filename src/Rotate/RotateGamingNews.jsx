@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import '../body.css';
 import SectionHeader, { SectionLoader } from '../Components/SectionHeader.jsx';
+import { useT } from '../i18n/index.jsx';
 
 export default function RotateGamingNews({ articles, name }) {
+    const { t, locale } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -20,7 +22,7 @@ export default function RotateGamingNews({ articles, name }) {
 
     return (
         <div>
-            <SectionHeader title={name} subtitle="Headlines from around the industry" onPrev={prev} onNext={next} />
+            <SectionHeader title={name} subtitle={t('rotate.newsSubtitle')} onPrev={prev} onNext={next} />
             <div className="gh-scroller overflow-hidden -mx-2">
                 <div className="gh-track flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
                     {articles.map((article) => (
@@ -45,7 +47,7 @@ export default function RotateGamingNews({ articles, name }) {
                                     )}
                                 </div>
                                 <p className="mt-3 text-xs text-[#6b7080]">
-                                    {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    {new Date(article.publishedAt).toLocaleDateString(locale,{ month: 'short', day: 'numeric', year: 'numeric' })}
                                     {article.author ? ` · ${article.author}` : ''}
                                 </p>
                                 <h3 className="mt-1 text-[15px] font-semibold leading-snug text-[#eceef2] group-hover:text-white group-hover:underline decoration-white/30 underline-offset-4 line-clamp-2">{article.title}</h3>

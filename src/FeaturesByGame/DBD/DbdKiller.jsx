@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useT } from "../../i18n/index.jsx";
 
 export default function DbdKiller({ killers, showKillerDetails }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const carouselRef = useRef(null);
     const itemRefs = useRef([]);
@@ -92,7 +94,7 @@ export default function DbdKiller({ killers, showKillerDetails }) {
                             > 
                                 <div className="dbd-character-card dbd-killer-card h-full">
                                     <div className="dbd-role-badge dbd-killer-badge">
-                                        KILLER
+                                        {t('dbd.killer').toUpperCase()}
                                     </div>
                                     <img 
                                         src={killer.image || killer.imgs}   
@@ -123,14 +125,14 @@ export default function DbdKiller({ killers, showKillerDetails }) {
                     <button 
                         onClick={prevItem}  
                         className="dbd-nav-btn dbd-killer-nav left-0 -translate-x-2 md:-translate-x-4"
-                        aria-label="Previous killer"
+                        aria-label={t('dbd.prevKiller')}
                     >
                         <FaChevronLeft className="text-lg md:text-xl" />
                     </button> 
                     <button 
                         onClick={nextItem}  
                         className="dbd-nav-btn dbd-killer-nav right-0 translate-x-2 md:translate-x-4"
-                        aria-label="Next killer"
+                        aria-label={t('dbd.nextKiller')}
                     >
                         <FaChevronRight className="text-lg md:text-xl" />
                     </button>
@@ -143,7 +145,7 @@ export default function DbdKiller({ killers, showKillerDetails }) {
                         key={index} 
                         onClick={() => goToIndex(index)} 
                         className={`dbd-dot dbd-killer-dot ${currentIndex == index ? 'active' : ''}`}
-                        aria-label={`Go to killer ${index + 1}`} 
+                        aria-label={t('dbd.goToKiller', { n: index + 1 })}
                     />
                 ))}
             </div>

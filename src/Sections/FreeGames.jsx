@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import RotateFree from "../Rotate/RotateFree.jsx";
+import { useT } from "../i18n/index.jsx";
 
 export default function FreeGames() {
+    const { t } = useT();
     const [freeGames, setFreeGames] = useState([]);
 
     useEffect(() => {
@@ -33,7 +35,7 @@ export default function FreeGames() {
 
     return (
         <section id="free-games" className="mb-8" data-aos="fade-up">
-            <RotateFree games={freeGames} showGameDetails={showGameDetails} name="Free Games" />
+            <RotateFree games={freeGames} showGameDetails={showGameDetails} name={t('home.free.title')} />
         </section>
     );
 }

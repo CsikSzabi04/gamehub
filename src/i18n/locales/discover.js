@@ -1,0 +1,36 @@
+// Discover page (full catalogue, free-to-play list, pagination)
+export default {
+    en: {
+        title: 'Discover',
+        intro: 'Browse the full catalogue, free-to-play titles and the latest news.',
+        allGames: 'All games',
+        allFreeGames: 'All free games',
+        titles: '{count} titles',
+        noGames: 'No games found.',
+        pagination: 'Pagination',
+        previousPage: 'Previous page',
+        nextPage: 'Next page',
+    },
+    hu: {
+        title: 'Felfedezés',
+        intro: 'Böngészd a teljes katalógust, az ingyenes játékokat és a legfrissebb híreket.',
+        allGames: 'Összes játék',
+        allFreeGames: 'Összes ingyenes játék',
+        titles: '{count} cím',
+        noGames: 'Nem találtunk játékot.',
+        pagination: 'Lapozás',
+        previousPage: 'Előző oldal',
+        nextPage: 'Következő oldal',
+    },
+    de: {
+        title: 'Entdecken',
+        intro: 'Durchstöbere den ganzen Katalog, Free-to-Play-Titel und die neuesten News.',
+        allGames: 'Alle Spiele',
+        allFreeGames: 'Alle kostenlosen Spiele',
+        titles: '{count} Titel',
+        noGames: 'Keine Spiele gefunden.',
+        pagination: 'Seitennavigation',
+        previousPage: 'Vorherige Seite',
+        nextPage: 'Nächste Seite',
+    },
+};

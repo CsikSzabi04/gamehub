@@ -8,6 +8,7 @@ import SystemRequirements from '../Components/SystemRequirements.jsx';
 import ReviewsPanel from '../Components/ReviewsPanel.jsx';
 import { formatDate, DetailRow, DetailList, GameHero, PageState, Spinner } from './AllReview.jsx';
 import { cachedFetch, peekCached } from '../Components/apiCache.js';
+import { useT } from '../i18n/index.jsx';
 
 const gameUrl = id => `https://api.rawg.io/api/games/${encodeURIComponent(id)}?key=984255fceb114b05b5e746dc24a8520a`;
 
@@ -21,6 +22,7 @@ function withRequirements(data) {
 export default function SearchReview() {
     const { gameId } = useParams();
     const { user } = useContext(UserContext);
+    const { t, locale } = useT();
     const [game, setGame] = useState(() => withRequirements(peekCached(gameUrl(gameId))) || null);
     const [reviews, setReviews] = useState([]);
     const [error, setError] = useState('');
@@ -36,7 +38,7 @@ export default function SearchReview() {
                 setGame(withRequirements(data));
 
             } catch (err) {
-                setError('Failed to fetch game details');
+                setError('game.fetchFailed');
             } finally {
                 setLoading(false);
             }
@@ -65,7 +67,7 @@ export default function SearchReview() {
 
     async function submitReview() {
         if (!newReview || rating == 0) {
-            setError("Please write a review and select a rating");
+            setError("reviews.validation");
             return;
         }
 
@@ -91,10 +93,10 @@ export default function SearchReview() {
                 setRating(0);
                 setReviewsVersion(v => v + 1);
             } else {
-                setError("Failed to submit review");
+                setError("reviews.submitFailed");
             }
         } catch (error) {
-            setError("Failed to submit review");
+            setError("reviews.submitFailed");
             console.error("Error submitting review:", error);
         }
     }
@@ -104,7 +106,7 @@ export default function SearchReview() {
     }
 
     if (!game) {
-        return <PageState><p className="text-[#a1a6b3]">{error || 'Game not found'}</p></PageState>;
+        return <PageState><p className="text-[#a1a6b3]">{t(error || 'game.notFound')}</p></PageState>;
     }
 
     const genres = game.genres?.map(g => g.name) || [];
@@ -122,9 +124,9 @@ export default function SearchReview() {
                                 <span>/ 5</span>
                             </span>
                         ) : null}
-                        <span>Released {formatDate(game.released)}</span>
+                        <span>{t('game.released', { date: formatDate(game.released, locale, t('game.tba')) })}</span>
                         {game.metacritic ? <span>Metacritic {game.metacritic}</span> : null}
-                        {game.playtime ? <span>{game.playtime}h avg playtime</span> : null}
+                        {game.playtime ? <span>{t('game.avgPlaytime', { hours: game.playtime })}</span> : null}
                     </div>
                 </GameHero>
 
@@ -133,7 +135,7 @@ export default function SearchReview() {
                     <div className="contents lg:flex lg:flex-col lg:gap-10 lg:col-span-2 min-w-0">
                         {game.description_raw && (
                             <div className="order-1 min-w-0">
-                                <h3 className="gh-section-title mb-3">About</h3>
+                                <h3 className="gh-section-title mb-3">{t('game.about')}</h3>
                                 <p className="text-sm sm:text-[15px] leading-7 text-[#c9ccd4] whitespace-pre-line line-clamp-[12]">{game.description_raw}</p>
                             </div>
                         )}
@@ -157,28 +159,28 @@ export default function SearchReview() {
                                 rating={rating}
                                 setRating={setRating}
                                 onSubmit={submitReview}
-                                error={error}
+                                error={error && t(error)}
                             />
                         </div>
                     </div>
 
                     <aside className="order-3 lg:order-none min-w-0 lg:sticky lg:top-24">
                         <div className="gh-surface p-4 sm:p-5">
-                            <h3 className="text-sm font-semibold text-white mb-2">Game details</h3>
+                            <h3 className="text-sm font-semibold text-white mb-2">{t('game.details')}</h3>
                             <DetailList>
-                                <DetailRow label="Release date">{formatDate(game.released)}</DetailRow>
-                                {game.esrb_rating?.name && <DetailRow label="Age rating">{game.esrb_rating.name}</DetailRow>}
-                                <DetailRow label="Platforms" wide>
+                                <DetailRow label={t('game.releaseDate')}>{formatDate(game.released, locale, t('game.tba'))}</DetailRow>
+                                {game.esrb_rating?.name && <DetailRow label={t('game.ageRating')}>{game.esrb_rating.name}</DetailRow>}
+                                <DetailRow label={t('game.platforms')} wide>
                                     {game.platforms?.length ? game.platforms.map(p => p.platform.name).join(', ') : '—'}
                                 </DetailRow>
                                 {game.developers?.length > 0 && (
-                                    <DetailRow label="Developer">{game.developers.map(d => d.name).join(', ')}</DetailRow>
+                                    <DetailRow label={t('game.developer')}>{game.developers.map(d => d.name).join(', ')}</DetailRow>
                                 )}
                                 {game.publishers?.length > 0 && (
-                                    <DetailRow label="Publisher">{game.publishers.map(d => d.name).join(', ')}</DetailRow>
+                                    <DetailRow label={t('game.publisher')}>{game.publishers.map(d => d.name).join(', ')}</DetailRow>
                                 )}
                                 {game.stores?.length > 0 && (
-                                    <DetailRow label="Stores" wide>
+                                    <DetailRow label={t('game.stores')} wide>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
                                             {game.stores.map(({ store }) => (
                                                 <a
@@ -195,7 +197,7 @@ export default function SearchReview() {
                                     </DetailRow>
                                 )}
                                 {game.tags?.length > 0 && (
-                                    <DetailRow label="Tags" wide>
+                                    <DetailRow label={t('game.tags')} wide>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
                                             {game.tags.slice(0, 10).map(tag => (
                                                 <span key={tag.id} className="gh-chip">{tag.name}</span>

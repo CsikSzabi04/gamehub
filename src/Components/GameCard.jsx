@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BsStarFill, BsChatSquareText } from 'react-icons/bs';
 import { rawgImg, rawgSrcSet } from './rawgImage.js';
+import { useT } from '../i18n/index.jsx';
 
 export function releaseYear(released) {
     if (!released) return 'TBA';
@@ -10,6 +11,8 @@ export function releaseYear(released) {
 }
 
 export default function GameCard({ game, onClick, className = '' }) {
+    const { t } = useT();
+    const year = releaseYear(game.released);
     return (
         <div
             role="button"
@@ -43,18 +46,18 @@ export default function GameCard({ game, onClick, className = '' }) {
                 <Link
                     to={`/allreview/${game.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    title="Open game page"
+                    title={t('game.card.openPage')}
                     className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/75 px-2 py-1 text-[11px] font-medium text-white opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 focus:opacity-100 transition-all duration-200 hover:bg-black"
                 >
                     <BsChatSquareText className="text-[10px]" />
-                    Reviews
+                    {t('game.card.reviews')}
                 </Link>
             </div>
 
             <div className="px-3.5 py-3">
                 <h3 className="truncate text-[15px] font-semibold text-[#eceef2] group-hover:text-white">{game.name}</h3>
                 <div className="mt-1 flex items-center justify-between gap-2 text-xs text-[#6b7080]">
-                    <span>{releaseYear(game.released)}</span>
+                    <span>{year === 'TBA' ? t('game.tba') : year}</span>
                     {game.genres?.[0] && <span className="truncate">{game.genres[0].name}</span>}
                 </div>
             </div>

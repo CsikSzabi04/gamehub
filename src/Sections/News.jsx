@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE, useApi } from "../Components/apiCache.js";
 import SectionHeader, { SectionLoader } from "../Components/SectionHeader.jsx";
+import { useT } from "../i18n/index.jsx";
 
 const toNews = data => (Array.isArray(data) ? data : []);
 
@@ -13,6 +14,7 @@ function getCardPercent() {
 }
 
 export default function News() {
+  const { t } = useT();
   const { data: newsItems, loading } = useApi(`${API_BASE}/news`, toNews);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardPercent, setCardPercent] = useState(getCardPercent);
@@ -40,10 +42,10 @@ export default function News() {
   return (
     <section id="news" className="!mb-12">
       {loading || !newsItems ? (
-        <SectionLoader title="Latest Steam news" height="h-[320px]" />
+        <SectionLoader title={t('home.news.title')} height="h-[320px]" />
       ) : (
         <>
-          <SectionHeader title="Latest Steam news" onPrev={prevItem} onNext={nextItem} />
+          <SectionHeader title={t('home.news.title')}onPrev={prevItem} onNext={nextItem} />
           <div className="gh-scroller relative overflow-hidden -mx-2">
             <div
               className="gh-track flex transition-transform duration-700 ease-in-out"

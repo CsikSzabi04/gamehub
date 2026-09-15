@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
 import { releaseYear } from "../Components/GameCard.jsx";
 import { rawgImg } from "../Components/rawgImage.js";
+import { useT } from "../i18n/index.jsx";
 
 function Tile({ game, onClick, large }) {
     return (
@@ -35,6 +36,7 @@ function Tile({ game, onClick, large }) {
 }
 
 export default function MainSection({ allGames, showGameDetails }) {
+    const { t } = useT();
     const [randomGames, setRandomGames] = useState([]);
 
     useEffect(() => {
@@ -43,7 +45,7 @@ export default function MainSection({ allGames, showGameDetails }) {
 
     return (
         <div className="mb-12">
-            <h2 className="gh-section-title !mb-4">More to explore</h2>
+            <h2 className="gh-section-title !mb-4">{t('home.moreToExplore')}</h2>
             {randomGames.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-3 gap-3 md:h-[440px]">
                     <div className="md:col-span-2 md:row-span-3 grid">

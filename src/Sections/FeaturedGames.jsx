@@ -4,14 +4,15 @@ import SectionHeader from '../Components/SectionHeader.jsx';
 import StoreCard, { SOURCE_LABELS } from '../Hub/StoreCard.jsx';
 import useStoreItem from '../Hub/useStoreItem.jsx';
 import { useHub, timeAgo, pickItems } from '../Hub/hubApi.js';
+import { useT } from '../i18n/index.jsx';
 
 // Fresh store charts first; the RAWG catalogue stays as the last tab
 const TABS = [
-    { id: 'top', label: 'Top sellers', path: '/steam/featured', key: 'topSellers', source: 'steam' },
-    { id: 'new', label: 'New releases', path: '/steam/featured', key: 'newReleases', source: 'steam' },
-    { id: 'hot', label: 'Hot this fortnight', path: '/steamspy/trending', key: 'items', source: 'steam' },
-    { id: 'gog', label: 'Trending on GOG', path: '/gog', key: 'trending', source: 'gog' },
-    { id: 'picks', label: 'Community picks' },
+    { id: 'top', label: 'home.featured.tabs.top', path: '/steam/featured', key: 'topSellers', source: 'steam' },
+    { id: 'new', label: 'home.featured.tabs.new', path: '/steam/featured', key: 'newReleases', source: 'steam' },
+    { id: 'hot', label: 'home.featured.tabs.hot', path: '/steamspy/trending', key: 'items', source: 'steam' },
+    { id: 'gog', label: 'home.featured.tabs.gog', path: '/gog', key: 'trending', source: 'gog' },
+    { id: 'picks', label: 'home.featured.tabs.picks' },
 ];
 
 // Two full rows at every breakpoint: 2 / 3 / 4 / 5 columns
@@ -39,10 +40,11 @@ function Skeleton() {
 }
 
 export default function FeaturedGames({ allGames, showGameDetails }) {
+    const { t, locale } = useT();
     const [tabId, setTabId] = useState('top');
     const [count, setCount] = useState(visibleCount);
     const [onItemClick, modal] = useStoreItem();
-    const tab = TABS.find(t => t.id === tabId);
+    const tab = TABS.find(item => item.id === tabId);
 
     // One request per endpoint; the Steam tabs share /steam/featured
     const { data: storeData, error } = useHub(tab.path || null);
@@ -61,27 +63,27 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
     const storeItems = tab.key ? (tab.key === 'items' ? pickItems(storeData) : storeData?.[tab.key] || []) : [];
     const failed = tab.path && error && !storeData;
 
-    let subtitle = 'Hand-picked from the GameDataHub catalogue';
+    let subtitle = t('home.featured.subtitlePicks');
     if (tab.path) {
         subtitle = storeData?.updatedAt
-            ? `Live from ${SOURCE_LABELS[tab.source]} · updated ${timeAgo(storeData.updatedAt)}`
-            : `Live from ${SOURCE_LABELS[tab.source]}`;
+            ? t('home.featured.liveFromUpdated', { source: SOURCE_LABELS[tab.source], time: timeAgo(storeData.updatedAt, locale) })
+            : t('home.featured.liveFrom', { source: SOURCE_LABELS[tab.source] });
     }
 
     return (
         <div className="w-full mb-12">
-            <SectionHeader title="Featured games" subtitle={subtitle} />
+            <SectionHeader title={t('home.featured.title')} subtitle={subtitle} />
 
-            <div className="flex gap-2 overflow-x-auto pb-1 mb-4 -mt-1" role="tablist" aria-label="Featured games source">
-                {TABS.map(t => (
+            <div className="flex gap-2 overflow-x-auto pb-1 mb-4 -mt-1" role="tablist" aria-label={t('home.featured.tabsLabel')}>
+                {TABS.map(item => (
                     <button
-                        key={t.id}
+                        key={item.id}
                         role="tab"
-                        aria-selected={t.id === tabId}
-                        onClick={() => setTabId(t.id)}
-                        className={`shrink-0 h-8 px-3 rounded-lg text-[13px] font-medium border transition-colors ${t.id === tabId ? 'bg-[#eceef2] text-[#0a0b0f] border-transparent' : 'bg-[#111319] text-[#a1a6b3] border-white/[0.06] hover:text-white hover:border-white/[0.14]'}`}
+                        aria-selected={item.id === tabId}
+                        onClick={() => setTabId(item.id)}
+                        className={`shrink-0 h-8 px-3 rounded-lg text-[13px] font-medium border transition-colors ${item.id === tabId ? 'bg-[#eceef2] text-[#0a0b0f] border-transparent' : 'bg-[#111319] text-[#a1a6b3] border-white/[0.06] hover:text-white hover:border-white/[0.14]'}`}
                     >
-                        {t.label}
+                        {t(item.label)}
                     </button>
                 ))}
             </div>
@@ -96,8 +98,8 @@ export default function FeaturedGames({ allGames, showGameDetails }) {
                 )
             ) : failed ? (
                 <div className="gh-surface p-6 text-center">
-                    <p className="text-sm text-[#a1a6b3]">Live store data is not available right now.</p>
-                    <button onClick={() => setTabId('picks')} className="gh-btn gh-btn-secondary mt-4">Show community picks</button>
+                    <p className="text-sm text-[#a1a6b3]">{t('home.featured.unavailable')}</p>
+                    <button onClick={() => setTabId('picks')} className="gh-btn gh-btn-secondary mt-4">{t('home.featured.showPicks')}</button>
                 </div>
             ) : !storeData ? (
                 <Skeleton />

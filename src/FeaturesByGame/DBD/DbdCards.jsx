@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { FaTimes, FaSkull, FaRunning, FaVenusMars, FaRulerVertical } from "react-icons/fa";
 import { GiBloodySword } from "react-icons/gi";
 import { motion, AnimatePresence } from "framer-motion";
+import { useT } from "../../i18n/index.jsx";
 
 export default function DbdCards({ selectedCharacter, closeModal }) {
+    const { t } = useT();
     const [activeTab, setActiveTab] = useState('bio');
     const [imageLoaded, setImageLoaded] = useState(false);
     const [hoveredPerk, setHoveredPerk] = useState(null);
@@ -12,6 +14,7 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
 
     const role = selectedCharacter?.role || '';
     const isKiller = role.toLowerCase().includes('killer');
+    const roleLabel = role ? t(isKiller ? 'dbd.killer' : 'dbd.survivor') : '';
     const roleColor = isKiller ? 'red' : 'blue';
     const bgGradient = isKiller ? 'bg-gradient-to-b from-red-900/90 to-black' : 'bg-gradient-to-b from-blue-900/90 to-black';
 
@@ -45,12 +48,12 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
 
                     <div className="flex flex-col lg:flex-row">
                         <div className="relative w-full lg:w-2/5 min-h-64 lg:min-h-[400px]">
-                            {!imageLoaded && <div className="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center"><span className="text-gray-500">Loading image...</span></div>}
+                            {!imageLoaded && <div className="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center"><span className="text-gray-500">{t('dbd.loadingImage')}</span></div>}
                             <img src={selectedCharacter.image} alt={selectedCharacter.name} className={`w-full h-full object-cover ${imageLoaded ? 'block' : 'hidden'} ${isKiller ? 'brightness-90 contrast-110' : 'brightness-100'}`} onLoad={() => setImageLoaded(true)} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.visibility = 'hidden'; setImageLoaded(true); }} loading="lazy"/>
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
                                 <h2 className="text-2xl md:text-3xl font-bold text-white">{selectedCharacter.name}</h2>
                                 <div className="flex items-center mt-1">
-                                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${isKiller ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}>{role.toUpperCase()}</span>
+                                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${isKiller ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}>{roleLabel.toUpperCase()}</span>
                                     {selectedCharacter.dlc && <span className="ml-2 px-2 py-1 rounded-full text-xs bg-yellow-600 text-white">DLC: {selectedCharacter.dlc}</span>}
                                 </div>
                             </div>
@@ -58,9 +61,9 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
 
                         <div className="w-full lg:w-3/5 p-4 md:p-6">
                             <div className="flex border-b border-gray-700 mb-4 overflow-x-auto">
-                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'bio' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('bio')}>Biography</button>
-                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'story' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('story')}>Backstory</button>
-                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'perks' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('perks')}>Perks</button>
+                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'bio' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('bio')}>{t('dbd.biography')}</button>
+                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'story' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('story')}>{t('dbd.backstory')}</button>
+                                <button className={`px-3 py-2 text-sm md:text-base md:px-4 font-medium whitespace-nowrap ${activeTab == 'perks' ? `text-${roleColor}-400 border-b-2 border-${roleColor}-400` : 'text-gray-400'}`} onClick={() => setActiveTab('perks')}>{t('dbd.perks')}</button>
                             </div>
 
                             <div className="text-gray-300">
@@ -68,10 +71,10 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                                     <div>
                                         <p className="mb-4">{selectedCharacter.overview}</p>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><FaVenusMars className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">Gender</p><p className="capitalize">{selectedCharacter.gender}</p></div></div>
-                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><FaRulerVertical className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">Height</p><p className="capitalize">{selectedCharacter.height}</p></div></div>
-                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><GiBloodySword className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">Difficulty</p><p className="capitalize">{selectedCharacter.difficulty}</p></div></div>
-                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700">{isKiller ? <FaSkull className={`text-${roleColor}-400 mr-2`} /> : <FaRunning className={`text-${roleColor}-400 mr-2`} />}<div><p className="text-xs text-gray-400">Role</p><p className="capitalize">{selectedCharacter.role}</p></div></div>
+                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><FaVenusMars className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">{t('dbd.gender')}</p><p className="capitalize">{selectedCharacter.gender}</p></div></div>
+                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><FaRulerVertical className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">{t('dbd.height')}</p><p className="capitalize">{selectedCharacter.height}</p></div></div>
+                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700"><GiBloodySword className={`text-${roleColor}-400 mr-2`} /><div><p className="text-xs text-gray-400">{t('dbd.difficulty')}</p><p className="capitalize">{selectedCharacter.difficulty}</p></div></div>
+                                            <div className="bg-gray-800/70 p-3 rounded-lg flex items-center border border-gray-700">{isKiller ? <FaSkull className={`text-${roleColor}-400 mr-2`} /> : <FaRunning className={`text-${roleColor}-400 mr-2`} />}<div><p className="text-xs text-gray-400">{t('dbd.role')}</p><p className="capitalize">{roleLabel}</p></div></div>
                                         </div>
                                     </div>
                                 )}
@@ -79,12 +82,12 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                                 {activeTab == 'perks' && (
                                     <div className="flex">
                                         <div className="w-full md:w-1/2 pr-0 md:pr-4">
-                                            <h3 className="text-xl font-bold text-white mb-3">Unique Perks</h3>
+                                            <h3 className="text-xl font-bold text-white mb-3">{t('dbd.uniquePerks')}</h3>
                                             <div className="space-y-3">
                                                 {(selectedCharacter.perks || []).map((perk, index) => (
                                                     <div key={index} className={`bg-gray-800/70 p-3 md:p-4 rounded-lg border border-gray-700 hover:border-${roleColor}-400 transition-all cursor-pointer`} onClick={() => setHoveredPerk(perk)} >
                                                         <h4 className={`font-bold text-${roleColor}-400`}>{perk}</h4>
-                                                        <p className="text-gray-400 text-sm mt-1">Hover to see details</p>
+                                                        <p className="text-gray-400 text-sm mt-1">{t('dbd.perkHint')}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -93,7 +96,7 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                                             <div className="sticky top-4">
                                                 {loadingPerk ? (
                                                     <div className="bg-gray-800/70 p-4 rounded-lg border border-gray-700 h-64 flex items-center justify-center">
-                                                        <div className="animate-pulse text-gray-400">Loading perk details</div>
+                                                        <div className="animate-pulse text-gray-400">{t('dbd.loadingPerk')}</div>
                                                     </div>
                                                 ) : perkDetails ? (
                                                     <motion.div  initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-800/70 p-4 rounded-lg border border-gray-700">
@@ -109,7 +112,7 @@ export default function DbdCards({ selectedCharacter, closeModal }) {
                                                             ))}
                                                         </div>
                                                     </motion.div>
-                                                ) : (<div className="bg-gray-800/70 p-4 rounded-lg border border-gray-700 h-64 flex items-center justify-center"><p className="text-gray-400">Click on a perk to see details!</p></div> )}
+                                                ) : (<div className="bg-gray-800/70 p-4 rounded-lg border border-gray-700 h-64 flex items-center justify-center"><p className="text-gray-400">{t('dbd.clickPerk')}</p></div> )}
                                             </div>
                                         </div>
                                     </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useT } from '../i18n/index.jsx';
 
 export default function ImageLoader({ src, alt, className }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const { t } = useT();
 
     return (
         <div className={`relative ${className}`}>
@@ -21,7 +23,7 @@ export default function ImageLoader({ src, alt, className }) {
             {/* Error state */}
             {hasError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                    <span className="text-gray-500 text-sm">Failed to load</span>
+                    <span className="text-gray-500 text-sm">{t('game.image.failed')}</span>
                 </div>
             )}
             

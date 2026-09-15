@@ -7,6 +7,7 @@ import Header from './Header.jsx';
 import LazySection from './Components/LazySection.jsx';
 import { API_BASE, useApi } from './Components/apiCache.js';
 import { searchRawgGames } from './Features/Search.jsx';
+import { useT } from './i18n/index.jsx';
 
 // Above the fold (Header, hero, featured grid) is in the main bundle.
 // Everything below is split into chunks that load as the user scrolls towards them.
@@ -48,6 +49,7 @@ function useStableGames(games) {
 }
 
 export default function Body() {
+    const { t } = useT();
     const { data: liveGames = EMPTY } = useApi(GAMES_URL, toGames);
     const allGames = useStableGames(liveGames);
     const [selectedGame, setSelectedGame] = useState(null);
@@ -111,10 +113,10 @@ export default function Body() {
                             <DealsHub />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={categories.multiplayer} showGameDetails={showGameDetails} name={"Multiplayer games"} intervalTimeA={8000} />
+                            <Rotate games={categories.multiplayer} showGameDetails={showGameDetails} name={t('home.rotate.multiplayer')} intervalTimeA={8000} />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={categories.action} showGameDetails={showGameDetails} name={"Action games"} intervalTimeA={6800} />
+                            <Rotate games={categories.action} showGameDetails={showGameDetails} name={t('home.rotate.action')} intervalTimeA={6800} />
                         </LazySection>
                         <LazySection>
                             <Discounted />
@@ -135,10 +137,10 @@ export default function Body() {
                             <UniverseStrip />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={categories.scifi} showGameDetails={showGameDetails} name={"Sci-fi games"} intervalTimeA={8000} />
+                            <Rotate games={categories.scifi} showGameDetails={showGameDetails} name={t('home.rotate.scifi')} intervalTimeA={8000} />
                         </LazySection>
                         <LazySection>
-                            <Rotate games={categories.exploration} showGameDetails={showGameDetails} name={"Exploration games"} intervalTimeA={8700} />
+                            <Rotate games={categories.exploration} showGameDetails={showGameDetails} name={t('home.rotate.exploration')} intervalTimeA={8700} />
                         </LazySection>
                         <LazySection>
                             <News />

@@ -1,0 +1,25 @@
+# Runs the backend's notification jobs (price alerts, free games, release reminders, Game Pass, outages)
+# on a schedule, so they also run while the free Render instance is asleep.
+#
+# Setup (GitHub repo > Settings > Secrets and variables > Actions):
+#   BACKEND_URL   https://gamehub-backend-zekj.onrender.com
+#   CRON_SECRET   the same value as CRON_SECRET in the backend environment
+name: Community jobs
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Wake the backend
+        run: curl -fsS --retry 5 --retry-delay 20 --max-time 90 "${{ secrets.BACKEND_URL }}/health" || true
+      - name: Run due jobs
+        run: |
+          curl -fsS --max-time 300 -X POST \
+            -H "x-cron-key: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.BACKEND_URL }}/cron/run"

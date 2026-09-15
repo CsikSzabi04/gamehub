@@ -6,11 +6,13 @@ import { FaArrowLeft, FaSkull, FaUserInjured, FaShieldAlt } from "react-icons/fa
 import DbdKiller from "./DbdKiller.jsx";
 import "./DbdApp.css";
 import { API_BASE, cachedFetch } from "../../Components/apiCache.js";
+import { useT } from "../../i18n/index.jsx";
 
 // DBD API Base URL - Original backend
 const DBD_API = API_BASE;
 
 export default function DbdApp() {
+    const { t } = useT();
     const [survivors, setSurvivors] = useState([]);
     const [killers, setKillers] = useState([]);
     const [perks, setPerks] = useState([]);
@@ -128,14 +130,14 @@ export default function DbdApp() {
             <div className="dbd-loading">
                 <div className="dbd-loading-content">
                     <div className="dbd-loading-icon">💀</div>
-                    <h2 className="dbd-loading-title">Entering The Fog...</h2>
+                    <h2 className="dbd-loading-title">{t('dbd.loadingTitle')}</h2>
                     <div className="dbd-loading-bar">
                         <div 
                             className="dbd-loading-progress" 
                             style={{ width: `${loadingProgress}%` }}
                         ></div>
                     </div>
-                            <p className="dbd-loading-text">Summoning characters from The Entity&apos;s realm...</p>
+                            <p className="dbd-loading-text">{t('dbd.loadingText')}</p>
                 </div>
             </div>
         );
@@ -153,23 +155,23 @@ export default function DbdApp() {
                         <h1 className="dbd-main-title">DEAD BY</h1>
                         <h1 className="dbd-main-title dbd-title-outline">DAYLIGHT</h1>
                     </div>
-                    <p className="dbd-subtitle">Choose your fate. Survive or hunt.</p>
+                    <p className="dbd-subtitle">{t('dbd.subtitle')}</p>
                     
                     <div className="dbd-hero-stats">
                         <div className="dbd-stat">
                             <FaUserInjured className="dbd-stat-icon" />
                             <span className="dbd-stat-value">{survivors.length}</span>
-                            <span className="dbd-stat-label">Survivors</span>
+                            <span className="dbd-stat-label">{t('dbd.survivors')}</span>
                         </div>
                         <div className="dbd-stat">
                             <FaSkull className="dbd-stat-icon" />
                             <span className="dbd-stat-value">{killers.length}</span>
-                            <span className="dbd-stat-label">Killers</span>
+                            <span className="dbd-stat-label">{t('dbd.killers')}</span>
                         </div>
                         <div className="dbd-stat">
                             <FaShieldAlt className="dbd-stat-icon" />
                             <span className="dbd-stat-value">{perks.length}</span>
-                            <span className="dbd-stat-label">Perks</span>
+                            <span className="dbd-stat-label">{t('dbd.perks')}</span>
                         </div>
                     </div>
                 </div>
@@ -187,21 +189,21 @@ export default function DbdApp() {
                         onClick={() => setActiveTab('survivors')}
                     >
                         <FaUserInjured />
-                        <span>Survivors</span>
+                        <span>{t('dbd.survivors')}</span>
                     </button>
                     <button 
                         className={`dbd-nav-tab ${activeTab === 'killers' ? 'active' : ''}`}
                         onClick={() => setActiveTab('killers')}
                     >
                         <FaSkull />
-                        <span>Killers</span>
+                        <span>{t('dbd.killers')}</span>
                     </button>
                     <button 
                         className={`dbd-nav-tab ${activeTab === 'perks' ? 'active' : ''}`}
                         onClick={() => setActiveTab('perks')}
                     >
                         <FaShieldAlt />
-                        <span>Perks</span>
+                        <span>{t('dbd.perks')}</span>
                     </button>
                 </div>
             </nav>
@@ -213,7 +215,7 @@ export default function DbdApp() {
                     <div className="dbd-back-section">
                         <Link to="/" className="dbd-back-btn">
                             <FaArrowLeft />
-                            <span>Back to Hub</span>
+                            <span>{t('dbd.backToHub')}</span>
                         </Link>
                     </div>
 
@@ -222,10 +224,10 @@ export default function DbdApp() {
                         <div className="dbd-tab-content">
                             <div className="dbd-section-header">
                                 <h2 className="dbd-section-title dbd-survivors-title">
-                                    <FaUserInjured /> Survivors
+                                    <FaUserInjured /> {t('dbd.survivors')}
                                 </h2>
                                 <p className="dbd-section-subtitle">
-                                    Every survivor has unique perks and abilities. Choose wisely.
+                                    {t('dbd.survivorsSubtitle')}
                                 </p>
                             </div>
                             <RotateDbd 
@@ -240,10 +242,10 @@ export default function DbdApp() {
                         <div className="dbd-tab-content">
                             <div className="dbd-section-header">
                                 <h2 className="dbd-section-title dbd-killers-title">
-                                    <FaSkull /> Killers
+                                    <FaSkull /> {t('dbd.killers')}
                                 </h2>
                                 <p className="dbd-section-subtitle">
-                                    Each killer has their own power and playstyle. Embrace the hunt.
+                                    {t('dbd.killersSubtitle')}
                                 </p>
                             </div>
                             <DbdKiller 
@@ -258,10 +260,10 @@ export default function DbdApp() {
                         <div className="dbd-tab-content">
                             <div className="dbd-section-header">
                                 <h2 className="dbd-section-title">
-                                    <FaShieldAlt /> All Perks
+                                    <FaShieldAlt /> {t('dbd.allPerks')}
                                 </h2>
                                 <p className="dbd-section-subtitle">
-                                    Browse all available perks for survivors and killers.
+                                    {t('dbd.perksSubtitle')}
                                 </p>
                             </div>
                             <div className="dbd-perks-grid">
@@ -280,7 +282,7 @@ export default function DbdApp() {
                                         <div className="dbd-perk-info">
                                             <h3>{perk.name}</h3>
                                             <span className={`dbd-perk-role ${perk.role === 'Survivor' ? 'survivor' : 'killer'}`}>
-                                                {perk.role}
+                                                {perk.role === 'Survivor' ? t('dbd.survivor') : perk.role === 'Killer' ? t('dbd.killer') : perk.role}
                                             </span>
                                             <p>{perk.description?.substring(0, 100)}...</p>
                                         </div>
@@ -305,10 +307,10 @@ export default function DbdApp() {
                 <div className="dbd-footer-content">
                     <div className="dbd-footer-logo">💀 Dead by Daylight</div>
                     <p className="dbd-footer-text">
-                        This is a fan-made website. Dead by Daylight™ is a trademark of Behaviour Interactive Inc.
+                        {t('dbd.fanMade')}
                     </p>
                     <p className="dbd-footer-copyright">
-                        Not affiliated with Behaviour Interactive. All rights reserved.
+                        {t('dbd.notAffiliated')}
                     </p>
                 </div>
             </footer>

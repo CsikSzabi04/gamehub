@@ -3,20 +3,22 @@ import { BsStopwatch, BsBoxArrowUpRight } from 'react-icons/bs';
 import SectionHeader, { SectionLoader } from '../Components/SectionHeader.jsx';
 import HubImage from './HubImage.jsx';
 import { useHub, pickItems, timeAgo } from './hubApi.js';
+import { useT } from '../i18n/index.jsx';
 
 /** Latest verified speedruns from speedrun.com */
 export default function SpeedrunFeed() {
+    const { t, locale } = useT();
     const { data, error } = useHub('/speedrun/latest', pickItems);
 
     if (error) return null;
-    if (!data) return <section className="mb-12"><SectionLoader title="Fresh speedruns" /></section>;
+    if (!data) return <section className="mb-12"><SectionLoader title={t('hub.speedrun.title')} /></section>;
     if (!data.length) return null;
 
     return (
         <section className="w-full mb-12">
             <SectionHeader
-                title="Fresh speedruns"
-                subtitle="Runs verified in the last hours on speedrun.com"
+                title={t('hub.speedrun.title')}
+                subtitle={t('hub.speedrun.subtitle')}
                 action={<a href="https://www.speedrun.com" target="_blank" rel="noopener noreferrer" className="gh-btn gh-btn-secondary !h-9 hidden sm:inline-flex">speedrun.com <BsBoxArrowUpRight className="w-3 h-3" /></a>}
             />
             <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
@@ -37,7 +39,7 @@ export default function SpeedrunFeed() {
                                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white tabular-nums">
                                     <BsStopwatch className="text-[#8b5cf6] text-xs" /> {run.tag}
                                 </span>
-                                <span className="block text-[11px] text-[#6b7080]">{timeAgo(run.date)}</span>
+                                <span className="block text-[11px] text-[#6b7080]">{timeAgo(run.date, locale)}</span>
                             </span>
                         </a>
                     </li>

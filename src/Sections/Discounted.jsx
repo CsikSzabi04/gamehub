@@ -3,6 +3,7 @@ import RotateDiscounted from "../Rotate/RotateDiscounted.jsx";
 import DiscountedShowCards from "../Features/DiscountedShowCards.jsx";
 import { API_BASE, useApi } from "../Components/apiCache.js";
 import { SectionLoader } from "../Components/SectionHeader.jsx";
+import { useT } from "../i18n/index.jsx";
 
 // Epic's CDN resizes on request; the originals are ~500 kB each
 function epicImage(game) {
@@ -27,6 +28,7 @@ function toDiscounted(data) {
 }
 
 export default function Discounted() {
+    const { t } = useT();
     const { data: freeGames, loading } = useApi(`${API_BASE}/discounted`, toDiscounted);
     const [selectedGame, setSelectedGame] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -44,13 +46,13 @@ export default function Discounted() {
     return (
         <section id="discounted-games" className="!mb-12">
             {loading || !freeGames ? (
-                <SectionLoader title="Discounted games" height="h-[380px]" />
+                <SectionLoader title={t('home.discounted.title')} height="h-[380px]" />
             ) : freeGames.length > 0 ? (
                 <>
                     <RotateDiscounted
                         games={freeGames}
                         showGameDetails={showGameDetails}
-                        name="Discounted games"
+                        name={t('home.discounted.title')}
                     />
                     <DiscountedShowCards
                         selectedGame={selectedGame}
@@ -60,9 +62,9 @@ export default function Discounted() {
                 </>
             ) : (
                 <div>
-                    <h2 className="gh-section-title !mb-4">Discounted games</h2>
+                    <h2 className="gh-section-title !mb-4">{t('home.discounted.title')}</h2>
                     <div className="gh-surface py-10 text-center">
-                        <p className="text-sm">No discounted games available at the moment.</p>
+                        <p className="text-sm">{t('home.discounted.empty')}</p>
                     </div>
                 </div>
             )}

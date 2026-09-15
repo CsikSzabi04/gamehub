@@ -9,6 +9,7 @@ import UnderMain from './UnderMain.jsx';
 import GameCard from "../Components/GameCard.jsx";
 import { BsChevronLeft, BsChevronRight, BsBoxArrowUpRight } from "react-icons/bs";
 import { cachedFetch } from "../Components/apiCache.js";
+import { useT } from "../i18n/index.jsx";
 
 function pageNumbers(page, count) {
     return Array.from({ length: Math.min(5, count) }, (_, i) => {
@@ -19,12 +20,13 @@ function pageNumbers(page, count) {
 }
 
 function Pagination({ page, count, onChange }) {
+    const { t } = useT();
     if (count <= 1) return null;
     const base = "inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors";
     const idle = "text-[#a1a6b3] hover:bg-white/[0.06] hover:text-white";
     return (
-        <nav className="mt-6 flex flex-wrap items-center justify-center gap-1" aria-label="Pagination">
-            <button onClick={() => onChange(page - 1)} disabled={page === 1} className={`${base} ${idle} disabled:opacity-30 disabled:pointer-events-none`} aria-label="Previous page">
+        <nav className="mt-6 flex flex-wrap items-center justify-center gap-1" aria-label={t('discover.pagination')}>
+            <button onClick={() => onChange(page - 1)} disabled={page === 1} className={`${base} ${idle} disabled:opacity-30 disabled:pointer-events-none`} aria-label={t('discover.previousPage')}>
                 <BsChevronLeft />
             </button>
             {pageNumbers(page, count).map((n) => (
@@ -38,7 +40,7 @@ function Pagination({ page, count, onChange }) {
                     <button onClick={() => onChange(count)} className={`${base} ${idle}`}>{count}</button>
                 </>
             )}
-            <button onClick={() => onChange(page + 1)} disabled={page === count} className={`${base} ${idle} disabled:opacity-30 disabled:pointer-events-none`} aria-label="Next page">
+            <button onClick={() => onChange(page + 1)} disabled={page === count} className={`${base} ${idle} disabled:opacity-30 disabled:pointer-events-none`} aria-label={t('discover.nextPage')}>
                 <BsChevronRight />
             </button>
         </nav>
@@ -62,6 +64,7 @@ function GridSkeleton({ count }) {
 }
 
 export default function Discover() {
+    const { t } = useT();
     const [allGames, setAllGames] = useState([]);
     const [games, setGames] = useState([]);
     const [gamesFree, setGamesFree] = useState([]);
@@ -152,16 +155,16 @@ export default function Discover() {
             {searchTrue == false ? (
                 <main className="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-10 [--gh-edge:1rem]">
                     <div className="mb-10">
-                        <h1 className="text-3xl md:text-4xl font-extrabold text-white">Discover</h1>
-                        <p className="mt-2 text-[#a1a6b3]">Browse the full catalogue, free-to-play titles and the latest news.</p>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white">{t('discover.title')}</h1>
+                        <p className="mt-2 text-[#a1a6b3]">{t('discover.intro')}</p>
                     </div>
 
                     <UnderMain allGames={allGames} showGameDetails={showGameDetails} />
 
                     <section id="featured-games" className="!mb-14">
                         <div className="flex items-end justify-between gap-4 mb-4">
-                            <h2 className="gh-section-title !mb-0">All games</h2>
-                            {allGames.length > 0 && <span className="text-sm text-[#6b7080]">{allGames.length} titles</span>}
+                            <h2 className="gh-section-title !mb-0">{t('discover.allGames')}</h2>
+                            {allGames.length > 0 && <span className="text-sm text-[#6b7080]">{t('discover.titles', { count: allGames.length })}</span>}
                         </div>
                         {isLoading ? (
                             <GridSkeleton count={featuredGamesPerPage} />
@@ -175,7 +178,7 @@ export default function Discover() {
                                 <Pagination page={featuredPage} count={featuredPageCount} onChange={changePage(paginateFeatured, featuredPageCount)} />
                             </>
                         ) : (
-                            <div className="gh-surface py-12 text-center"><p className="text-sm">No games found.</p></div>
+                            <div className="gh-surface py-12 text-center"><p className="text-sm">{t('discover.noGames')}</p></div>
                         )}
                     </section>
 
@@ -183,8 +186,8 @@ export default function Discover() {
 
                     <section id="free-games" className="!mb-6">
                         <div className="flex items-end justify-between gap-4 mb-4">
-                            <h2 className="gh-section-title !mb-0">All free games</h2>
-                            {gamesFree.length > 0 && <span className="text-sm text-[#6b7080]">{gamesFree.length} titles</span>}
+                            <h2 className="gh-section-title !mb-0">{t('discover.allFreeGames')}</h2>
+                            {gamesFree.length > 0 && <span className="text-sm text-[#6b7080]">{t('discover.titles', { count: gamesFree.length })}</span>}
                         </div>
                         {isLoadingFree ? (
                             <GridSkeleton count={gamesPerPage} />
@@ -215,7 +218,7 @@ export default function Discover() {
                                 <Pagination page={currentPage} count={pageCount} onChange={changePage(paginate, pageCount)} />
                             </>
                         ) : (
-                            <div className="gh-surface py-12 text-center"><p className="text-sm">No games found.</p></div>
+                            <div className="gh-surface py-12 text-center"><p className="text-sm">{t('discover.noGames')}</p></div>
                         )}
                     </section>
                 </main>

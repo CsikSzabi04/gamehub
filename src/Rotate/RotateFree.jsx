@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import SectionHeader from "../Components/SectionHeader.jsx";
+import { useT } from "../i18n/index.jsx";
 
 // Card width as a percentage of the track, matching w-[80%] sm:w-1/2 md:w-1/3 lg:w-1/4
 function getCardPercent() {
@@ -11,6 +12,7 @@ function getCardPercent() {
 }
 
 export default function RotateFree({ games, showGameDetails, name }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cardPercent, setCardPercent] = useState(getCardPercent);
 
@@ -43,7 +45,7 @@ export default function RotateFree({ games, showGameDetails, name }) {
 
     return (
         <div className="relative">
-            <SectionHeader title={name} subtitle="Free-to-play titles worth trying" onPrev={prevItem} onNext={nextItem} />
+            <SectionHeader title={name} subtitle={t('rotate.freeSubtitle')} onPrev={prevItem} onNext={nextItem} />
             <div className="gh-scroller relative overflow-hidden -mx-2">
                 <div
                     className="gh-track flex transition-transform duration-700 ease-in-out"
@@ -61,14 +63,14 @@ export default function RotateFree({ games, showGameDetails, name }) {
                                 <div className="p-4 flex flex-col flex-1">
                                     <div className="flex items-center gap-2 mb-2">
                                         {game.genre && <span className="gh-chip !py-0.5 !text-[11px]">{game.genre}</span>}
-                                        <span className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400">Free</span>
+                                        <span className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400">{t('common.free')}</span>
                                     </div>
                                     <h3 className="text-[15px] font-semibold text-white line-clamp-1">{game.title}</h3>
                                     <p className="text-sm text-[#8a8f9c] mt-1.5 line-clamp-2">{game.short_description}</p>
                                     <div className="mt-auto pt-4 flex items-center justify-between text-xs text-[#6b7080]">
                                         <span className="truncate">{game.platform}</span>
                                         <span className="inline-flex items-center gap-1 text-[#c9ccd4] group-hover:text-white">
-                                            Play <BsBoxArrowUpRight className="text-[10px]" />
+                                            {t('rotate.play')} <BsBoxArrowUpRight className="text-[10px]" />
                                         </span>
                                     </div>
                                 </div>

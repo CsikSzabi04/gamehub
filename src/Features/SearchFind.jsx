@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useT } from "../i18n/index.jsx";
 
 export default function SearchFind({ games }) {
+    const { t } = useT();
     const [currentPage, setCurrentPage] = useState(1);
 
     // A new search must start on page 1, otherwise the old page number can point past the results
@@ -46,7 +48,7 @@ export default function SearchFind({ games }) {
                                         </div>
                                         {/* A nested <a> inside the card <Link> is invalid HTML, so open RAWG from a span */}
                                         <span role="link" tabIndex={0} onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.open(`https://rawg.io/games/${game.slug}`, "_blank", "noopener,noreferrer"); }} className="gh-btn gh-btn-secondary w-full !h-9 !text-xs sm:!text-sm">
-                                            View Details
+                                            {t('search.viewDetails')}
                                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                             </svg>
@@ -64,10 +66,10 @@ export default function SearchFind({ games }) {
                     <FaArrowLeftLong className="transition-transform duration-300 group-hover:-translate-x-1" />
                     <span className="relative overflow-hidden">
                         <span className="block transition-transform duration-300 group-hover:-translate-y-[110%] text-sm sm:text-base">
-                            Back to Home Page
+                            {t('search.backHome')}
                         </span>
                         <span className="absolute inset-0 block translate-y-[110%] transition-transform duration-300 group-hover:translate-y-0 text-sm sm:text-base">
-                            Take Me Back!
+                            {t('search.takeMeBack')}
                         </span>
                     </span>
                 </button>

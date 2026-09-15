@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import '../body.css';
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import GameCard from "../Components/GameCard.jsx";
+import { useT } from "../i18n/index.jsx";
 
 // Card width + gap-4 (16px) from md (300px cards). Below md the track is a native swipe scroller
 // (.gh-scroller/.gh-track in body.css) and the translate is ignored.
@@ -12,6 +13,7 @@ function getStep() {
 }
 
 export default function Rotate({ games, showGameDetails, name, intervalTimeA }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [step, setStep] = useState(getStep);
 
@@ -48,10 +50,10 @@ export default function Rotate({ games, showGameDetails, name, intervalTimeA }) 
             <div className="flex items-end justify-between gap-4 mb-4">
                 <h2 className="gh-section-title">{name}</h2>
                 <div className="hidden md:flex items-center gap-2">
-                    <button onClick={prevItem} className="gh-icon-btn !w-9 !h-9" aria-label={`Previous ${name}`}>
+                    <button onClick={prevItem} className="gh-icon-btn !w-9 !h-9" aria-label={t('rotate.previous', { name })}>
                         <BsChevronLeft className="w-4 h-4" />
                     </button>
-                    <button onClick={nextItem} className="gh-icon-btn !w-9 !h-9" aria-label={`Next ${name}`}>
+                    <button onClick={nextItem} className="gh-icon-btn !w-9 !h-9" aria-label={t('rotate.next', { name })}>
                         <BsChevronRight className="w-4 h-4" />
                     </button>
                 </div>

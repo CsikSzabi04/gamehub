@@ -5,22 +5,25 @@ import StoreCard from './StoreCard.jsx';
 import HubImage from './HubImage.jsx';
 import { useHub, formatCount, timeAgo } from './hubApi.js';
 import useStoreItem from './useStoreItem.jsx';
+import { useT } from '../i18n/index.jsx';
 
 function Trend({ rank, lastWeekRank }) {
-    if (!lastWeekRank || lastWeekRank === rank) return <BsDash className="text-[#6b7080]" aria-label="Same rank as last week" />;
+    const { t } = useT();
+    if (!lastWeekRank || lastWeekRank === rank) return <BsDash className="text-[#6b7080]" aria-label={t('hub.live.sameRank')} />;
     return lastWeekRank > rank
-        ? <BsArrowUpShort className="text-emerald-400 text-lg" aria-label={`Up from #${lastWeekRank}`} />
-        : <BsArrowDownShort className="text-red-400 text-lg" aria-label={`Down from #${lastWeekRank}`} />;
+        ? <BsArrowUpShort className="text-emerald-400 text-lg" aria-label={t('hub.live.upFrom', { rank: lastWeekRank })} />
+        : <BsArrowDownShort className="text-red-400 text-lg" aria-label={t('hub.live.downFrom', { rank: lastWeekRank })} />;
 }
 
 /** Steam's most played games with live player counts. */
 export default function LivePlayers() {
+    const { t, locale } = useT();
     const { data, error } = useHub('/steam/most-played');
     const [expanded, setExpanded] = useState(false);
     const [onItemClick, modal] = useStoreItem();
 
     if (error) return null;
-    if (!data) return <section className="mb-12"><SectionLoader title="Most played right now" /></section>;
+    if (!data) return <section className="mb-12"><SectionLoader title={t('hub.live.title')} /></section>;
 
     const items = data.items || [];
     const podium = items.slice(0, 3);
@@ -30,11 +33,11 @@ export default function LivePlayers() {
     return (
         <section className="w-full mb-12">
             <SectionHeader
-                title="Most played right now"
+                title={t('hub.live.title')}
                 subtitle={
                     <span className="inline-flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                        Live player counts from Steam · updated {timeAgo(data.updatedAt)}
+                        {t('hub.live.subtitle', { time: timeAgo(data.updatedAt, locale) })}
                     </span>
                 }
             />
@@ -54,11 +57,11 @@ export default function LivePlayers() {
                             <HubImage src={item.image} alt={item.name} className="w-20 sm:w-24 aspect-[460/215] rounded-md shrink-0" />
                             <span className="min-w-0 flex-1">
                                 <span className="block text-sm font-semibold text-[#eceef2] truncate">{item.name}</span>
-                                <span className="block text-xs text-[#6b7080] truncate">Peak today {formatCount(item.peak)}</span>
+                                <span className="block text-xs text-[#6b7080] truncate">{t('hub.live.peakToday', { count: formatCount(item.peak, locale) })}</span>
                             </span>
                             <span className="text-right shrink-0">
-                                <span className="block text-sm font-semibold text-white">{formatCount(item.players)}</span>
-                                <span className="block text-[11px] text-[#6b7080]">playing</span>
+                                <span className="block text-sm font-semibold text-white">{formatCount(item.players, locale)}</span>
+                                <span className="block text-[11px] text-[#6b7080]">{t('hub.live.playing')}</span>
                             </span>
                             <Trend rank={item.rank} lastWeekRank={item.lastWeekRank} />
                         </button>
@@ -69,7 +72,7 @@ export default function LivePlayers() {
             {items.length > 11 && (
                 <div className="mt-4 flex justify-center">
                     <button onClick={() => setExpanded(v => !v)} className="gh-btn gh-btn-secondary">
-                        {expanded ? 'Show less' : `Show top ${items.length}`}
+                        {expanded ? t('common.showLess') : t('hub.live.showTop', { count: items.length })}
                     </button>
                 </div>
             )}

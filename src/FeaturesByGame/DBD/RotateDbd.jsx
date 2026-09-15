@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useT } from "../../i18n/index.jsx";
 
 export default function RotateDbd({ characters, showCharacterDetails }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const carouselRef = useRef(null);
     const itemRefs = useRef([]);
@@ -91,7 +93,7 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
                             > 
                                 <div className="dbd-character-card dbd-survivor-card h-full">
                                     <div className="dbd-role-badge dbd-survivor-badge">
-                                        SURVIVOR
+                                        {t('dbd.survivor').toUpperCase()}
                                     </div>
                                     <img 
                                         src={character.image || character.imgs}  
@@ -120,14 +122,14 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
                     <button 
                         onClick={prevItem} 
                         className="dbd-nav-btn dbd-survivor-nav left-0 -translate-x-2 md:-translate-x-4"
-                        aria-label="Previous character"
+                        aria-label={t('dbd.prevCharacter')}
                     >
                         <FaChevronLeft className="text-lg md:text-xl" />
                     </button>
                     <button 
                         onClick={nextItem} 
                         className="dbd-nav-btn dbd-survivor-nav right-0 translate-x-2 md:translate-x-4"
-                        aria-label="Next character"
+                        aria-label={t('dbd.nextCharacter')}
                     >
                         <FaChevronRight className="text-lg md:text-xl" />
                     </button>
@@ -140,7 +142,7 @@ export default function RotateDbd({ characters, showCharacterDetails }) {
                         key={index} 
                         onClick={() => goToIndex(index)}  
                         className={`dbd-dot dbd-survivor-dot ${currentIndex == index ? 'active' : ''}`}
-                        aria-label={`Go to character ${index + 1}`}
+                        aria-label={t('dbd.goToCharacter', { n: index + 1 })}
                     />
                 ))}
             </div>

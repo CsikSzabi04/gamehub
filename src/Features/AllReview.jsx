@@ -8,14 +8,16 @@ import SystemRequirements from '../Components/SystemRequirements.jsx';
 import { rawgImg, rawgSrcSet } from '../Components/rawgImage.js';
 import ReviewsPanel from '../Components/ReviewsPanel.jsx';
 import { API_BASE, cachedFetch, peekCached } from '../Components/apiCache.js';
+import { useT } from '../i18n/index.jsx';
 
 const GAMES_URL = `${API_BASE}/fetch-games`;
 const findGame = (data, id) => (Array.isArray(data?.games) ? data.games.find(g => g.id == id) : undefined);
 
-export function formatDate(value) {
-    if (!value) return 'TBA';
+// locale / tba come from useT() in components (defaults keep the English output)
+export function formatDate(value, locale = 'en-US', tba = 'TBA') {
+    if (!value) return tba;
     const date = new Date(value);
-    return isNaN(date) ? value : date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    return isNaN(date) ? value : date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 export function DetailRow({ label, children, wide }) {
@@ -38,6 +40,7 @@ export function DetailList({ children }) {
 
 // Banner + title block shared by the game pages
 export function GameHero({ game, genres, children }) {
+    const { t } = useT();
     return (
         <>
             <div className="relative h-[300px] sm:h-[360px] md:h-[400px] overflow-hidden">
@@ -60,7 +63,7 @@ export function GameHero({ game, genres, children }) {
                     className="inline-flex items-center gap-2 py-2 -my-2 text-sm text-[#c9ccd4] hover:text-white transition-colors mb-4 sm:mb-6"
                 >
                     <BsArrowLeft />
-                    Back to home
+                    {t('game.backToHome')}
                 </Link>
 
                 <div className="flex flex-col md:flex-row md:items-end gap-6">
@@ -110,6 +113,7 @@ export default function AllReview() {
 function RawgGamePage() {
     const { gameId } = useParams();
     const { user } = useContext(UserContext);
+    const { t, locale } = useT();
     // The home page already has the game list cached, so the page usually renders instantly
     const [game, setGame] = useState(() => findGame(peekCached(GAMES_URL), gameId) || null);
     const [reviews, setReviews] = useState([]);
@@ -130,10 +134,10 @@ function RawgGamePage() {
                 if (foundGame) {
                     setGame(foundGame);
                 } else {
-                    setError('Game not found');
+                    setError('game.notFound');
                 }
             } catch (err) {
-                setError('Failed to fetch game details');
+                setError('game.fetchFailed');
             } finally {
                 setLoading(false);
             }
@@ -189,7 +193,7 @@ function RawgGamePage() {
 
     async function addFav() {
         if (!user) {
-            setFavError("You must log in to add favorites.");
+            setFavError("game.favLoginRequired");
             return;
         }
 
@@ -205,10 +209,10 @@ function RawgGamePage() {
                 setFavok([...favok, favData]);
                 setFav(true);
             } else {
-                setFavError("Failed to add to favorites.");
+                setFavError("game.favAddFailed");
             }
         } catch (err) {
-            setFavError("Failed to add to favorites.");
+            setFavError("game.favAddFailed");
         }
     }
 
@@ -225,16 +229,16 @@ function RawgGamePage() {
                 setFavok(favok.filter(favItem => favItem.gameId !== game.id));
                 setFav(false);
             } else {
-                setFavError("Failed to delete from favorites.");
+                setFavError("game.favDeleteFailed");
             }
         } catch (err) {
-            setFavError("Failed to delete from favorites.");
+            setFavError("game.favDeleteFailed");
         }
     }
 
     async function submitReview() {
         if (!newReview || rating === 0) {
-            setError("Please write a review and select a rating");
+            setError("reviews.validation");
             return;
         }
 
@@ -260,10 +264,10 @@ function RawgGamePage() {
                 setRating(0);
                 setReviewsVersion(v => v + 1);
             } else {
-                setError("Failed to submit review");
+                setError("reviews.submitFailed");
             }
         } catch (error) {
-            setError("Failed to submit review");
+            setError("reviews.submitFailed");
             console.error("Error submitting review:", error);
         }
     }
@@ -273,7 +277,7 @@ function RawgGamePage() {
     }
 
     if (!game) {
-        return <PageState><p className="text-[#a1a6b3]">{error || 'Game not found'}</p></PageState>;
+        return <PageState><p className="text-[#a1a6b3]">{t(error || 'game.notFound')}</p></PageState>;
     }
 
     const requirementsPlatform = game.platforms?.find(p => p.requirements_en?.minimum || p.requirements_en?.recommended);
@@ -292,7 +296,7 @@ function RawgGamePage() {
                                 <span>/ 5</span>
                             </span>
                         ) : null}
-                        <span>Released {formatDate(game.released)}</span>
+                        <span>{t('game.released', { date: formatDate(game.released, locale, t('game.tba')) })}</span>
                         {game.metacritic ? (
                             <span className="inline-flex items-center gap-2">
                                 <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded px-1.5 text-xs font-bold ${game.metacritic >= 75 ? 'bg-emerald-500/15 text-emerald-400' : game.metacritic >= 50 ? 'bg-amber-500/15 text-amber-400' : 'bg-red-500/15 text-red-400'}`}>
@@ -301,23 +305,23 @@ function RawgGamePage() {
                                 Metacritic
                             </span>
                         ) : null}
-                        {game.playtime ? <span>{game.playtime}h avg playtime</span> : null}
+                        {game.playtime ? <span>{t('game.avgPlaytime', { hours: game.playtime })}</span> : null}
                     </div>
 
                     <div className="mt-5 flex flex-wrap gap-3">
                         {fav ? (
                             <button onClick={delFav} className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto">
                                 <BsHeartFill className="text-[#f87171]" />
-                                In your favorites
+                                {t('game.inFavorites')}
                             </button>
                         ) : (
                             <button onClick={addFav} className="gh-btn gh-btn-primary !h-11 w-full sm:w-auto">
                                 <BsHeart />
-                                Add to favorites
+                                {t('game.addFavorite')}
                             </button>
                         )}
                     </div>
-                    {favError && <p className="text-sm text-red-400 mt-3">{favError}</p>}
+                    {favError && <p className="text-sm text-red-400 mt-3">{t(favError)}</p>}
                 </GameHero>
 
                 {/* Content: phones/tablets stack requirements, details, reviews; desktop puts details in a sidebar */}
@@ -344,30 +348,30 @@ function RawgGamePage() {
                             rating={rating}
                             setRating={setRating}
                             onSubmit={submitReview}
-                            error={error}
+                            error={error && t(error)}
                         />
                     </div>
                     </div>
 
                     <aside className="order-2 lg:order-none min-w-0 lg:sticky lg:top-24">
                         <div className="gh-surface p-4 sm:p-5">
-                            <h3 className="text-sm font-semibold text-white mb-2">Game details</h3>
+                            <h3 className="text-sm font-semibold text-white mb-2">{t('game.details')}</h3>
                             <DetailList>
-                                <DetailRow label="Release date">{formatDate(game.released)}</DetailRow>
-                                {game.esrb_rating?.name && <DetailRow label="Age rating">{game.esrb_rating.name}</DetailRow>}
-                                <DetailRow label="Platforms" wide>
+                                <DetailRow label={t('game.releaseDate')}>{formatDate(game.released, locale, t('game.tba'))}</DetailRow>
+                                {game.esrb_rating?.name && <DetailRow label={t('game.ageRating')}>{game.esrb_rating.name}</DetailRow>}
+                                <DetailRow label={t('game.platforms')} wide>
                                     {game.platforms?.length ? game.platforms.map(p => p.platform.name).join(', ') : '—'}
                                 </DetailRow>
                                 {game.stores?.length > 0 && (
-                                    <DetailRow label="Stores" wide>
+                                    <DetailRow label={t('game.stores')} wide>
                                         {game.stores.map(s => s.store.name).join(', ')}
                                     </DetailRow>
                                 )}
                                 {game.tags?.length > 0 && (
-                                    <DetailRow label="Tags" wide>
+                                    <DetailRow label={t('game.tags')} wide>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
-                                            {game.tags.slice(0, 10).map((t, i) => (
-                                                <span key={i} className="gh-chip">{t.name}</span>
+                                            {game.tags.slice(0, 10).map((tag, i) => (
+                                                <span key={i} className="gh-chip">{tag.name}</span>
                                             ))}
                                         </div>
                                     </DetailRow>

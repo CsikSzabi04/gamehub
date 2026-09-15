@@ -6,12 +6,14 @@ import Header from '../Header.jsx';
 import LazySection from '../Components/LazySection.jsx';
 import HubImage from './HubImage.jsx';
 import { useHub, timeAgo } from './hubApi.js';
+import { useT } from '../i18n/index.jsx';
 
 const Footer = lazy(() => import('../Footer.jsx'));
 
 const PAGE_SIZE = 48;
 
 function ItemDetails({ item, onClose }) {
+    const { t } = useT();
     useEffect(() => {
         const onKey = e => { if (e.key === 'Escape') onClose(); };
         window.addEventListener('keydown', onKey);
@@ -41,7 +43,7 @@ function ItemDetails({ item, onClose }) {
             >
                 <div className="relative bg-[#0a0b0f]">
                     <HubImage src={item.image} alt={item.name} fit="contain" width={800} className="w-full max-h-[50vh] aspect-square p-4" />
-                    <button onClick={onClose} aria-label="Close" className="gh-icon-btn absolute top-3 right-3">
+                    <button onClick={onClose} aria-label={t('common.close')} className="gh-icon-btn absolute top-3 right-3">
                         <BsX className="w-5 h-5" />
                     </button>
                 </div>
@@ -54,7 +56,7 @@ function ItemDetails({ item, onClose }) {
                     {item.description && <p className="text-sm leading-relaxed text-[#a1a6b3] mt-4 whitespace-pre-line">{item.description}</p>}
                     {item.url && (
                         <a href={item.url} target="_blank" rel="noopener noreferrer" className="gh-btn gh-btn-secondary mt-5">
-                            Open source page <BsBoxArrowUpRight className="w-3 h-3" />
+                            {t('hub.universe.openSource')} <BsBoxArrowUpRight className="w-3 h-3" />
                         </a>
                     )}
                 </div>
@@ -64,6 +66,7 @@ function ItemDetails({ item, onClose }) {
 }
 
 export default function UniversePage() {
+    const { t, locale } = useT();
     const { id } = useParams();
     const { data, error } = useHub(`/universe/${encodeURIComponent(id)}`);
     const [sectionId, setSectionId] = useState(null);
@@ -103,9 +106,9 @@ export default function UniversePage() {
 
                 {error && !data ? (
                     <div className="gh-surface p-8 text-center">
-                        <p className="text-white font-semibold">This game universe could not be loaded.</p>
-                        <p className="text-sm text-[#6b7080] mt-1">The source API may be down. Try again in a few minutes.</p>
-                        <Link to="/hub" className="gh-btn gh-btn-secondary mt-5">Back to the hub</Link>
+                        <p className="text-white font-semibold">{t('hub.universe.loadError')}</p>
+                        <p className="text-sm text-[#6b7080] mt-1">{t('hub.universe.loadErrorHint')}</p>
+                        <Link to="/hub" className="gh-btn gh-btn-secondary mt-5">{t('hub.universe.backToHub')}</Link>
                     </div>
                 ) : !data ? (
                     <div className="space-y-4">
@@ -121,9 +124,9 @@ export default function UniversePage() {
                             <div className="p-5 sm:p-6 min-w-0 flex flex-col justify-center">
                                 <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">{data.name}</h1>
                                 <p className="text-sm text-[#6b7080] mt-2">
-                                    Data from{' '}
+                                    {t('hub.universe.dataFrom')}{' '}
                                     <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-[#c4b5fd] hover:text-white">{data.source}</a>
-                                    {' '}· refreshed {timeAgo(data.updatedAt) || 'recently'}
+                                    {' '}{t('hub.universe.refreshed', { time: timeAgo(data.updatedAt, locale) || t('hub.universe.recently') })}
                                 </p>
                             </div>
                         </header>
@@ -147,15 +150,15 @@ export default function UniversePage() {
                                 <input
                                     value={query}
                                     onChange={e => setQuery(e.target.value)}
-                                    placeholder={`Search ${section?.title?.toLowerCase() || ''}`}
-                                    aria-label="Search this list"
+                                    placeholder={t('hub.universe.searchPlaceholder', { section: section?.title?.toLowerCase() || '' })}
+                                    aria-label={t('hub.universe.searchLabel')}
                                     className="gh-input !pl-9 !py-2"
                                 />
                             </label>
                         </div>
 
                         {items.length === 0 ? (
-                            <p className="text-sm text-[#6b7080] py-10 text-center">No results.</p>
+                            <p className="text-sm text-[#6b7080] py-10 text-center">{t('hub.universe.noResults')}</p>
                         ) : (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                                 {items.slice(0, limit).map(item => (
@@ -181,7 +184,7 @@ export default function UniversePage() {
                         {items.length > limit && (
                             <div className="flex justify-center mt-6">
                                 <button onClick={() => setLimit(l => l + PAGE_SIZE)} className="gh-btn gh-btn-secondary">
-                                    Show more ({items.length - limit} left)
+                                    {t('hub.universe.showMoreLeft', { count: items.length - limit })}
                                 </button>
                             </div>
                         )}

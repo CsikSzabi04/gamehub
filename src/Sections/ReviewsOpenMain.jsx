@@ -4,6 +4,7 @@ import { BsStarFill, BsArrowRight } from 'react-icons/bs';
 import { API_BASE, useApi } from '../Components/apiCache.js';
 import { rawgImg } from '../Components/rawgImage.js';
 import { SectionLoader } from '../Components/SectionHeader.jsx';
+import { useT } from '../i18n/index.jsx';
 
 const toReviews = data => (Array.isArray(data) ? data : []);
 
@@ -18,10 +19,11 @@ function Stars({ value }) {
 }
 
 export default function ReviewsOpenMain({ allGames, showGameDetails }) {
+    const { t } = useT();
     const { data: reviews, loading } = useApi(`${API_BASE}/get-all-reviews`, toReviews);
 
     if (loading || !reviews) {
-        return <div><SectionLoader title="Community reviews" height="h-[300px]" /></div>;
+        return <div><SectionLoader title={t('home.reviews.title')} height="h-[300px]" /></div>;
     }
 
     if (!Array.isArray(reviews) || reviews.length === 0) return null;
@@ -47,9 +49,9 @@ export default function ReviewsOpenMain({ allGames, showGameDetails }) {
     return (
         <section className="!mb-12">
             <div className="flex items-end justify-between gap-4 mb-4">
-                <h2 className="gh-section-title !mb-0">Community reviews</h2>
+                <h2 className="gh-section-title !mb-0">{t('home.reviews.title')}</h2>
                 <Link to="/review" className="inline-flex items-center gap-1.5 text-sm text-[#a1a6b3] hover:text-white transition-colors">
-                    See all <BsArrowRight />
+                    {t('home.reviews.seeAll')} <BsArrowRight />
                 </Link>
             </div>
 
@@ -92,7 +94,7 @@ export default function ReviewsOpenMain({ allGames, showGameDetails }) {
                             <p className="mt-3 text-sm text-[#c9ccd4] leading-relaxed line-clamp-3">{game.reviews[0].review}</p>
                             <p className="mt-auto pt-3 text-xs text-[#6b7080] truncate">
                                 {game.reviews[0].email}
-                                {game.reviews.length > 1 && ` · ${game.reviews.length} reviews`}
+                                {game.reviews.length > 1 && ` · ${t('home.reviews.count', { count: game.reviews.length })}`}
                             </p>
                         </Link>
                     ))}

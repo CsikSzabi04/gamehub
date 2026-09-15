@@ -4,6 +4,7 @@ import LazySection from '../Components/LazySection.jsx';
 import SectionHeader from '../Components/SectionHeader.jsx';
 import { useApi } from '../Components/apiCache.js';
 import HubRow from './HubRow.jsx';
+import { useT } from '../i18n/index.jsx';
 import { UniverseCard } from './UniverseStrip.jsx';
 import { hubUrl, pickItems, pickTopSellers, pickNewReleases, pickGogTrending, pickGogNewest } from './hubApi.js';
 
@@ -17,14 +18,15 @@ const Footer = lazy(() => import('../Footer.jsx'));
 const toList = data => (Array.isArray(data) ? data : []);
 
 const STORE_TABS = [
-    { id: 'top', label: 'Steam top sellers', path: '/steam/featured', select: pickTopSellers, source: 'steam' },
-    { id: 'new', label: 'New on Steam', path: '/steam/featured', select: pickNewReleases, source: 'steam' },
-    { id: 'spy', label: 'Hot last 2 weeks', path: '/steamspy/trending', select: pickItems, source: 'steam' },
-    { id: 'gog', label: 'Trending on GOG', path: '/gog', select: pickGogTrending, source: 'gog' },
-    { id: 'gog-new', label: 'New on GOG', path: '/gog', select: pickGogNewest, source: 'gog' },
+    { id: 'top', labelKey: 'hub.tabs.topSellers', path: '/steam/featured', select: pickTopSellers, source: 'steam' },
+    { id: 'new', labelKey: 'hub.tabs.newOnSteam', path: '/steam/featured', select: pickNewReleases, source: 'steam' },
+    { id: 'spy', labelKey: 'hub.tabs.hotTwoWeeks', path: '/steamspy/trending', select: pickItems, source: 'steam' },
+    { id: 'gog', labelKey: 'hub.tabs.trendingGog', path: '/gog', select: pickGogTrending, source: 'gog' },
+    { id: 'gog-new', labelKey: 'hub.tabs.newOnGog', path: '/gog', select: pickGogNewest, source: 'gog' },
 ];
 
 export default function HubPage() {
+    const { t } = useT();
     const { data: universes, error } = useApi(hubUrl('/universes'), toList);
 
     return (
@@ -33,18 +35,18 @@ export default function HubPage() {
             <main className="allSections">
                 <div className="mb-10">
                     <p className="gh-eyebrow mb-2">Game Hub</p>
-                    <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">Everything live, from every store and game</h1>
+                    <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">{t('hub.page.title')}</h1>
                     <p className="text-[#a1a6b3] mt-3 max-w-2xl">
-                        Store charts, live player counts, deals and per-game data pulled from public game APIs and refreshed automatically.
+                        {t('hub.page.intro')}
                     </p>
                 </div>
 
-                <HubRow title="Store charts" tabs={STORE_TABS} />
+                <HubRow title={t('hub.page.storeCharts')} tabs={STORE_TABS} />
 
                 <section className="w-full mb-12">
-                    <SectionHeader title="Game universes" subtitle={universes ? `${universes.length} games with their own live data` : undefined} />
+                    <SectionHeader title={t('hub.universe.title')} subtitle={universes ? t('hub.page.universesCount', { count: universes.length }) : undefined} />
                     {error ? (
-                        <p className="text-sm text-[#6b7080]">Game universes are not available right now.</p>
+                        <p className="text-sm text-[#6b7080]">{t('hub.page.universesUnavailable')}</p>
                     ) : (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 sm:gap-4">
                             {universes

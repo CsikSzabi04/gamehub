@@ -16,6 +16,10 @@ import { cachedFetch } from '../Components/apiCache.js';
 import Footer from '../Footer';
 import Header from '../Header';
 import EditProfileModal from '../Components/profile/EditProfileModal.jsx';
+import ProfileQuickLinks from '../Components/profile/ProfileQuickLinks.jsx';
+import { challengeBadgesXp } from '../challenges/challenges.js';
+import LanguageSwitcher from '../Components/LanguageSwitcher.jsx';
+import { translate, useT } from '../i18n/index.jsx';
 import {
     getAccent, bannerBackground, computeXp, getLevelInfo, evaluateBadges, dateKey, XP_RULES,
 } from '../Components/profile/profileUtils.js';
@@ -38,6 +42,8 @@ const SOCIAL_LINKS = [
 ];
 
 const TABS = ['overview', 'reviews', 'favorites', 'badges', 'account'];
+
+const tierName = (t, tier) => t(`profile.tiers.${tier.name.toLowerCase()}`);
 
 /* ---------- Small building blocks ---------- */
 
@@ -88,6 +94,7 @@ function EmptyState({ icon: Icon, title, text, cta }) {
 }
 
 function LevelRing({ info, accent, size = 128 }) {
+    const { t } = useT();
     const stroke = 10;
     const r = (size - stroke) / 2;
     const c = 2 * Math.PI * r;
@@ -116,7 +123,7 @@ function LevelRing({ info, accent, size = 128 }) {
                 />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Level</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">{t('profile.level')}</span>
                 <span className="text-4xl font-black text-white leading-none">{info.level}</span>
             </div>
         </div>
@@ -124,11 +131,14 @@ function LevelRing({ info, accent, size = 128 }) {
 }
 
 function BadgeTile({ badge, compact }) {
+    const { t } = useT();
     const Icon = badge.icon;
+    const name = t(`profile.badgeList.${badge.id}.name`);
+    const desc = t(`profile.badgeList.${badge.id}.desc`);
     return (
         <motion.div
             whileHover={{ y: -3 }}
-            title={`${badge.name}: ${badge.desc}`}
+            title={`${name}: ${desc}`}
             className={`relative rounded-2xl border p-4 ${badge.unlocked ? 'border-white/10 bg-white/[0.04]' : 'border-white/5 bg-white/[0.015]'}`}
         >
             <div className="flex items-center gap-3">
@@ -141,8 +151,8 @@ function BadgeTile({ badge, compact }) {
                     {badge.unlocked ? <Icon className="w-5 h-5" /> : <FaLock className="w-4 h-4" />}
                 </div>
                 <div className="min-w-0">
-                    <p className={`text-sm font-bold truncate ${badge.unlocked ? 'text-white' : 'text-gray-500'}`}>{badge.name}</p>
-                    {!compact && <p className="text-xs text-gray-500 truncate">{badge.desc}</p>}
+                    <p className={`text-sm font-bold truncate ${badge.unlocked ? 'text-white' : 'text-gray-500'}`}>{name}</p>
+                    {!compact && <p className="text-xs text-gray-500 truncate">{desc}</p>}
                 </div>
             </div>
             {!compact && !badge.unlocked && (
@@ -224,13 +234,15 @@ function SkeletonGrid() {
 }
 
 function ViewAll({ onClick }) {
-    return <button onClick={onClick} className="text-xs text-gray-400 hover:text-white transition-colors">View all</button>;
+    const { t } = useT();
+    return <button onClick={onClick} className="text-xs text-gray-400 hover:text-white transition-colors">{t('common.viewAll')}</button>;
 }
 
 /* ---------- Page ---------- */
 
 export default function Profile({ setUser }) {
     const { user, profile, setProfile, authReady } = useContext(UserContext);
+    const { t, locale } = useT();
     const navigate = useNavigate();
     const [tab, setTab] = useState('overview');
     const [editing, setEditing] = useState(false);
@@ -275,7 +287,7 @@ export default function Profile({ setUser }) {
     const derived = useMemo(() => {
         if (!user || !profile) return null;
         const memberDays = Math.max(0, Math.floor((Date.now() - new Date(user.metadata.creationTime)) / 86400000));
-        const level = getLevelInfo(computeXp({ profile, reviews, favorites, memberDays }));
+        const level = getLevelInfo(computeXp({ profile, reviews, favorites, memberDays }) + challengeBadgesXp(profile));
 
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -302,11 +314,11 @@ export default function Profile({ setUser }) {
             badges,
             unlockedCount: badges.filter(b => b.unlocked).length,
             completion: [
-                { label: 'Profile picture', done: Boolean(profile.avatar) },
-                { label: 'Cover image', done: Boolean(profile.banner) },
-                { label: 'Bio', done: Boolean(profile.bio) },
-                { label: 'Platforms', done: Boolean(profile.platforms?.length) },
-                { label: 'Favorite genres', done: Boolean(profile.genres?.length) },
+                { key: 'avatar', done: Boolean(profile.avatar) },
+                { key: 'banner', done: Boolean(profile.banner) },
+                { key: 'bio', done: Boolean(profile.bio) },
+                { key: 'platforms', done: Boolean(profile.platforms?.length) },
+                { key: 'genres', done: Boolean(profile.genres?.length) },
             ],
         };
     }, [user, profile, reviews, favorites]);
@@ -319,13 +331,25 @@ export default function Profile({ setUser }) {
         try {
             const seen = Number(localStorage.getItem(key)) || 0;
             if (seen && currentLevel > seen) {
-                toast.success(`Level up! You reached level ${currentLevel}`, { icon: '🎉', duration: 5000 });
+                toast.success(t('profile.levelUp', { level: currentLevel }), { icon: '🎉', duration: 5000 });
             }
             localStorage.setItem(key, String(currentLevel));
         } catch {
             // storage unavailable, skip the celebration
         }
-    }, [currentLevel, activityLoading, user]);
+    }, [currentLevel, activityLoading, user]); // eslint-disable-line react-hooks/exhaustive-deps -- t only formats the toast
+
+    // Public data for the leaderboard / public profile (/u/:username): XP, level and a lowercase handle
+    const syncXp = derived?.level.xp;
+    useEffect(() => {
+        if (activityLoading || !user || !profile || syncXp == null) return;
+        const usernameLower = (profile.username || '').trim().toLowerCase();
+        if (profile.xp === syncXp && profile.level === currentLevel && profile.usernameLower === usernameLower) return;
+        const fields = { xp: syncXp, level: currentLevel, usernameLower };
+        setDoc(doc(firestore, 'users', user.uid), fields, { merge: true })
+            .then(() => setProfile(prev => ({ ...prev, ...fields })))
+            .catch(error => console.error('Could not sync XP:', error));
+    }, [activityLoading, user, profile, syncXp, currentLevel, setProfile]);
 
     const sortedReviews = useMemo(() => {
         const list = [...reviews];
@@ -335,12 +359,13 @@ export default function Profile({ setUser }) {
     }, [reviews, reviewSort]);
 
     async function handleSave(draft) {
+        draft = { ...draft, usernameLower: (draft.username || '').trim().toLowerCase() };
         await setDoc(doc(firestore, 'users', user.uid), draft, { merge: true });
         if (draft.username !== auth.currentUser.displayName) {
             await updateProfile(auth.currentUser, { displayName: draft.username }).catch(() => {});
         }
         setProfile(prev => ({ ...prev, ...draft }));
-        toast.success('Profile updated');
+        toast.success(t('profile.updated'));
     }
 
     async function handleLogout() {
@@ -350,25 +375,25 @@ export default function Profile({ setUser }) {
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
-            toast.error('Failed to logout. Please try again.');
+            toast.error(t('profile.logoutFailed'));
         }
     }
 
     async function handleVerify() {
         try {
             await sendEmailVerification(auth.currentUser);
-            toast.success('Verification email sent');
+            toast.success(t('profile.verificationSent'));
         } catch {
-            toast.error('Could not send verification email');
+            toast.error(t('profile.verificationFailed'));
         }
     }
 
     async function handlePasswordReset() {
         try {
             await sendPasswordResetEmail(auth, user.email);
-            toast.success('Password reset email sent');
+            toast.success(t('profile.resetSent'));
         } catch {
-            toast.error('Could not send password reset email');
+            toast.error(t('profile.resetFailed'));
         }
     }
 
@@ -383,7 +408,7 @@ export default function Profile({ setUser }) {
                             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                             className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full"
                         />
-                        <p className="text-gray-400 mt-4">{authReady && !user ? 'Redirecting to login...' : 'Loading profile...'}</p>
+                        <p className="text-gray-400 mt-4">{authReady && !user ? t('profile.redirecting') : t('profile.loading')}</p>
                     </div>
                 </div>
                 <Footer />
@@ -394,18 +419,18 @@ export default function Profile({ setUser }) {
     const accent = getAccent(profile.accent);
     const gradient = `linear-gradient(135deg, ${accent.from}, ${accent.to})`;
     const { level } = derived;
-    const joined = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const joined = new Date(user.metadata.creationTime).toLocaleDateString(locale, { month: 'long', year: 'numeric' });
     const socials = SOCIAL_LINKS.filter(s => profile.socials?.[s.key]);
     const tabCounts = { reviews: reviews.length, favorites: favorites.length, badges: `${derived.unlockedCount}/${derived.badges.length}` };
     const completionDone = derived.completion.filter(c => c.done).length;
 
     const statItems = [
-        { label: 'Reviews', value: reviews.length, icon: FaPen, color: '#a78bfa', remote: true },
-        { label: 'Favorites', value: favorites.length, icon: FaHeart, color: '#f472b6', remote: true },
-        { label: 'Avg rating', value: derived.avgRating, icon: FaStar, color: '#facc15', remote: true },
-        { label: 'Day streak', value: derived.streak, icon: FaFire, color: '#fb923c' },
-        { label: 'Active days', value: profile.activeDays || 0, icon: FaChartLine, color: '#34d399' },
-        { label: 'Badges', value: derived.unlockedCount, icon: FaTrophy, color: '#38bdf8', remote: true },
+        { label: t('profile.stats.reviews'), value: reviews.length, icon: FaPen, color: '#a78bfa', remote: true },
+        { label: t('profile.stats.favorites'), value: favorites.length, icon: FaHeart, color: '#f472b6', remote: true },
+        { label: t('profile.stats.avgRating'), value: derived.avgRating, icon: FaStar, color: '#facc15', remote: true },
+        { label: t('profile.stats.dayStreak'), value: derived.streak, icon: FaFire, color: '#fb923c' },
+        { label: t('profile.stats.activeDays'), value: profile.activeDays || 0, icon: FaChartLine, color: '#34d399' },
+        { label: t('profile.stats.badges'), value: derived.unlockedCount, icon: FaTrophy, color: '#38bdf8', remote: true },
     ];
 
     return (
@@ -429,7 +454,7 @@ export default function Profile({ setUser }) {
                                 onClick={() => setEditing(true)}
                                 className="absolute top-4 right-4 flex items-center gap-2 px-3 py-2 rounded-xl bg-black/50 hover:bg-black/70 backdrop-blur text-xs font-semibold text-white border border-white/10 transition-colors"
                             >
-                                <FaCamera className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Change cover</span>
+                                <FaCamera className="w-3.5 h-3.5" /> <span className="hidden sm:inline">{t('profile.changeCover')}</span>
                             </button>
                         </div>
 
@@ -442,7 +467,7 @@ export default function Profile({ setUser }) {
                                         <button
                                             onClick={() => setEditing(true)}
                                             className="group relative w-full h-full rounded-full overflow-hidden bg-[#0b0f1a] flex items-center justify-center border-4 border-[#070b14]"
-                                            aria-label="Change profile picture"
+                                            aria-label={t('profile.changePicture')}
                                         >
                                             {profile.avatar
                                                 ? <img src={profile.avatar} alt={profile.username} className="w-full h-full object-cover" />
@@ -455,7 +480,7 @@ export default function Profile({ setUser }) {
                                     <div
                                         className="absolute bottom-1 right-1 min-w-[2.5rem] h-10 px-2 rounded-full flex items-center justify-center text-sm font-black text-white border-4 border-[#070b14] shadow-lg"
                                         style={{ background: gradient }}
-                                        title={`Level ${level.level}`}
+                                        title={t('profile.levelN', { level: level.level })}
                                     >
                                         {level.level}
                                     </div>
@@ -468,16 +493,16 @@ export default function Profile({ setUser }) {
                                     </h1>
                                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2">
                                         <span className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.15em]" style={{ color: level.tier.color }}>
-                                            <FaBolt className="w-3 h-3" /> {level.tier.name}
+                                            <FaBolt className="w-3 h-3" /> {tierName(t, level.tier)}
                                         </span>
                                         {derived.streak > 1 && (
                                             <span className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.15em] text-orange-400">
-                                                <FaFire className="w-3 h-3" /> {derived.streak} day streak
+                                                <FaFire className="w-3 h-3" /> {t('profile.dayStreak', { count: derived.streak })}
                                             </span>
                                         )}
                                         {user.emailVerified && (
                                             <span className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.15em] text-emerald-400">
-                                                <FaCheckCircle className="w-3 h-3" /> Verified
+                                                <FaCheckCircle className="w-3 h-3" /> {t('profile.verified')}
                                             </span>
                                         )}
                                     </div>
@@ -490,18 +515,18 @@ export default function Profile({ setUser }) {
                                     onClick={() => setEditing(true)}
                                     className="self-start md:self-auto md:mb-3 flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors"
                                 >
-                                    <FaPen className="w-3 h-3" /> Edit profile
+                                    <FaPen className="w-3 h-3" /> {t('profile.editProfile')}
                                 </motion.button>
                             </div>
 
                             {profile.bio && <p className="text-gray-300 mt-5 max-w-2xl leading-relaxed break-words">{profile.bio}</p>}
 
                             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 pt-5 border-t border-white/5 text-sm text-gray-500">
-                                <span className="flex items-center gap-2"><FaCalendarAlt className="w-3.5 h-3.5" /> Joined {joined}</span>
+                                <span className="flex items-center gap-2"><FaCalendarAlt className="w-3.5 h-3.5" /> {t('profile.joined', { date: joined })}</span>
                                 {profile.playing && (
                                     <span className="flex items-center gap-2 min-w-0">
                                         <FaGamepad className="w-3.5 h-3.5 shrink-0" style={{ color: accent.from }} />
-                                        Playing <span className="text-gray-200 font-medium truncate">{profile.playing}</span>
+                                        {t('profile.playing')} <span className="text-gray-200 font-medium truncate">{profile.playing}</span>
                                     </span>
                                 )}
                                 {profile.platforms?.length > 0 && (
@@ -522,8 +547,8 @@ export default function Profile({ setUser }) {
                                             ) : (
                                                 <button
                                                     key={key}
-                                                    title={`${value} (click to copy)`}
-                                                    onClick={() => navigator.clipboard?.writeText(value).then(() => toast.success('Discord name copied'))}
+                                                    title={t('profile.clickToCopy', { value })}
+                                                    onClick={() => navigator.clipboard?.writeText(value).then(() => toast.success(t('profile.discordCopied')))}
                                                     className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                                                 >
                                                     {inner}
@@ -537,8 +562,8 @@ export default function Profile({ setUser }) {
                             {/* XP bar */}
                             <div className="mt-6">
                                 <div className="flex items-end justify-between gap-3 text-[11px] font-black uppercase tracking-[0.15em] mb-2">
-                                    <span style={{ color: accent.from }}>Level {level.level} · {level.tier.name}</span>
-                                    <span className="text-gray-500">{level.intoLevel.toLocaleString()} / {level.levelSpan.toLocaleString()} XP</span>
+                                    <span style={{ color: accent.from }}>{t('profile.levelN', { level: level.level })} · {tierName(t, level.tier)}</span>
+                                    <span className="text-gray-500">{level.intoLevel.toLocaleString(locale)} / {level.levelSpan.toLocaleString(locale)} XP</span>
                                 </div>
                                 <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
                                     <motion.div
@@ -550,8 +575,8 @@ export default function Profile({ setUser }) {
                                     />
                                 </div>
                                 <p className="text-xs text-gray-500 mt-2">
-                                    {level.toNext.toLocaleString()} XP to level {level.level + 1} · {level.xp.toLocaleString()} XP total
-                                    {activityLoading && <span className="ml-2 text-gray-600">(syncing activity...)</span>}
+                                    {t('profile.xpToNext', { xp: level.toNext.toLocaleString(locale), level: level.level + 1 })} · {t('profile.xpTotal', { xp: level.xp.toLocaleString(locale) })}
+                                    {activityLoading && <span className="ml-2 text-gray-600">{t('profile.syncing')}</span>}
                                 </p>
                             </div>
 
@@ -569,18 +594,20 @@ export default function Profile({ setUser }) {
                     </Card>
                 </motion.div>
 
+                <ProfileQuickLinks profile={profile} />
+
                 {/* ---------- Tabs ---------- */}
                 <div className="flex gap-2 mt-8 overflow-x-auto pb-1">
-                    {TABS.map(t => {
-                        const active = tab === t;
+                    {TABS.map(tabKey => {
+                        const active = tab === tabKey;
                         return (
                             <button
-                                key={t}
-                                onClick={() => setTab(t)}
+                                key={tabKey}
+                                onClick={() => setTab(tabKey)}
                                 className={`shrink-0 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-[0.15em] border transition-all ${active ? '' : 'text-gray-400 border-white/10 hover:text-white hover:border-white/20'}`}
                                 style={active ? { borderColor: accent.from, background: `${accent.from}22`, color: accent.from } : undefined}
                             >
-                                {t}{tabCounts[t] !== undefined && !activityLoading && ` (${tabCounts[t]})`}
+                                {t(`profile.tabs.${tabKey}`)}{tabCounts[tabKey] !== undefined && !activityLoading && ` (${tabCounts[tabKey]})`}
                             </button>
                         );
                     })}
@@ -602,7 +629,7 @@ export default function Profile({ setUser }) {
                                     <>
                                         {(profile.genres?.length > 0 || profile.platforms?.length > 0) && (
                                             <Card className="p-6">
-                                                <SectionTitle accent={accent}>Gamer DNA</SectionTitle>
+                                                <SectionTitle accent={accent}>{t('profile.gamerDna')}</SectionTitle>
                                                 {profile.platforms?.length > 0 && (
                                                     <div className="flex flex-wrap gap-2 mb-4">
                                                         {profile.platforms.map(p => {
@@ -618,7 +645,7 @@ export default function Profile({ setUser }) {
                                                 <div className="flex flex-wrap gap-2">
                                                     {profile.genres?.map(g => (
                                                         <span key={g} className="px-3 py-1.5 rounded-full text-xs font-semibold text-white" style={{ background: `${accent.to}26`, border: `1px solid ${accent.to}55` }}>
-                                                            {g}
+                                                            {t(`profile.genres.${g}`)}
                                                         </span>
                                                     ))}
                                                 </div>
@@ -626,9 +653,9 @@ export default function Profile({ setUser }) {
                                         )}
 
                                         <Card className="p-6">
-                                            <SectionTitle accent={accent} action={<ViewAll onClick={() => setTab('badges')} />}>Badges</SectionTitle>
+                                            <SectionTitle accent={accent} action={<ViewAll onClick={() => setTab('badges')} />}>{t('profile.badges')}</SectionTitle>
                                             {derived.unlockedCount === 0 ? (
-                                                <p className="text-gray-500 text-sm">No badges yet. They unlock as you review games, collect favorites and keep your streak going.</p>
+                                                <p className="text-gray-500 text-sm">{t('profile.noBadges')}</p>
                                             ) : (
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                     {derived.badges.filter(b => b.unlocked).slice(0, 6).map(b => <BadgeTile key={b.id} badge={b} compact />)}
@@ -638,10 +665,10 @@ export default function Profile({ setUser }) {
 
                                         <Card className="p-6">
                                             <SectionTitle accent={accent} action={reviews.length > 3 && <ViewAll onClick={() => setTab('reviews')} />}>
-                                                Recent reviews
+                                                {t('profile.recentReviews')}
                                             </SectionTitle>
                                             {activityLoading ? <SkeletonList /> : reviews.length === 0 ? (
-                                                <EmptyState icon={FaPen} title="No reviews yet" text="Your first review is worth 60 XP." cta={<CtaLink to="/review" gradient={gradient}>Write a review</CtaLink>} />
+                                                <EmptyState icon={FaPen} title={t('profile.noReviews')} text={t('profile.firstReviewXp')} cta={<CtaLink to="/review" gradient={gradient}>{t('profile.writeReview')}</CtaLink>} />
                                             ) : (
                                                 <div className="space-y-3">
                                                     {sortedReviews.slice(0, 3).map((r, i) => <ReviewItem key={i} review={r} image={imageFor(r.gameId)} />)}
@@ -651,10 +678,10 @@ export default function Profile({ setUser }) {
 
                                         <Card className="p-6">
                                             <SectionTitle accent={accent} action={favorites.length > 6 && <ViewAll onClick={() => setTab('favorites')} />}>
-                                                Favorite games
+                                                {t('profile.favoriteGames')}
                                             </SectionTitle>
                                             {activityLoading ? <SkeletonGrid /> : favorites.length === 0 ? (
-                                                <EmptyState icon={FaHeart} title="No favorites yet" text="Tap the star on any game to add it here." cta={<CtaLink to="/discover" gradient={gradient}>Discover games</CtaLink>} />
+                                                <EmptyState icon={FaHeart} title={t('profile.noFavorites')} text={t('profile.noFavoritesHint')} cta={<CtaLink to="/discover" gradient={gradient}>{t('profile.discoverGames')}</CtaLink>} />
                                             ) : (
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                     {favorites.slice(0, 6).map((f, i) => <FavoriteTile key={i} fav={f} image={imageFor(f.gameId, f.background_image)} />)}
@@ -672,19 +699,19 @@ export default function Profile({ setUser }) {
                                                 <select
                                                     value={reviewSort}
                                                     onChange={e => setReviewSort(e.target.value)}
-                                                    aria-label="Sort reviews"
+                                                    aria-label={t('profile.sortReviews')}
                                                     className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-200 focus:outline-none"
                                                 >
-                                                    <option value="newest" className="bg-gray-900">Newest</option>
-                                                    <option value="high" className="bg-gray-900">Highest rated</option>
-                                                    <option value="low" className="bg-gray-900">Lowest rated</option>
+                                                    <option value="newest" className="bg-gray-900">{t('profile.sort.newest')}</option>
+                                                    <option value="high" className="bg-gray-900">{t('profile.sort.high')}</option>
+                                                    <option value="low" className="bg-gray-900">{t('profile.sort.low')}</option>
                                                 </select>
                                             }
                                         >
-                                            Your reviews
+                                            {t('profile.yourReviews')}
                                         </SectionTitle>
                                         {activityLoading ? <SkeletonList /> : reviews.length === 0 ? (
-                                            <EmptyState icon={FaPen} title="No reviews yet" text="Share what you think about a game." cta={<CtaLink to="/review" gradient={gradient}>Write a review</CtaLink>} />
+                                            <EmptyState icon={FaPen} title={t('profile.noReviews')} text={t('profile.shareReview')} cta={<CtaLink to="/review" gradient={gradient}>{t('profile.writeReview')}</CtaLink>} />
                                         ) : (
                                             <div className="space-y-3">
                                                 {sortedReviews.map((r, i) => <ReviewItem key={i} review={r} image={imageFor(r.gameId)} />)}
@@ -695,9 +722,9 @@ export default function Profile({ setUser }) {
 
                                 {tab === 'favorites' && (
                                     <Card className="p-6">
-                                        <SectionTitle accent={accent}>Favorite games</SectionTitle>
+                                        <SectionTitle accent={accent}>{t('profile.favoriteGames')}</SectionTitle>
                                         {activityLoading ? <SkeletonGrid /> : favorites.length === 0 ? (
-                                            <EmptyState icon={FaHeart} title="No favorites yet" text="Tap the star on any game to add it here." cta={<CtaLink to="/discover" gradient={gradient}>Discover games</CtaLink>} />
+                                            <EmptyState icon={FaHeart} title={t('profile.noFavorites')} text={t('profile.noFavoritesHint')} cta={<CtaLink to="/discover" gradient={gradient}>{t('profile.discoverGames')}</CtaLink>} />
                                         ) : (
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                 {favorites.map((f, i) => <FavoriteTile key={i} fav={f} image={imageFor(f.gameId, f.background_image)} />)}
@@ -708,8 +735,8 @@ export default function Profile({ setUser }) {
 
                                 {tab === 'badges' && (
                                     <Card className="p-6">
-                                        <SectionTitle accent={accent} action={<span className="text-xs text-gray-400">{derived.unlockedCount} of {derived.badges.length} unlocked</span>}>
-                                            Badges
+                                        <SectionTitle accent={accent} action={<span className="text-xs text-gray-400">{t('profile.unlockedOf', { unlocked: derived.unlockedCount, total: derived.badges.length })}</span>}>
+                                            {t('profile.badges')}
                                         </SectionTitle>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             {[...derived.badges].sort((a, b) => b.unlocked - a.unlocked).map(b => <BadgeTile key={b.id} badge={b} />)}
@@ -719,19 +746,19 @@ export default function Profile({ setUser }) {
 
                                 {tab === 'account' && (
                                     <Card className="p-6 space-y-3">
-                                        <SectionTitle accent={accent}>Account</SectionTitle>
-                                        <AccountRow icon={FaEnvelope} label="Email" value={user.email}>
+                                        <SectionTitle accent={accent}>{t('profile.account')}</SectionTitle>
+                                        <AccountRow icon={FaEnvelope} label={t('profile.email')} value={user.email}>
                                             {user.emailVerified ? (
-                                                <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400"><FaCheckCircle /> Verified</span>
+                                                <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400"><FaCheckCircle /> {t('profile.verified')}</span>
                                             ) : (
                                                 <button onClick={handleVerify} className="flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300">
-                                                    <FaExclamationTriangle /> Verify now
+                                                    <FaExclamationTriangle /> {t('profile.verifyNow')}
                                                 </button>
                                             )}
                                         </AccountRow>
-                                        <AccountRow icon={FaCalendarAlt} label="Member since" value={`${new Date(user.metadata.creationTime).toLocaleDateString()} · ${derived.memberDays} days`} />
-                                        <AccountRow icon={FaKey} label="Password" value="••••••••">
-                                            <button onClick={handlePasswordReset} className="text-xs font-semibold text-gray-300 hover:text-white">Send reset email</button>
+                                        <AccountRow icon={FaCalendarAlt} label={t('profile.memberSince')} value={t('profile.memberDays', { date: new Date(user.metadata.creationTime).toLocaleDateString(locale), count: derived.memberDays })} />
+                                        <AccountRow icon={FaKey} label={t('profile.password')} value="••••••••">
+                                            <button onClick={handlePasswordReset} className="text-xs font-semibold text-gray-300 hover:text-white">{t('profile.sendReset')}</button>
                                         </AccountRow>
                                         <motion.button
                                             whileHover={{ scale: 1.01 }}
@@ -739,7 +766,7 @@ export default function Profile({ setUser }) {
                                             onClick={handleLogout}
                                             className="w-full mt-4 py-3.5 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 font-semibold flex items-center justify-center gap-3 hover:bg-red-500/20 transition-all"
                                         >
-                                            <FaSignOutAlt className="w-4 h-4" /> Log out
+                                            <FaSignOutAlt className="w-4 h-4" /> {t('profile.logout')}
                                         </motion.button>
                                     </Card>
                                 )}
@@ -750,15 +777,21 @@ export default function Profile({ setUser }) {
                     {/* ---------- Sidebar ---------- */}
                     <aside className="space-y-6">
                         <Card className="p-6">
-                            <SectionTitle accent={accent}>Your rank</SectionTitle>
+                            <SectionTitle accent={accent}>{t('profile.language')}</SectionTitle>
+                            <LanguageSwitcher className="w-full [&>button]:flex-1 [&>button]:justify-center" accent={gradient} onChange={code => toast.success(translate(code, 'profile.languageSaved'))} />
+                            <p className="text-xs text-gray-500 mt-3">{t('profile.languageHint')}</p>
+                        </Card>
+
+                        <Card className="p-6">
+                            <SectionTitle accent={accent}>{t('profile.yourRank')}</SectionTitle>
                             <div className="flex items-center gap-5">
                                 <LevelRing info={level} accent={accent} />
                                 <div className="min-w-0">
-                                    <p className="text-xl font-black uppercase italic" style={{ color: level.tier.color }}>{level.tier.name}</p>
-                                    <p className="text-sm text-gray-400 mt-1">{Math.round(level.progress * 100)}% to level {level.level + 1}</p>
+                                    <p className="text-xl font-black uppercase italic" style={{ color: level.tier.color }}>{tierName(t, level.tier)}</p>
+                                    <p className="text-sm text-gray-400 mt-1">{t('profile.percentToLevel', { percent: Math.round(level.progress * 100), level: level.level + 1 })}</p>
                                     {level.nextTier && (
                                         <p className="text-xs text-gray-500 mt-3">
-                                            Reach level {level.nextTier.minLevel} to become <span className="font-bold" style={{ color: level.nextTier.color }}>{level.nextTier.name}</span>
+                                            {t('profile.reachLevelToBecome', { level: level.nextTier.minLevel })} <span className="font-bold" style={{ color: level.nextTier.color }}>{tierName(t, level.nextTier)}</span>
                                         </p>
                                     )}
                                 </div>
@@ -768,30 +801,30 @@ export default function Profile({ setUser }) {
                         {completionDone < derived.completion.length && (
                             <Card className="p-6">
                                 <SectionTitle accent={accent} action={<span className="text-xs font-bold text-gray-400">{completionDone}/{derived.completion.length}</span>}>
-                                    Complete profile
+                                    {t('profile.completeProfile')}
                                 </SectionTitle>
                                 <div className="h-1.5 rounded-full bg-white/5 overflow-hidden mb-4">
                                     <div className="h-full rounded-full transition-all" style={{ width: `${(completionDone / derived.completion.length) * 100}%`, background: gradient }} />
                                 </div>
                                 <ul className="space-y-2">
                                     {derived.completion.map(c => (
-                                        <li key={c.label} className={`flex items-center gap-3 text-sm ${c.done ? 'text-gray-500 line-through' : 'text-gray-200'}`}>
-                                            <FaCheckCircle className={`w-4 h-4 shrink-0 ${c.done ? 'text-emerald-500' : 'text-gray-700'}`} /> {c.label}
+                                        <li key={c.key} className={`flex items-center gap-3 text-sm ${c.done ? 'text-gray-500 line-through' : 'text-gray-200'}`}>
+                                            <FaCheckCircle className={`w-4 h-4 shrink-0 ${c.done ? 'text-emerald-500' : 'text-gray-700'}`} /> {t(`profile.completion.${c.key}`)}
                                         </li>
                                     ))}
                                 </ul>
                                 <button onClick={() => setEditing(true)} className="w-full mt-4 py-2.5 rounded-xl text-sm font-bold text-white" style={{ background: gradient }}>
-                                    Finish setup
+                                    {t('profile.finishSetup')}
                                 </button>
                             </Card>
                         )}
 
                         <Card className="p-6">
-                            <SectionTitle accent={accent}>How to earn XP</SectionTitle>
+                            <SectionTitle accent={accent}>{t('profile.howToEarnXp')}</SectionTitle>
                             <ul className="space-y-3">
                                 {XP_RULES.map(rule => (
                                     <li key={rule.key} className="flex items-center justify-between gap-3 text-sm">
-                                        <span className="text-gray-300">{rule.label}</span>
+                                        <span className="text-gray-300">{t(`profile.xpRules.${rule.key}`)}</span>
                                         <span className="shrink-0 text-xs font-black px-2 py-1 rounded-lg" style={{ background: `${accent.from}22`, color: accent.from }}>+{rule.xp}</span>
                                     </li>
                                 ))}

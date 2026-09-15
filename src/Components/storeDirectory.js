@@ -6,11 +6,13 @@ import { FaXbox } from 'react-icons/fa';
  * `rawg` lists the store slugs used by the RAWG catalogue (game.stores[].store.slug),
  * so a store can report how many catalogue games it sells.
  * `mentioned` says where on the site the store shows up.
+ * `titleKey` / `mentionedKey` are the i18n keys (game namespace) of `title` / `mentioned`.
  */
 export const STORE_GROUPS = [
     {
         id: 'pc',
         title: 'PC stores',
+        titleKey: 'game.storeDirectory.groups.pc',
         stores: [
             {
                 id: 'steam',
@@ -19,6 +21,7 @@ export const STORE_GROUPS = [
                 icon: SiSteam,
                 rawg: ['steam'],
                 mentioned: 'Catalogue, store charts, free games, giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.steam',
             },
             {
                 id: 'epic-games',
@@ -27,6 +30,7 @@ export const STORE_GROUPS = [
                 icon: SiEpicgames,
                 rawg: ['epic-games'],
                 mentioned: 'Catalogue, discounted games, giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.epic-games',
             },
             {
                 id: 'gog',
@@ -35,6 +39,7 @@ export const STORE_GROUPS = [
                 icon: SiGogdotcom,
                 rawg: ['gog'],
                 mentioned: 'Catalogue, GOG trending and deals',
+                mentionedKey: 'game.storeDirectory.mentioned.gog',
             },
             {
                 id: 'itch',
@@ -43,12 +48,14 @@ export const STORE_GROUPS = [
                 icon: SiItchdotio,
                 rawg: ['itch'],
                 mentioned: 'Indie games in search results',
+                mentionedKey: 'game.storeDirectory.mentioned.itch',
             },
         ],
     },
     {
         id: 'console',
         title: 'Console stores',
+        titleKey: 'game.storeDirectory.groups.console',
         stores: [
             {
                 id: 'playstation-store',
@@ -57,6 +64,7 @@ export const STORE_GROUPS = [
                 icon: SiPlaystation,
                 rawg: ['playstation-store'],
                 mentioned: 'Catalogue, PS4 and PS5 giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.playstation-store',
             },
             {
                 id: 'xbox-store',
@@ -65,6 +73,7 @@ export const STORE_GROUPS = [
                 icon: FaXbox,
                 rawg: ['xbox-store', 'xbox360'],
                 mentioned: 'Catalogue, Xbox giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.xbox-store',
             },
             {
                 id: 'nintendo',
@@ -73,12 +82,14 @@ export const STORE_GROUPS = [
                 icon: SiNintendoswitch,
                 rawg: ['nintendo'],
                 mentioned: 'Catalogue, Switch giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.nintendo',
             },
         ],
     },
     {
         id: 'mobile',
         title: 'Mobile stores',
+        titleKey: 'game.storeDirectory.groups.mobile',
         stores: [
             {
                 id: 'apple-appstore',
@@ -87,6 +98,7 @@ export const STORE_GROUPS = [
                 icon: SiAppstore,
                 rawg: ['apple-appstore'],
                 mentioned: 'Catalogue, iOS giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.apple-appstore',
             },
             {
                 id: 'google-play',
@@ -95,12 +107,14 @@ export const STORE_GROUPS = [
                 icon: SiGoogleplay,
                 rawg: ['google-play'],
                 mentioned: 'Catalogue, Android giveaways',
+                mentionedKey: 'game.storeDirectory.mentioned.google-play',
             },
         ],
     },
     {
         id: 'launchers',
         title: 'Publisher launchers',
+        titleKey: 'game.storeDirectory.groups.launchers',
         stores: [
             {
                 id: 'battlenet',
@@ -109,6 +123,7 @@ export const STORE_GROUPS = [
                 icon: SiBattledotnet,
                 rawg: [],
                 mentioned: 'Overwatch 2 and other Blizzard games',
+                mentionedKey: 'game.storeDirectory.mentioned.battlenet',
             },
             {
                 id: 'ea-app',
@@ -117,6 +132,7 @@ export const STORE_GROUPS = [
                 icon: SiEa,
                 rawg: [],
                 mentioned: 'Apex Legends and other EA games',
+                mentionedKey: 'game.storeDirectory.mentioned.ea-app',
             },
             {
                 id: 'ubisoft',
@@ -125,6 +141,7 @@ export const STORE_GROUPS = [
                 icon: SiUbisoft,
                 rawg: [],
                 mentioned: "Rainbow Six Siege and other Ubisoft games",
+                mentionedKey: 'game.storeDirectory.mentioned.ubisoft',
             },
         ],
     },

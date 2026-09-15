@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Header from '../Header';
+import { useT } from '../i18n/index.jsx';
 
 export default function Login({ auth }) {
+  const { t } = useT();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -49,8 +51,8 @@ export default function Login({ auth }) {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#1e222c] text-[#a78bfa] mb-4">
                   <FaGamepad className="w-8 h-8 text-white" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Welcome Back</h1>
-                <p className="text-gray-400">Sign in to continue to GameDataHub</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('auth.welcomeBack')}</h1>
+                <p className="text-gray-400">{t('auth.signInSubtitle')}</p>
               </div>
 
               {/* Form */}
@@ -63,7 +65,7 @@ export default function Login({ auth }) {
                   <input
                     type="email"
                     required
-                    placeholder="Email address"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setLoginError(false); }}
                     onKeyDown={(e) => {if (e.key === "Enter") login();}}
@@ -79,7 +81,7 @@ export default function Login({ auth }) {
                   <input
                     type="password"
                     required
-                    placeholder="Password"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => {if (e.key === "Enter") login();}}
@@ -94,7 +96,7 @@ export default function Login({ auth }) {
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center"
                   >
-                    Wrong email or password! Please try again.
+                    {t('auth.wrongCredentials')}
                   </motion.div>
                 )}
 
@@ -112,19 +114,19 @@ export default function Login({ auth }) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Signing in...
+                      {t('auth.signingIn')}
                     </span>
                   ) : (
-                    "Sign In"
+                    t('auth.signIn')
                   )}
                 </motion.button>
               </div>
 
               {/* Sign Up Link */}
         <p className="text-center text-gray-400 mt-8">
-          Don&apos;t have an account?{' '}
+          {t('auth.noAccount')}{' '}
           <Link to="/signup" className="text-violet-400 hover:text-violet-300 font-semibold transition-colors">
-            Sign up now
+            {t('auth.signUpNow')}
           </Link>
         </p>
             </div>
@@ -140,7 +142,7 @@ export default function Login({ auth }) {
             <div className="relative rounded-3xl overflow-hidden h-[500px]">
               <img 
                 src="/gaming.webp"
-                alt="Login Illustration" 
+                alt={t('auth.loginIllustration')}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -148,8 +150,8 @@ export default function Login({ auth }) {
               
               {/* Overlay Content */}
               <div className="absolute bottom-0 left-0 right-0 p-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Discover Amazing Games</h2>
-                <p className="text-gray-300">Track your favorites, find new adventures, and connect with the gaming community.</p>
+                <h2 className="text-2xl font-bold text-white mb-2">{t('auth.discoverTitle')}</h2>
+                <p className="text-gray-300">{t('auth.discoverText')}</p>
               </div>
             </div>
           </motion.div>

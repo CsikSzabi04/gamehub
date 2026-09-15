@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useT } from '../i18n/index.jsx';
 
 export default function LazyImage({ src, alt, className, placeholderClassName }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isInView, setIsInView] = useState(false);
     const [hasError, setHasError] = useState(false);
     const imgRef = useRef(null);
+    const { t } = useT();
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -37,7 +39,7 @@ export default function LazyImage({ src, alt, className, placeholderClassName })
             
             {hasError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                    <span className="text-gray-500 text-xs">No image</span>
+                    <span className="text-gray-500 text-xs">{t('game.image.none')}</span>
                 </div>
             )}
             

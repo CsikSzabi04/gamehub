@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { UserProvider } from "./Features/UserContext.jsx";
+import { LanguageProvider } from "./i18n/index.jsx";
 import './index.css';
 import App from "./App.jsx"
 
@@ -30,6 +31,8 @@ idle(() => {
 
 createRoot(document.getElementById('root')).render(
   <UserProvider>
-    <App />
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
   </UserProvider>
 )

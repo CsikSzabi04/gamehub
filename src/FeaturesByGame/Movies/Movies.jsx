@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import RotateMovies from "./RotateMovies";
 import ShowMoviesCards from "./ShowMoviesCards";
+import { useT } from "../../i18n/index.jsx";
 
 export default function Movies() {
+    const { t } = useT();
     const [movies, setMovies] = useState([]);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -48,7 +50,7 @@ export default function Movies() {
 
     return (
         <section id="movies" className="mb-8">
-            <RotateMovies movies={movies} showMovieDetails={showMovieDetails} name="Popular Movies" />
+            <RotateMovies movies={movies} showMovieDetails={showMovieDetails} name={t('movies.popular')} />
             {modalVisible && selectedMovie && (<ShowMoviesCards selectedMovie={selectedMovie} closeModal={closeModal} modalVisible={modalVisible} />)}
         </section>
     );

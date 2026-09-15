@@ -2,6 +2,7 @@ import React from 'react';
 import { BsPeopleFill, BsStarFill } from 'react-icons/bs';
 import HubImage from './HubImage.jsx';
 import { formatCount } from './hubApi.js';
+import { useT } from '../i18n/index.jsx';
 
 const RATIOS = {
     landscape: 'aspect-[460/215]',
@@ -34,6 +35,7 @@ export function PriceTag({ item }) {
 
 /** Card for a normalized hub item (Steam, GOG, IGDB, ...). */
 export default function StoreCard({ item, onClick, variant = 'landscape', className = '' }) {
+    const { t, locale } = useT();
     return (
         <div
             role="button"
@@ -58,7 +60,7 @@ export default function StoreCard({ item, onClick, variant = 'landscape', classN
                 <div className="mt-1 flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-xs text-[#6b7080] min-h-[20px]">
                     {item.players != null ? (
                         <span className="inline-flex items-center gap-1.5 text-[#a1a6b3]">
-                            <BsPeopleFill className="text-[10px]" /> {formatCount(item.players)} playing
+                            <BsPeopleFill className="text-[10px]" /> {formatCount(item.players, locale)} {t('hub.card.playing')}
                         </span>
                     ) : (
                         <span className={`truncate min-w-0 ${item.price ? 'hidden min-[480px]:inline' : ''}`}>{item.subtitle || item.tag || SOURCE_LABELS[item.source]}</span>

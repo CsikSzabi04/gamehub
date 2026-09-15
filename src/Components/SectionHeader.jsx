@@ -1,7 +1,9 @@
 import React from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { useT } from '../i18n/index.jsx';
 
 export default function SectionHeader({ title, subtitle, onPrev, onNext, action }) {
+    const { t } = useT();
     return (
         <div className="flex items-end justify-between gap-4 mb-4">
             <div className="min-w-0">
@@ -11,12 +13,12 @@ export default function SectionHeader({ title, subtitle, onPrev, onNext, action 
             <div className="flex items-center gap-2 flex-shrink-0">
                 {action}
                 {onPrev && (
-                    <button onClick={onPrev} className="gh-icon-btn !hidden md:!inline-flex !w-9 !h-9" aria-label={`Previous ${title}`}>
+                    <button onClick={onPrev} className="gh-icon-btn !hidden md:!inline-flex !w-9 !h-9" aria-label={t('game.section.previous', { title })}>
                         <BsChevronLeft className="w-4 h-4" />
                     </button>
                 )}
                 {onNext && (
-                    <button onClick={onNext} className="gh-icon-btn !hidden md:!inline-flex !w-9 !h-9" aria-label={`Next ${title}`}>
+                    <button onClick={onNext} className="gh-icon-btn !hidden md:!inline-flex !w-9 !h-9" aria-label={t('game.section.next', { title })}>
                         <BsChevronRight className="w-4 h-4" />
                     </button>
                 )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import SectionHeader, { SectionLoader } from "../Components/SectionHeader.jsx";
 import { API_BASE, useApi } from "../Components/apiCache.js";
+import { useT } from "../i18n/index.jsx";
 
 function toGiveaways(data) {
     if (!Array.isArray(data)) return [];
@@ -20,6 +21,7 @@ function toGiveaways(data) {
 }
 
 export default function Giveaways() {
+    const { t } = useT();
     const { data: giveaways, loading } = useApi(`${API_BASE}/loot`, toGiveaways);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -58,17 +60,17 @@ export default function Giveaways() {
     return (
         <div className="w-full mb-12">
             {loading || !giveaways ? (
-                <SectionLoader title="Loot giveaways" height="h-[230px]" />
+                <SectionLoader title={t('home.loot.title')} height="h-[230px]" />
             ) : giveaways.length === 0 ? (
                 <>
-                    <h2 className="gh-section-title !mb-4">Loot giveaways</h2>
+                    <h2 className="gh-section-title !mb-4">{t('home.loot.title')}</h2>
                     <div className="gh-surface text-center py-12">
-                        <p className="text-sm">No giveaways available at the moment.</p>
+                        <p className="text-sm">{t('home.loot.empty')}</p>
                     </div>
                 </>
             ) : (
                 <>
-                    <SectionHeader title="Loot giveaways" subtitle="Free keys, DLC and in-game items" onPrev={prevItem} onNext={nextItem} />
+                    <SectionHeader title={t('home.loot.title')} subtitle={t('home.loot.subtitle')} onPrev={prevItem} onNext={nextItem} />
                     <div className="gh-scroller relative overflow-hidden -mx-1.5">
                         <div className="gh-track flex transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]" style={{ transform: `translateX(-${currentIndex * (100 / cardsToShow)}%)` }}>
                             {giveaways.map((giveaway) => {

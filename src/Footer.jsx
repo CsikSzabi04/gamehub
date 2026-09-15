@@ -4,6 +4,8 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { CgGames } from "react-icons/cg";
+import { useT } from './i18n/index.jsx';
+import LanguageSwitcher from './Components/LanguageSwitcher.jsx';
 
 const MAIL_URL = "https://mail.google.com/mail/u/0/?fs=1&to=helpdesk.gamehub@gmail.com&su=Collaboration+Opportunity+/+Egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+Lehet%C5%91s%C3%A9g&body=Dear+Cs%C3%ADk+Szabolcs+Alex,%0A%0AI+would+like+to+discuss+a+collaboration+opportunity+with+you.%0A%0ABest+regards,%0A%0A%5BYour+Name%5D%0A%0A---%0A%0AKedves+Cs%C3%ADk+Szabolcs+Alex,%0A%0ASzeretn%C3%A9k+egy+egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+lehet%C5%91s%C3%A9gr%C5%91l+besz%C3%A9lni+veled.%0A%0A%C3%9Cdv%C3%B6zlettel,%0A%0A%5BNeved%5D&tf=cm";
 
@@ -11,7 +13,7 @@ const socials = [
     { href: "https://github.com/CsikSzabi04", label: "GitHub", icon: FaGithub },
     { href: "https://www.linkedin.com/in/szabolcs-cs%C3%ADk-a4b767315/", label: "LinkedIn", icon: FaLinkedin },
     { href: "https://www.instagram.com/cs_szabj04/", label: "Instagram", icon: FaSquareInstagram },
-    { href: MAIL_URL, label: "Email", icon: SiGmail },
+    { href: MAIL_URL, label: "Email", labelKey: "footer.email", icon: SiGmail },
 ];
 
 const linkClass = "text-sm text-[#a1a6b3] hover:text-white transition-colors";
@@ -26,6 +28,7 @@ function Column({ title, children }) {
 }
 
 export default function Footer() {
+    const { t } = useT();
     return (
         <footer>
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-10 sm:py-12">
@@ -38,16 +41,16 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-sm leading-relaxed max-w-sm">
-                            Discover and track games, compare stores, catch free giveaways and read what the community thinks.
+                            {t('footer.tagline')}
                         </p>
                         <div className="flex gap-2 mt-5">
-                            {socials.map(({ href, label, icon: Icon }) => (
+                            {socials.map(({ href, label, labelKey, icon: Icon }) => (
                                 <a
                                     key={label}
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    aria-label={label}
+                                    aria-label={labelKey ? t(labelKey) : label}
                                     className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.07] text-[#a1a6b3] hover:text-white hover:border-white/[0.16] transition-colors"
                                 >
                                     <Icon size={16} />
@@ -56,18 +59,18 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    <Column title="Explore">
-                        <li><Link to="/discover" className={linkClass}>Discover</Link></li>
-                        <li><Link to="/review" className={linkClass}>Community reviews</Link></li>
-                        <li><Link to="/contact" className={linkClass}>Contact</Link></li>
+                    <Column title={t('footer.explore')}>
+                        <li><Link to="/discover" className={linkClass}>{t('footer.discover')}</Link></li>
+                        <li><Link to="/review" className={linkClass}>{t('footer.reviews')}</Link></li>
+                        <li><Link to="/contact" className={linkClass}>{t('footer.contact')}</Link></li>
                     </Column>
 
-                    <Column title="Legal">
-                        <li><Link to="/terms" className={linkClass}>Terms of Service</Link></li>
-                        <li><Link to="/privacy" className={linkClass}>Privacy Policy</Link></li>
+                    <Column title={t('footer.legal')}>
+                        <li><Link to="/terms" className={linkClass}>{t('footer.terms')}</Link></li>
+                        <li><Link to="/privacy" className={linkClass}>{t('footer.privacy')}</Link></li>
                     </Column>
 
-                    <Column title="Made by">
+                    <Column title={t('footer.madeBy')}>
                         <li><a href="https://csszabj.netlify.app/" target="_blank" rel="noopener noreferrer" className={linkClass}>Szabolcs Csík</a></li>
                         <li><span className="text-sm text-[#a1a6b3]">Balog Bence</span></li>
                         <li><span className="text-sm text-[#a1a6b3]">Furdan Milán</span></li>
@@ -75,8 +78,9 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-10 sm:mt-12 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between gap-3 text-xs text-[#6b7080]">
-                    <p className="text-[#6b7080]">© {new Date().getFullYear()} Game Data Hub. All rights reserved.</p>
-                    <p className="text-[#6b7080]">Data from RAWG, CheapShark, FreeToGame and GamerPower.</p>
+                    <p className="text-[#6b7080] sm:self-center">{t('footer.rights', { year: new Date().getFullYear() })}</p>
+                    <LanguageSwitcher className="self-start sm:self-center sm:order-last" />
+                    <p className="text-[#6b7080] sm:self-center">{t('footer.dataSources')}</p>
                 </div>
             </div>
         </footer>

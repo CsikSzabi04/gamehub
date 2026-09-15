@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useT } from "../i18n/index.jsx";
 
 const DBD_PRIMARY_URL = "https://www.dbdwiki.eu/";
 const DBD_FALLBACK_URL = "https://dbdwiki.vercel.app/";
@@ -57,16 +58,17 @@ function useDbdUrl() {
 }
 
 export default function DBD_Movies() {
+    const { t } = useT();
     const dbdUrl = useDbdUrl();
 
     const projects = [
-        { href: DEBATER_URL, img: '/dabter.webp', w: 1000, h: 522, title: 'Debater', text: 'Rank every character in fiction, vote on the lists and open debates.' },
-        { href: dbdUrl, img: '/dbd.webp', w: 1000, h: 448, title: 'Dead By Daylight', text: 'A wiki for one of my favourite games.' },
+        { href: DEBATER_URL, img: '/dabter.webp', w: 1000, h: 522, title: 'Debater', text: t('dbd.moreProjects.debater') },
+        { href: dbdUrl, img: '/dbd.webp', w: 1000, h: 448, title: 'Dead By Daylight', text: t('dbd.moreProjects.dbd') },
     ];
 
     return (
         <section id="more-projects" className="!mb-12">
-            <h2 className="gh-section-title !mb-4">More from us</h2>
+            <h2 className="gh-section-title !mb-4">{t('dbd.moreProjects.title')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {projects.map(project => (
                     <a
@@ -82,7 +84,7 @@ export default function DBD_Movies() {
                         <div className="p-4 sm:p-5 flex flex-col justify-center min-w-0">
                             <h3 className="text-base font-semibold text-white">{project.title}</h3>
                             <p className="mt-1 text-sm text-[#8a8f9c] leading-relaxed">{project.text}</p>
-                            <span className="mt-3 text-xs font-medium text-[#c9ccd4] group-hover:text-white">Visit site →</span>
+                            <span className="mt-3 text-xs font-medium text-[#c9ccd4] group-hover:text-white">{t('dbd.moreProjects.visit')}</span>
                         </div>
                     </a>
                 ))}

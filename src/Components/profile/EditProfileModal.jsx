@@ -5,13 +5,24 @@ import {
     ACCENTS, BANNER_PRESETS, PLATFORMS, GENRES, MAX_GENRES, BIO_MAX,
     AVATAR_OPTIONS, BANNER_OPTIONS, processImage, getAccent,
 } from './profileUtils.js';
+import ProfileExtrasFields from './ProfileExtrasFields.jsx';
+import { useT } from '../../i18n/index.jsx';
+import { sanitizeSpecs, hasSpecs } from '../../hardware/specs.js';
 
 const SOCIALS = [
-    { key: 'steam', label: 'Steam', icon: FaSteam, placeholder: 'Steam profile name' },
-    { key: 'discord', label: 'Discord', icon: FaDiscord, placeholder: 'username' },
-    { key: 'twitch', label: 'Twitch', icon: FaTwitch, placeholder: 'channel' },
-    { key: 'youtube', label: 'YouTube', icon: FaYoutube, placeholder: '@channel' },
+    { key: 'steam', label: 'Steam', icon: FaSteam, placeholder: 'profile.edit.steamPlaceholder' },
+    { key: 'discord', label: 'Discord', icon: FaDiscord, placeholder: 'profile.edit.discordPlaceholder' },
+    { key: 'twitch', label: 'Twitch', icon: FaTwitch, placeholder: 'profile.edit.twitchPlaceholder' },
+    { key: 'youtube', label: 'YouTube', icon: FaYoutube, placeholder: 'profile.edit.youtubePlaceholder' },
 ];
+
+// processImage() throws English messages; show them in the current language
+const IMAGE_ERRORS = {
+    'Please choose an image file.': 'profile.edit.imageNotImage',
+    'Image is too large (max 10 MB).': 'profile.edit.imageTooLarge',
+    'Could not read this image.': 'profile.edit.imageUnreadable',
+    'Image could not be compressed enough. Try a smaller one.': 'profile.edit.imageTooBig',
+};
 
 const inputClass = 'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all';
 
@@ -25,6 +36,7 @@ function Section({ title, children }) {
 }
 
 export default function EditProfileModal({ profile, onClose, onSave }) {
+    const { t } = useT();
     const [draft, setDraft] = useState(() => ({
         username: profile.username || '',
         bio: profile.bio || '',
@@ -37,6 +49,8 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
         platforms: profile.platforms || [],
         genres: profile.genres || [],
         socials: { steam: '', discord: '', twitch: '', youtube: '', ...profile.socials },
+        isPublic: profile.isPublic !== false,
+        pcSpecs: profile.pcSpecs || null,
     }));
     const [saving, setSaving] = useState(false);
     const [processing, setProcessing] = useState(null);
@@ -78,7 +92,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
             const dataUrl = await processImage(file, field === 'avatar' ? AVATAR_OPTIONS : BANNER_OPTIONS);
             update(field === 'banner' ? { banner: dataUrl, bannerPosY: 50 } : { avatar: dataUrl });
         } catch (err) {
-            setError(err.message);
+            setError(IMAGE_ERRORS[err.message] || err.message);
         } finally {
             setProcessing(null);
         }
@@ -87,7 +101,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
     async function handleSave() {
         const username = draft.username.trim();
         if (username.length < 3 || username.length > 20) {
-            setError('Username must be 3-20 characters.');
+            setError('profile.edit.usernameLength');
             return;
         }
         setSaving(true);
@@ -99,11 +113,12 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                 bio: draft.bio.trim(),
                 playing: draft.playing.trim(),
                 socials: Object.fromEntries(Object.entries(draft.socials).map(([k, v]) => [k, v.trim()])),
+                pcSpecs: hasSpecs(draft.pcSpecs) ? sanitizeSpecs(draft.pcSpecs) : null,
             });
             onClose();
         } catch (err) {
             console.error('Error saving profile:', err);
-            setError('Failed to save profile. Please try again.');
+            setError('profile.edit.saveFailed');
             setSaving(false);
         }
     }
@@ -126,15 +141,15 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-                    <h2 className="text-lg font-bold text-white">Edit profile</h2>
-                    <button onClick={onClose} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" aria-label="Close">
+                    <h2 className="text-lg font-bold text-white">{t('profile.edit.title')}</h2>
+                    <button onClick={onClose} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" aria-label={t('common.close')}>
                         <FaTimes className="w-4 h-4 text-gray-300" />
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8" data-lenis-prevent>
                     {/* Images */}
-                    <Section title="Cover & avatar">
+                    <Section title={t('profile.edit.coverAvatar')}>
                         <div className="relative">
                             <div
                                 className="h-36 sm:h-44 rounded-2xl overflow-hidden border border-white/10 bg-cover"
@@ -148,7 +163,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                             onClick={() => update({ banner: null })}
                                             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 hover:bg-red-500/80 text-xs font-semibold text-white transition-colors"
                                         >
-                                            <FaTrash className="w-3 h-3" /> Remove
+                                            <FaTrash className="w-3 h-3" /> {t('profile.edit.remove')}
                                         </button>
                                     )}
                                     <button
@@ -156,7 +171,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                         disabled={processing === 'banner'}
                                         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 hover:bg-black/80 text-xs font-semibold text-white transition-colors disabled:opacity-60"
                                     >
-                                        <FaImage className="w-3 h-3" /> {processing === 'banner' ? 'Processing...' : 'Upload cover'}
+                                        <FaImage className="w-3 h-3" /> {processing === 'banner' ? t('profile.edit.processing') : t('profile.edit.uploadCover')}
                                     </button>
                                 </div>
                             </div>
@@ -166,14 +181,14 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                 <div className="relative w-24 h-24 rounded-full p-[3px]" style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}>
                                     <div className="w-full h-full rounded-full overflow-hidden bg-[#0b0f1a] flex items-center justify-center">
                                         {draft.avatar
-                                            ? <img src={draft.avatar} alt="Avatar preview" className="w-full h-full object-cover" />
+                                            ? <img src={draft.avatar} alt={t('profile.edit.avatarPreview')} className="w-full h-full object-cover" />
                                             : <span className="text-3xl font-black text-white">{(draft.username || '?')[0].toUpperCase()}</span>}
                                     </div>
                                     <button
                                         onClick={() => avatarInput.current.click()}
                                         disabled={processing === 'avatar'}
                                         className="absolute inset-[3px] rounded-full bg-black/0 hover:bg-black/60 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-all"
-                                        aria-label="Upload avatar"
+                                        aria-label={t('profile.edit.uploadAvatar')}
                                     >
                                         <FaCamera className="w-5 h-5" />
                                     </button>
@@ -187,14 +202,14 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                 disabled={processing === 'avatar'}
                                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors disabled:opacity-60"
                             >
-                                <FaCamera className="w-3 h-3" /> {processing === 'avatar' ? 'Processing...' : 'Change avatar'}
+                                <FaCamera className="w-3 h-3" /> {processing === 'avatar' ? t('profile.edit.processing') : t('profile.edit.changeAvatar')}
                             </button>
                             {draft.avatar && (
                                 <button
                                     onClick={() => update({ avatar: null })}
                                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 text-xs font-semibold text-red-300 transition-colors"
                                 >
-                                    <FaTrash className="w-3 h-3" /> Remove
+                                    <FaTrash className="w-3 h-3" /> {t('profile.edit.remove')}
                                 </button>
                             )}
                         </div>
@@ -204,7 +219,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
 
                         {draft.banner ? (
                             <label className="block pt-2">
-                                <span className="text-xs text-gray-400">Cover position</span>
+                                <span className="text-xs text-gray-400">{t('profile.edit.coverPosition')}</span>
                                 <input
                                     type="range"
                                     min="0"
@@ -217,7 +232,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                             </label>
                         ) : (
                             <div className="pt-2">
-                                <span className="text-xs text-gray-400">Or pick a preset cover</span>
+                                <span className="text-xs text-gray-400">{t('profile.edit.presetCover')}</span>
                                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2">
                                     {Object.entries(BANNER_PRESETS).map(([key, bg]) => (
                                         <button
@@ -225,7 +240,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                             onClick={() => update({ bannerPreset: key })}
                                             className={`relative h-12 rounded-lg border-2 transition-all ${draft.bannerPreset === key ? 'border-white scale-105' : 'border-transparent hover:border-white/40'}`}
                                             style={{ background: bg }}
-                                            aria-label={`${key} cover`}
+                                            aria-label={t('profile.edit.presetLabel', { name: key })}
                                         >
                                             {draft.bannerPreset === key && <FaCheck className="absolute inset-0 m-auto w-3 h-3 text-white" />}
                                         </button>
@@ -236,9 +251,9 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                     </Section>
 
                     {/* Basics */}
-                    <Section title="About you">
+                    <Section title={t('profile.edit.aboutYou')}>
                         <div>
-                            <label className="text-xs text-gray-400" htmlFor="edit-username">Username</label>
+                            <label className="text-xs text-gray-400" htmlFor="edit-username">{t('profile.edit.username')}</label>
                             <input
                                 id="edit-username"
                                 className={`${inputClass} mt-1`}
@@ -249,7 +264,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                         </div>
                         <div>
                             <div className="flex justify-between">
-                                <label className="text-xs text-gray-400" htmlFor="edit-bio">Bio</label>
+                                <label className="text-xs text-gray-400" htmlFor="edit-bio">{t('profile.edit.bio')}</label>
                                 <span className={`text-xs ${draft.bio.length >= BIO_MAX ? 'text-amber-400' : 'text-gray-500'}`}>{draft.bio.length}/{BIO_MAX}</span>
                             </div>
                             <textarea
@@ -257,20 +272,20 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                 rows={3}
                                 maxLength={BIO_MAX}
                                 className={`${inputClass} mt-1 resize-none`}
-                                placeholder="Tell others what kind of gamer you are..."
+                                placeholder={t('profile.edit.bioPlaceholder')}
                                 value={draft.bio}
                                 onChange={e => update({ bio: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="text-xs text-gray-400" htmlFor="edit-playing">Currently playing</label>
+                            <label className="text-xs text-gray-400" htmlFor="edit-playing">{t('profile.edit.playing')}</label>
                             <div className="relative mt-1">
                                 <FaGamepad className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                 <input
                                     id="edit-playing"
                                     className={`${inputClass} pl-11`}
                                     maxLength={60}
-                                    placeholder="e.g. Elden Ring"
+                                    placeholder={t('profile.edit.playingPlaceholder')}
                                     value={draft.playing}
                                     onChange={e => update({ playing: e.target.value })}
                                 />
@@ -279,7 +294,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                     </Section>
 
                     {/* Accent */}
-                    <Section title="Profile color">
+                    <Section title={t('profile.edit.color')}>
                         <div className="flex flex-wrap gap-3">
                             {Object.entries(ACCENTS).map(([key, a]) => (
                                 <button
@@ -288,14 +303,14 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                     className={`flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border transition-all ${draft.accent === key ? 'border-white bg-white/10' : 'border-white/10 hover:border-white/30'}`}
                                 >
                                     <span className="w-6 h-6 rounded-full" style={{ background: `linear-gradient(135deg, ${a.from}, ${a.to})` }} />
-                                    <span className="text-xs font-semibold text-gray-200">{a.label}</span>
+                                    <span className="text-xs font-semibold text-gray-200">{t(`profile.accents.${key}`)}</span>
                                 </button>
                             ))}
                         </div>
                     </Section>
 
                     {/* Gaming */}
-                    <Section title="Platforms">
+                    <Section title={t('profile.edit.platforms')}>
                         <div className="flex flex-wrap gap-2">
                             {PLATFORMS.map(p => {
                                 const active = draft.platforms.includes(p);
@@ -313,7 +328,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                         </div>
                     </Section>
 
-                    <Section title={`Favorite genres (${draft.genres.length}/${MAX_GENRES})`}>
+                    <Section title={t('profile.edit.genres', { count: draft.genres.length, max: MAX_GENRES })}>
                         <div className="flex flex-wrap gap-2">
                             {GENRES.map(g => {
                                 const active = draft.genres.includes(g);
@@ -325,15 +340,17 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                         disabled={disabled}
                                         className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all disabled:opacity-30 disabled:cursor-not-allowed ${active ? 'bg-white text-gray-900 border-white' : 'text-gray-300 border-white/10 bg-white/5 hover:border-white/30'}`}
                                     >
-                                        {g}
+                                        {t(`profile.genres.${g}`)}
                                     </button>
                                 );
                             })}
                         </div>
                     </Section>
 
+                    <ProfileExtrasFields draft={draft} update={update} Section={Section} />
+
                     {/* Socials */}
-                    <Section title="Connections">
+                    <Section title={t('profile.edit.connections')}>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {SOCIALS.map(({ key, label, icon: Icon, placeholder }) => (
                                 <div key={key} className="relative">
@@ -341,7 +358,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                                     <input
                                         className={`${inputClass} pl-11`}
                                         aria-label={label}
-                                        placeholder={`${label}: ${placeholder}`}
+                                        placeholder={`${label}: ${t(placeholder)}`}
                                         maxLength={40}
                                         value={draft.socials[key]}
                                         onChange={e => update({ socials: { ...draft.socials, [key]: e.target.value } })}
@@ -354,10 +371,10 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
 
                 {/* Footer */}
                 <div className="px-6 py-4 border-t border-white/10 bg-[#0b0f1a]">
-                    {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
+                    {error && <p className="mb-3 text-sm text-red-400">{error.startsWith('profile.') ? t(error) : error}</p>}
                     <div className="flex justify-end gap-3">
                         <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:bg-white/5 transition-colors">
-                            Cancel
+                            {t('common.cancel')}
                         </button>
                         <motion.button
                             whileHover={{ scale: 1.03 }}
@@ -367,7 +384,7 @@ export default function EditProfileModal({ profile, onClose, onSave }) {
                             className="px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg disabled:opacity-60"
                             style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
                         >
-                            {saving ? 'Saving...' : 'Save changes'}
+                            {saving ? t('common.saving') : t('profile.edit.saveChanges')}
                         </motion.button>
                     </div>
                 </div>

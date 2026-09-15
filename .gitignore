@@ -17,3 +17,7 @@ coverage/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Firebase service account keys (never commit)
+*firebase-adminsdk*.json
+serviceAccount*.json

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SectionHeader from "../Components/SectionHeader.jsx";
+import { useT } from "../i18n/index.jsx";
 
 // Card width as a percentage of the track from md (md:w-1/4 lg:w-1/5); below md the row is a swipe scroller
 function getCardPercent() {
@@ -10,6 +11,7 @@ function getCardPercent() {
 }
 
 export default function RotateDiscounted({ games, showGameDetails, name }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cardPercent, setCardPercent] = useState(getCardPercent);
 
@@ -43,7 +45,7 @@ export default function RotateDiscounted({ games, showGameDetails, name }) {
 
     return (
         <div>
-            <SectionHeader title={name} subtitle="Current deals on the Epic Games Store" onPrev={prevItem} onNext={nextItem} />
+            <SectionHeader title={name} subtitle={t('rotate.discountedSubtitle')} onPrev={prevItem} onNext={nextItem} />
 
             <div className="gh-scroller overflow-hidden -mx-2">
                 <div

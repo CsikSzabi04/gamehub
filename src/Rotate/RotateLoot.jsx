@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import '../body.css';
+import { useT } from '../i18n/index.jsx';
 
 export default function RotateLoot({ giveaways, showGiveawayDetails, name }) {
+    const { t, locale } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -24,9 +26,9 @@ export default function RotateLoot({ giveaways, showGiveawayDetails, name }) {
                                     <div className="mt-[5%]">
                                         <p className="text-sm text-gray-400">{giveaway.description}</p>
                                         <div className="platforms text-sm text-gray-600">
-                                            <span className="font-semibold ">Platforms:</span> {giveaway.platforms}
+                                            <span className="font-semibold ">{t('rotate.platforms')}</span> {giveaway.platforms}
                                         </div>
-                                        <p className="text-sm text-gray-500">Published: {new Date(giveaway.publishedDate).toLocaleDateString()}</p>
+                                        <p className="text-sm text-gray-500">{t('rotate.published', { date: new Date(giveaway.publishedDate).toLocaleDateString(locale) })}</p>
                                     </div>
 
                                 </div>

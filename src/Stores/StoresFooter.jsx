@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from 'framer-motion';
+import { useT } from "../i18n/index.jsx";
 
 export default function StoresFooter() {
+    const { t } = useT();
     const [stores, setStores] = useState([]);
 
     const allowedStores = [
@@ -34,7 +36,7 @@ export default function StoresFooter() {
             {/* Section Header */}
             <div className="flex items-center justify-between mb-6 px-2">
                 <div className="relative">
-                    <h2 className="text-xl md:text-2xl font-bold text-white">Popular Stores</h2>
+                    <h2 className="text-xl md:text-2xl font-bold text-white">{t('stores.popular')}</h2>
                     
                 </div>
             </div>

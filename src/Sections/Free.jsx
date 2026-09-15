@@ -2,6 +2,7 @@ import React from "react";
 import RotateFree from "../Rotate/RotateFree.jsx";
 import { API_BASE, useApi } from "../Components/apiCache.js";
 import { SectionLoader } from "../Components/SectionHeader.jsx";
+import { useT } from "../i18n/index.jsx";
 
 function toFreeGames(data) {
     if (!Array.isArray(data)) return [];
@@ -21,6 +22,7 @@ function toFreeGames(data) {
 }
 
 export default function Free() {
+    const { t } = useT();
     const { data: games, loading } = useApi(`${API_BASE}/free`, toFreeGames);
 
     function showGameDetails(game) {
@@ -30,9 +32,9 @@ export default function Free() {
     return (
         <section id="free-games" className="!mb-12">
             {!loading && games ? (
-                <RotateFree games={games} showGameDetails={showGameDetails} name="Free Games" />
+                <RotateFree games={games} showGameDetails={showGameDetails} name={t('home.free.title')} />
             ) : (
-                <SectionLoader title="Free games" height="h-[330px]" />
+                <SectionLoader title={t('home.free.loading')} height="h-[330px]" />
             )}
         </section>
     );

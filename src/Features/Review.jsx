@@ -6,6 +6,7 @@ import './Features.css'
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaStar, FaSearch, FaUser } from 'react-icons/fa';
+import { useT } from '../i18n/index.jsx';
 
 export default function Review() {
     const [allGames, setAllGames] = useState([]);
@@ -15,6 +16,7 @@ export default function Review() {
     const [searchTerm, setSearchTerm] = useState("");
     const [rating, setRating] = useState(0);
     const { user } = useContext(UserContext) || {};
+    const { t } = useT();
 
     useEffect(() => {
         async function fetchGames() {
@@ -83,8 +85,8 @@ export default function Review() {
                 <Header />
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-10">
                     <div className="mb-8">
-                        <h1 className="text-3xl md:text-4xl font-extrabold text-white">Community reviews</h1>
-                        <p className="mt-2 text-[#a1a6b3]">Read what players think, or share your own take on a game.</p>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white">{t('reviews.title')}</h1>
+                        <p className="mt-2 text-[#a1a6b3]">{t('reviews.subtitle')}</p>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Left Side - Write Review */}
@@ -94,7 +96,7 @@ export default function Review() {
                             className="lg:col-span-1"
                         >
                             <div className="gh-surface p-5 lg:sticky lg:top-24">
-                                <h2 className="!mb-4 text-base font-semibold text-white">Write a review</h2>
+                                <h2 className="!mb-4 text-base font-semibold text-white">{t('reviews.write')}</h2>
 
                                 {/* Search Game */}
                                 <div className="relative mb-4">
@@ -103,7 +105,7 @@ export default function Review() {
                                     </div>
                                     <input
                                         type="text"
-                                        placeholder="Search for a game..."
+                                        placeholder={t('reviews.searchPlaceholder')}
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         className="gh-input !pl-10"
@@ -132,14 +134,14 @@ export default function Review() {
                                         animate={{ opacity: 1, y: 0 }}
                                         className="mb-4 px-3 py-2.5 rounded-lg bg-[#171a22] border-l-2 border-[#8b5cf6]"
                                     >
-                                        <p className="gh-eyebrow mb-0.5">Selected game</p>
+                                        <p className="gh-eyebrow mb-0.5">{t('reviews.selectedGame')}</p>
                                         <p className="text-sm text-white font-semibold">{selectedGame.name}</p>
                                     </motion.div>
                                 )}
 
                                 {/* Review Text */}
                                 <textarea
-                                    placeholder="Write your review..."
+                                    placeholder={t('reviews.textPlaceholder')}
                                     value={reviewText}
                                     onChange={(e) => setReviewText(e.target.value)}
                                     rows={4}
@@ -148,7 +150,7 @@ export default function Review() {
 
                                 {/* Rating Stars */}
                                 <div className="flex items-center gap-1 mb-5">
-                                    <span className="text-sm text-[#a1a6b3] mr-2">Rating</span>
+                                    <span className="text-sm text-[#a1a6b3] mr-2">{t('reviews.rating')}</span>
                                     {[1, 2, 3, 4, 5].map(star => (
                                         <motion.button
                                             key={star}
@@ -170,7 +172,7 @@ export default function Review() {
                                     disabled={!reviewText || rating === 0}
                                     className="gh-btn gh-btn-primary w-full !h-11"
                                 >
-                                    Post review
+                                    {t('reviews.post')}
                                 </motion.button>
                             </div>
                         </motion.div>
@@ -183,8 +185,8 @@ export default function Review() {
                         >
                             <div>
                                 <div className="flex items-baseline justify-between mb-4">
-                                    <h2 className="gh-section-title !mb-0">Latest reviews</h2>
-                                    <span className="text-sm text-[#6b7080]">{reviews.length} total</span>
+                                    <h2 className="gh-section-title !mb-0">{t('reviews.latest')}</h2>
+                                    <span className="text-sm text-[#6b7080]">{t('reviews.total', { count: reviews.length })}</span>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -230,7 +232,7 @@ export default function Review() {
                                     ) : (
                                         <div className="col-span-full gh-surface text-center py-12">
                                             <FaStar className="w-6 h-6 text-[#3a3f4b] mx-auto mb-3" />
-                                            <p className="text-sm">No reviews yet. Be the first to write one.</p>
+                                            <p className="text-sm">{t('reviews.empty')}</p>
                                         </div>
                                     )}
                                 </div>

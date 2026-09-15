@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGamepad, FaRocket, FaArrowRight } from 'react-icons/fa';
 import "../body.css";
+import { useT } from "../i18n/index.jsx";
 
 export default function StartUp({ onLoaded }) {
+    const { t } = useT();
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const [showWelcome, setShowWelcome] = useState(false);
     const [slogans] = useState([
-        "Loading amazing games...",
-        "Preparing your gaming experience...",
-        "Discovering new worlds...",
-        "Almost ready to play..."
+        "startup.slogans.loadingGames",
+        "startup.slogans.preparing",
+        "startup.slogans.discovering",
+        "startup.slogans.almostReady"
     ]);
     const [currentSlogan, setCurrentSlogan] = useState(0);
 
@@ -142,14 +144,14 @@ export default function StartUp({ onLoaded }) {
                             transition={{ duration: 0.3 }}
                             className="text-gray-400 text-sm mb-8 h-6"
                         >
-                            {slogans[currentSlogan]}
+                            {t(slogans[currentSlogan])}
                         </motion.p>
                     </AnimatePresence>
 
                     {/* Progress Bar */}
                     <div className="w-72 md:w-96">
                         <div className="flex justify-between text-xs text-gray-500 mb-2">
-                            <span>Loading</span>
+                            <span>{t('startup.loading')}</span>
                             <span>{Math.round(progress)}%</span>
                         </div>
                         <div className="h-2 bg-white/10 rounded-full overflow-hidden">
@@ -214,7 +216,7 @@ export default function StartUp({ onLoaded }) {
                             transition={{ delay: 0.3 }}
                             className="text-4xl md:text-6xl font-bold mb-6"
                         >
-                            <span className="text-white">Welcome to </span>
+                            <span className="text-white">{t('startup.welcome')}</span>
                             <span className="text-[#8b5cf6]">
                                 GameDataHub
                             </span>
@@ -226,7 +228,7 @@ export default function StartUp({ onLoaded }) {
                             transition={{ delay: 0.4 }}
                             className="text-lg md:text-xl text-gray-400 mb-4 max-w-2xl mx-auto"
                         >
-                            Discover the best games, amazing deals, and latest gaming news
+                            {t('startup.tagline')}
                         </motion.p>
 
                         <motion.p
@@ -235,7 +237,7 @@ export default function StartUp({ onLoaded }) {
                             transition={{ delay: 0.5 }}
                             className="text-gray-500 mb-12"
                         >
-                            Your ultimate gaming destination
+                            {t('startup.destination')}
                         </motion.p>
 
                         {/* Enter Button */}
@@ -249,7 +251,7 @@ export default function StartUp({ onLoaded }) {
                             className="group relative gh-btn gh-btn-primary !h-12 !px-10 text-base"
                         >
                             <span className="relative z-10 flex items-center gap-3">
-                                Start Exploring
+                                {t('startup.start')}
                                 <FaArrowRight className="transition-transform group-hover:translate-x-1" />
                             </span>
                             {/* Button glow */}

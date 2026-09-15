@@ -1,0 +1,165 @@
+rules_version = '2';
+
+// GameDataHub Firestore rules.
+// Deploy: Firebase console > Firestore Database > Rules (paste), or `firebase deploy --only firestore:rules`.
+// The backend uses the Admin SDK, which bypasses these rules (reviews, favorites, notifications, meta, jobs).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isUser(uid) { return signedIn() && request.auth.uid == uid; }
+    function incoming() { return request.resource.data; }
+    function onlyChanges(keys) { return incoming().diff(resource.data).affectedKeys().hasOnly(keys); }
+    function str(value, max) { return value is string && value.size() <= max; }
+    function optStr(value, max) { return value == null || str(value, max); }
+    function isPublicUser(uid) { return exists(/databases/$(database)/documents/publicProfiles/$(uid)); }
+
+    /* ---------- Private user data ---------- */
+
+    match /users/{uid} {
+      allow read, write: if isUser(uid);
+
+      // Game library: visible to others while the profile is public
+      match /library/{gameKey} {
+        allow read: if isUser(uid) || isPublicUser(uid);
+        allow write: if isUser(uid) && str(incoming().name, 160) && optStr(incoming().get('note', null), 280);
+        allow delete: if isUser(uid);
+      }
+
+      match /priceAlerts/{gameKey} { allow read, write: if isUser(uid); }
+      match /reminders/{gameKey} { allow read, write: if isUser(uid); }
+      match /claimedFree/{freeId} { allow read, write: if isUser(uid); }
+      match /push/{subscriptionId} { allow read, write: if isUser(uid); }
+
+      // Created by the backend only; the owner can mark read / delete
+      match /notifications/{id} {
+        allow read, delete: if isUser(uid);
+        allow update: if isUser(uid) && onlyChanges(['read']);
+      }
+
+      // Written by the backend (reviewsStore)
+      match /favorites/{gameId} { allow read: if isUser(uid); }
+    }
+
+    /* ---------- Public profiles ---------- */
+
+    match /publicProfiles/{uid} {
+      allow read: if true;
+      allow create, update: if isUser(uid)
+        && str(incoming().username, 40)
+        && incoming().usernameLower == incoming().username.trim().lower()
+        && optStr(incoming().get('avatarThumb', null), 30000)
+        && optStr(incoming().get('bio', null), 200);
+      allow delete: if isUser(uid);
+    }
+
+    match /publicBanners/{uid} {
+      allow read: if true;
+      allow write: if isUser(uid) && str(incoming().banner, 900000);
+    }
+
+    match /follows/{followId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && incoming().follower == request.auth.uid
+        && incoming().followed is string
+        && incoming().followed != request.auth.uid
+        && followId == request.auth.uid + '_' + incoming().followed;
+      allow delete: if signedIn() && resource.data.follower == request.auth.uid;
+    }
+
+    match /activity/{id} {
+      allow read: if true;
+      allow create: if signedIn()
+        && incoming().uid == request.auth.uid
+        && str(incoming().type, 20)
+        && optStr(incoming().get('text', null), 280)
+        && optStr(incoming().get('gameName', null), 120);
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /reports/{id} {
+      allow create: if signedIn() && incoming().uid == request.auth.uid && optStr(incoming().get('reason', null), 300);
+    }
+
+    /* ---------- LFG ---------- */
+
+    match /lfgPosts/{postId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && incoming().uid == request.auth.uid
+        && incoming().filled == 0
+        && incoming().closed == false
+        && incoming().slots is int && incoming().slots >= 1 && incoming().slots <= 9
+        && optStr(incoming().get('note', null), 300)
+        && optStr(incoming().get('rank', null), 40);
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && onlyChanges(['closed', 'expiresAt', 'filled'])
+        && incoming().filled >= 0 && incoming().filled <= resource.data.slots;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+
+      function postOwner() { return get(/databases/$(database)/documents/lfgPosts/$(postId)).data.uid; }
+
+      match /requests/{requesterUid} {
+        allow read: if isUser(requesterUid) || (signedIn() && postOwner() == request.auth.uid);
+        allow create: if isUser(requesterUid)
+          && incoming().uid == requesterUid
+          && incoming().status == 'pending'
+          && optStr(incoming().get('message', null), 200)
+          && optStr(incoming().get('contact', null), 60)
+          && postOwner() != requesterUid;
+        allow update: if signedIn() && postOwner() == request.auth.uid
+          && onlyChanges(['status', 'ownerContact', 'updatedAt'])
+          && incoming().status in ['pending', 'accepted', 'declined']
+          && optStr(incoming().get('ownerContact', null), 60);
+        allow delete: if (isUser(requesterUid) && resource.data.status == 'pending')
+          || (signedIn() && postOwner() == request.auth.uid);
+      }
+    }
+
+    // "My requests" (collection group query where uid == me)
+    match /{path=**}/requests/{requestId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    /* ---------- Community content ---------- */
+
+    match /gameFacts/{gameKey}/votes/{uid} {
+      allow read: if true;
+      allow write: if isUser(uid);
+    }
+
+    match /tierVotes/{listId}/votes/{uid} {
+      allow read: if true;
+      allow write: if isUser(uid) && incoming().tiers is map && incoming().tiers.size() <= 200;
+    }
+
+    match /builds/{buildId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && incoming().uid == request.auth.uid
+        && incoming().likeCount == 0
+        && incoming().perks is list && incoming().perks.size() == 4
+        && str(incoming().title, 60)
+        && optStr(incoming().get('description', null), 500);
+      // Likes: anyone signed in may move likeCount by exactly one (together with their like doc)
+      allow update: if signedIn() && onlyChanges(['likeCount'])
+        && (incoming().likeCount == resource.data.likeCount + 1 || incoming().likeCount == resource.data.likeCount - 1);
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+
+      match /likes/{uid} {
+        allow read, create, delete: if isUser(uid);
+      }
+    }
+
+    match /outageReports/{id} {
+      allow read: if true;
+      allow create: if signedIn() && incoming().uid == request.auth.uid && str(incoming().get('service', null), 40);
+    }
+
+    /* ---------- Backend only ---------- */
+
+    match /reviews/{document=**} { allow read, write: if false; }
+    match /meta/{document=**} { allow read, write: if false; }
+  }
+}

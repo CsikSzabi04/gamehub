@@ -5,10 +5,12 @@ import { motion } from 'framer-motion';
 import { BsStarFill } from "react-icons/bs";
 import { releaseYear } from "../Components/GameCard.jsx";
 import { rawgImg } from "../Components/rawgImage.js";
+import { useT } from "../i18n/index.jsx";
 
 const ROTATE_MS = 10000;
 
 export default function MainSection({ allGames, showGameDetails }) {
+  const { t } = useT();
   const [randomGames, setRandomGames] = useState([]);
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
 
@@ -60,7 +62,7 @@ export default function MainSection({ allGames, showGameDetails }) {
 
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
           <div key={currentGame.id} className="animate-fadeInUp max-w-xl">
-            <p className="gh-eyebrow !text-[#c9ccd4] mb-3">Featured</p>
+            <p className="gh-eyebrow !text-[#c9ccd4] mb-3">{t('home.hero.featured')}</p>
             <h2 className="!mb-0 text-3xl md:text-5xl font-extrabold text-white leading-[1.05]">
               {currentGame.name}
             </h2>
@@ -80,10 +82,10 @@ export default function MainSection({ allGames, showGameDetails }) {
 
             <div className="mt-6 flex flex-wrap gap-3">
               <button onClick={() => showGameDetails(currentGame)} className="gh-btn gh-btn-light !h-11 !px-5">
-                View details
+                {t('home.hero.viewDetails')}
               </button>
               <Link to={`/allreview/${currentGame.id}`} className="gh-btn !h-11 !px-5 bg-white/10 text-white hover:bg-white/20">
-                Reviews
+                {t('home.hero.reviews')}
               </Link>
             </div>
           </div>
@@ -94,7 +96,7 @@ export default function MainSection({ allGames, showGameDetails }) {
           {randomGames.map((_, index) => (
             <button
               key={index}
-              aria-label={`Show featured game ${index + 1}`}
+              aria-label={t('home.hero.showFeatured', { n: index + 1 })}
               onClick={() => setCurrentFeaturedIndex(index)}
               className={`h-1 rounded-full transition-all duration-300 ${index === currentFeaturedIndex ? 'w-6 bg-white' : 'w-3 bg-white/40'}`}
             />

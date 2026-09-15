@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { motion } from 'framer-motion';
+import { useT } from '../i18n/index.jsx';
 
 export async function searchRawgGames(query, maxPrice = 500) {
   const response = await fetch(
@@ -31,6 +32,7 @@ export async function searchRawgGames(query, maxPrice = 500) {
 }
 
 export default function Search({ setGames, setSearchTrue }) {
+  const { t } = useT();
   const [query, setQuery] = useState("");
   const [maxPrice] = useState(500);
   const [error, setError] = useState(null);
@@ -67,7 +69,8 @@ export default function Search({ setGames, setSearchTrue }) {
       setError(null);
     } catch (err) {
       console.error("Error fetching games:", err);
-      setError("Something went wrong. Please try again.");
+      // Keep the key, not the text, so the message follows a language switch
+      setError("common.error");
     } finally {
       setIsSearching(false);
     }
@@ -91,7 +94,7 @@ export default function Search({ setGames, setSearchTrue }) {
           id="search-input"
           className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
           type="text"
-          placeholder="Search games..."
+          placeholder={t("search.placeholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -105,7 +108,7 @@ export default function Search({ setGames, setSearchTrue }) {
           animate={{ opacity: 1, y: 0 }}
           className="mt-2 text-red-400 text-sm"
         >
-          {error}
+          {t(error)}
         </motion.p>
       )}
     </div>

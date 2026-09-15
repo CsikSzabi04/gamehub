@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BsWindows, BsCpu, BsMemory, BsGpuCard, BsDeviceHdd, BsVolumeUp, BsWifi, BsDisplay, BsBadgeVr, BsMotherboard, BsInfoCircle } from 'react-icons/bs';
+import { useT } from '../i18n/index.jsx';
 
 // Order matters: longer labels first so "Sound Card" wins over "Sound".
 const LABELS = [
@@ -22,17 +23,18 @@ const LABELS = [
     ['OS', 'os'],
 ];
 
+// Display labels are i18n keys, translated at render time
 const SPEC_META = {
-    os: { label: 'OS', icon: BsWindows },
-    cpu: { label: 'Processor', icon: BsCpu },
-    memory: { label: 'Memory', icon: BsMemory },
-    graphics: { label: 'Graphics', icon: BsGpuCard },
-    directx: { label: 'DirectX', icon: BsMotherboard },
-    storage: { label: 'Storage', icon: BsDeviceHdd },
-    sound: { label: 'Sound', icon: BsVolumeUp },
-    network: { label: 'Network', icon: BsWifi },
-    display: { label: 'Display', icon: BsDisplay },
-    vr: { label: 'VR', icon: BsBadgeVr },
+    os: { label: 'game.requirements.specs.os', icon: BsWindows },
+    cpu: { label: 'game.requirements.specs.cpu', icon: BsCpu },
+    memory: { label: 'game.requirements.specs.memory', icon: BsMemory },
+    graphics: { label: 'game.requirements.specs.graphics', icon: BsGpuCard },
+    directx: { label: 'game.requirements.specs.directx', icon: BsMotherboard },
+    storage: { label: 'game.requirements.specs.storage', icon: BsDeviceHdd },
+    sound: { label: 'game.requirements.specs.sound', icon: BsVolumeUp },
+    network: { label: 'game.requirements.specs.network', icon: BsWifi },
+    display: { label: 'game.requirements.specs.display', icon: BsDisplay },
+    vr: { label: 'game.requirements.specs.vr', icon: BsBadgeVr },
 };
 
 const LABEL_REGEX = new RegExp(
@@ -91,6 +93,7 @@ export function parseRequirements(raw) {
 // Two columns when there is room: full width (single card) from sm, or stacked cards
 // between md and lg (they sit side by side from lg, where one column fits better).
 function SpecList({ specs, layout }) {
+    const { t } = useT();
     const columns = layout === 'wide'
         ? 'sm:grid-cols-2 sm:gap-x-8'
         : 'md:grid-cols-2 md:gap-x-8 lg:grid-cols-1';
@@ -104,7 +107,7 @@ function SpecList({ specs, layout }) {
                     <div key={key} className="flex gap-3 py-3 border-t border-white/[0.06]">
                         <Icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#6b7080]" aria-hidden="true" />
                         <div className="min-w-0">
-                            <dt className="gh-eyebrow mb-0.5">{label}</dt>
+                            <dt className="gh-eyebrow mb-0.5">{t(label)}</dt>
                             <dd className="text-sm leading-relaxed text-[#d4d7de] break-words">{value}</dd>
                         </div>
                     </div>
@@ -117,6 +120,7 @@ function SpecList({ specs, layout }) {
 
 function Notes({ notes }) {
     const [open, setOpen] = useState(false);
+    const { t } = useT();
     const text = notes.join(' ');
     if (!text) return null;
 
@@ -133,7 +137,7 @@ function Notes({ notes }) {
                         onClick={() => setOpen(o => !o)}
                         className="mt-1.5 font-medium text-[#c4b5fd] hover:text-white transition-colors"
                     >
-                        {open ? 'Show less' : 'Show full notes'}
+                        {open ? t('common.showLess') : t('game.requirements.showFullNotes')}
                     </button>
                 )}
             </div>
@@ -158,18 +162,19 @@ function RequirementColumn({ title, raw, accent, layout }) {
 }
 
 export default function SystemRequirements({ minimum, recommended, platform = 'PC', className = '' }) {
+    const { t } = useT();
     if (!minimum && !recommended) return null;
     const both = Boolean(minimum && recommended);
 
     return (
         <div className={className}>
             <div className="flex items-baseline justify-between gap-4 mb-4">
-                <h3 className="gh-section-title">System Requirements</h3>
+                <h3 className="gh-section-title">{t('game.requirements.title')}</h3>
                 <span className="gh-chip">{platform}</span>
             </div>
             <div className={`grid gap-4 ${both ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
-                {minimum && <RequirementColumn title="Minimum" raw={minimum} accent="bg-[#6b7080]" layout={both ? 'stacked' : 'wide'} />}
-                {recommended && <RequirementColumn title="Recommended" raw={recommended} accent="bg-[#8b5cf6]" layout={both ? 'stacked' : 'wide'} />}
+                {minimum && <RequirementColumn title={t('game.requirements.minimum')} raw={minimum} accent="bg-[#6b7080]" layout={both ? 'stacked' : 'wide'} />}
+                {recommended && <RequirementColumn title={t('game.requirements.recommended')} raw={recommended} accent="bg-[#8b5cf6]" layout={both ? 'stacked' : 'wide'} />}
             </div>
         </div>
     );

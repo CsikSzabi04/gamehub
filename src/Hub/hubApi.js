@@ -18,19 +18,35 @@ export function useHubProviders() {
     return data;
 }
 
-const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+const compactFormats = {};
 
-export function formatCount(n) {
-    return n || n === 0 ? compact.format(n) : '–';
+/** Compact count ("1.2K"). Pass the UI locale (useT().locale); defaults to en-US. */
+export function formatCount(n, locale = 'en-US') {
+    if (!(n || n === 0)) return '–';
+    if (!compactFormats[locale]) compactFormats[locale] = new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: 1 });
+    return compactFormats[locale].format(n);
 }
 
-export function timeAgo(value) {
+const relativeFormats = {};
+
+/**
+ * Relative time ("3h ago"). Pass the UI locale (useT().locale); English keeps the short
+ * "3h ago" style, other languages use Intl.RelativeTimeFormat.
+ */
+export function timeAgo(value, locale = 'en-US') {
     if (!value) return '';
     const seconds = Math.max(0, (Date.now() - new Date(value).getTime()) / 1000);
-    if (seconds < 60) return 'just now';
-    const units = [[86400, 'd'], [3600, 'h'], [60, 'm']];
-    for (const [size, label] of units) {
-        if (seconds >= size) return `${Math.floor(seconds / size)}${label} ago`;
+    const english = String(locale).toLowerCase().startsWith('en');
+    if (!english && !relativeFormats[locale]) {
+        relativeFormats[locale] = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: String(locale).startsWith('hu') ? 'narrow' : 'short' });
+    }
+    if (seconds < 60) return english ? 'just now' : relativeFormats[locale].format(0, 'second');
+    const units = [[86400, 'd', 'day'], [3600, 'h', 'hour'], [60, 'm', 'minute']];
+    for (const [size, label, unit] of units) {
+        if (seconds >= size) {
+            const amount = Math.floor(seconds / size);
+            return english ? `${amount}${label} ago` : relativeFormats[locale].format(-amount, unit);
+        }
     }
     return '';
 }

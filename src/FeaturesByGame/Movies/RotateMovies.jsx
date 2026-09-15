@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import '../../body.css';
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
+import { useT } from "../../i18n/index.jsx";
 
 export default function RotateMovies({ movies, showMovieDetails, name }) {
+    const { t } = useT();
     const [currentIndex, setCurrentIndex] = useState(0);
     const carouselRef = useRef(null);
     const itemWidth = 400;
@@ -58,8 +60,8 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
     return (
         <div className="relative">
             <section id="movies" className="mb-8 s">
-                <h2 className="text-2xl font-semibold mb-4">Some {name}</h2>
-                <span className="text-sm text-gray-700">(If you want to catch a break)</span>
+                <h2 className="text-2xl font-semibold mb-4">{t('movies.some', { name: name ?? '' })}</h2>
+                <span className="text-sm text-gray-700">{t('movies.breakHint')}</span>
                 <div className="carousel-container overflow-hidden relative">
                     <div className="carousel flex space-x-4" ref={carouselRef} style={{ width: `${movies.length * 2 * itemWidth}px` }}>
                         {movies.concat(movies).map((movie, index) => (
@@ -67,8 +69,8 @@ export default function RotateMovies({ movies, showMovieDetails, name }) {
                                 <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="movie-image " loading="lazy" />
                                 <div className="movie-details mt-10">
                                     <h3 className="text-lg font-bold mb-2">{movie.title}</h3>
-                                    <p className="text-sm text-gray-400">Release: {movie.release_date}</p>
-                                    <p className="text-sm text-gray-400">Rating: {movie.vote_average}/10</p>
+                                    <p className="text-sm text-gray-400">{t('movies.release', { date: movie.release_date ?? '' })}</p>
+                                    <p className="text-sm text-gray-400">{t('movies.rating', { rating: movie.vote_average ?? '' })}</p>
                                 </div>
                             </div>
                         ))}

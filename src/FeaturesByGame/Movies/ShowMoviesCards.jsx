@@ -4,8 +4,10 @@ import { MdDeleteForever } from "react-icons/md";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { FaCheck } from 'react-icons/fa6';
 import { UserContext } from '../../Features/UserContext';
+import { useT } from '../../i18n/index.jsx';
 
 export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisible }) {
+    const { t } = useT();
     const { user } = useContext(UserContext);
     const [error, setError] = useState('');
     const [fav, setFav] = useState(false);
@@ -47,7 +49,7 @@ export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisibl
                                 {selectedMovie.release_date}
                             </span>
                             <span className="bg-blue-900 text-white px-3 py-1 rounded-full text-sm">
-                                {selectedMovie.media_type == 'movie' ? 'Movie' : 'TV Show'}
+                                {selectedMovie.media_type == 'movie' ? t('movies.movie') : t('movies.tvShow')}
                             </span>
                         </div>
 
@@ -55,11 +57,11 @@ export default function ShowMoviesCards({ selectedMovie, closeModal, modalVisibl
 
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             <div className="bg-gray-800 p-3 rounded-lg">
-                                <span className="text-gray-400 text-sm">Popularity: </span>
+                                <span className="text-gray-400 text-sm">{t('movies.popularity')}</span>
                                 <span className="text-gray-300 ml-2  font-medium">{Number(selectedMovie.popularity ?? 0).toFixed(2)}</span>
                             </div>
                             <div className="bg-gray-800 p-3 rounded-lg">
-                                <span className="text-gray-400 text-sm">Vote Count: </span>
+                                <span className="text-gray-400 text-sm">{t('movies.voteCount')}</span>
                                 <span className="text-gray-300 ml-2 font-medium">{selectedMovie.vote_count}</span>
                             </div>
                         </div>

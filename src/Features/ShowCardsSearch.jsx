@@ -2,8 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../Features/UserContext.jsx';
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdDeleteForever } from "react-icons/md";
+import { useT } from '../i18n/index.jsx';
 
 export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible }) {
+  const { t } = useT();
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
   const [fav, setFav] = useState(false);
@@ -55,7 +57,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
 
   async function addFav() {
     if (!user) {
-      setError("You must log in to add favorites.");
+      setError("cards.loginRequired");
       return;
     }
 
@@ -77,10 +79,10 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
         setFavok([...favok, favData]);
         setError('');
       } else {
-        setError("Failed to add to favorites.");
+        setError("cards.addFailed");
       }
     } catch (err) {
-      setError("An error occurred while adding favorite.");
+      setError("cards.addError");
       console.error(err);
     }
   }
@@ -98,10 +100,10 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
         setFav(false);
         setError('');
       } else {
-        setError("Failed to delete from favorites.");
+        setError("cards.deleteFailed");
       }
     } catch (err) {
-      setError("An error occurred while deleting favorite.");
+      setError("cards.deleteError");
       console.error(err);
     }
   }
@@ -152,7 +154,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors justify-center"
               >
                 <MdDeleteForever className="text-lg" />
-                Remove from Favorites
+                {t('cards.removeFavoriteTitle')}
               </button>
             ) : (
               <button 
@@ -160,14 +162,14 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
                 className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors  justify-center"
               >
                 <IoAddCircleOutline className="text-lg" />
-                Add to Favorites
+                {t('cards.addFavoriteTitle')}
               </button>
             )}
           </div>
 
           {error && (
             <div className="p-3 bg-red-900/50 text-red-200 rounded-lg text-sm">
-              {error}
+              {t(error)}
             </div>
           )}
 
@@ -178,7 +180,7 @@ export default function ShowCardsSearch({ selectedGame, closeModal, modalVisible
             onClick={(e) => e.stopPropagation()}
             className="w-full inline-flex items-center justify-center bg-blue-900 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
           >
-            View Details
+            {t('cards.viewDetails')}
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>

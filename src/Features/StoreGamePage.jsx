@@ -14,6 +14,8 @@ import { peekCached, useApi } from '../Components/apiCache.js';
 import { optimizedSrc } from '../Components/imageMirror.js';
 import { formatDate, DetailRow, DetailList, GameHero, PageState, Spinner } from './AllReview.jsx';
 import useGameCommunity from './useGameCommunity.js';
+import { useT } from '../i18n/index.jsx';
+import { GameActions, GameBadges, GameAside, GameMain } from '../gamepage/GameExtras.jsx';
 
 const RAWG_KEY = '984255fceb114b05b5e746dc24a8520a';
 const SOURCES = ['steam', 'gog'];
@@ -117,6 +119,7 @@ function Chips({ items }) {
 
 export default function StoreGamePage() {
     const { source, id } = useParams();
+    const { t, locale } = useT();
     const location = useLocation();
     const valid = SOURCES.includes(source) && /^\d{1,12}$/.test(id || '');
     const isSteam = source === 'steam';
@@ -153,11 +156,11 @@ export default function StoreGamePage() {
     const [shot, setShot] = useState(null);
 
     if (!valid) {
-        return <PageState><p className="text-[#a1a6b3]">Game not found</p></PageState>;
+        return <PageState><p className="text-[#a1a6b3]">{t('game.notFound')}</p></PageState>;
     }
 
     if (!name) {
-        return <PageState>{storeError ? <p className="text-[#a1a6b3]">Game details are not available right now.</p> : <Spinner />}</PageState>;
+        return <PageState>{storeError ? <p className="text-[#a1a6b3]">{t('storePage.unavailable')}</p> : <Spinner />}</PageState>;
     }
 
     const storeUrl = item?.url || store?.url || (isSteam ? `https://store.steampowered.com/app/${id}` : undefined);
@@ -176,7 +179,7 @@ export default function StoreGamePage() {
     const metacritic = steam?.metacritic ?? rawg?.metacritic ?? null;
     const screenshots = firstList(store?.screenshots, steamLookup?.screenshots);
     const features = firstList(store?.categories, store?.features);
-    const tags = firstList(gogGame?.tags, rawg?.tags?.map(t => t.name)).slice(0, 12);
+    const tags = firstList(gogGame?.tags, rawg?.tags?.map(tag => tag.name)).slice(0, 12);
     const ageRating = gogGame?.ageRating || rawg?.esrb_rating?.name || (steamApp?.requiredAge ? `${steamApp.requiredAge}+` : null);
 
     const platforms = steamApp?.platforms
@@ -184,10 +187,19 @@ export default function StoreGamePage() {
         : firstList(gogGame?.platforms, rawg?.platforms?.map(p => p.platform.name));
 
     const price = isSteam && steamApp
-        ? { price: steamApp.isFree ? 'Free' : steamApp.price?.final || item?.price, originalPrice: steamApp.price?.initial, discount: steamApp.price?.discount }
+        ? { price: steamApp.isFree ? t('common.free') : steamApp.price?.final || item?.price, originalPrice: steamApp.price?.initial, discount: steamApp.price?.discount }
         : { price: item?.price, originalPrice: item?.originalPrice, discount: item?.discount };
 
     // Store art first (a full-size screenshot looks sharp as the banner), RAWG only as a fallback
+    const extrasGame = {
+        source, id, gameKey: storeGameKey(source, id), name,
+        image: steam?.image || gogGame?.image || item?.image || rawg?.background_image || null,
+        steamAppId: isSteam ? Number(id) : steamLookup?.id ?? null,
+        releaseDate: store?.releaseDate || rawg?.released || null,
+        comingSoon: Boolean(steamApp?.comingSoon || gogGame?.comingSoon),
+        requirements, steam: steam || null,
+    };
+
     const heroImage = steamApp?.screenshots?.[0]?.full || gogGame?.image || rawg?.background_image || steam?.image || item?.image;
 
     return (
@@ -209,7 +221,7 @@ export default function StoreGamePage() {
                                 <span className="font-semibold text-white">{rawg.rating}</span> / 5
                             </span>
                         ) : null}
-                        {releaseDate && <span>Released {formatDate(releaseDate)}</span>}
+                        {releaseDate && <span>{t('game.released', { date: formatDate(releaseDate, locale) })}</span>}
                         {metacritic ? (
                             <span className="inline-flex items-center gap-2">
                                 <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded px-1.5 text-xs font-bold ${metacritic >= 75 ? 'bg-emerald-500/15 text-emerald-400' : metacritic >= 50 ? 'bg-amber-500/15 text-amber-400' : 'bg-red-500/15 text-red-400'}`}>
@@ -218,27 +230,29 @@ export default function StoreGamePage() {
                                 Metacritic
                             </span>
                         ) : null}
-                        {rawg?.playtime ? <span>{rawg.playtime}h avg playtime</span> : null}
+                        {rawg?.playtime ? <span>{t('game.avgPlaytime', { hours: rawg.playtime })}</span> : null}
                     </div>
 
                     <div className="mt-5 flex flex-col sm:flex-row flex-wrap gap-3">
                         {community.isFavorite ? (
                             <button onClick={community.removeFavorite} className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto">
                                 <BsHeartFill className="text-[#f87171]" />
-                                In your favorites
+                                {t('game.inFavorites')}
                             </button>
                         ) : (
                             <button onClick={community.addFavorite} className="gh-btn gh-btn-primary !h-11 w-full sm:w-auto">
                                 <BsHeart />
-                                Add to favorites
+                                {t('game.addFavorite')}
                             </button>
                         )}
+                        <GameActions game={extrasGame} />
                         {storeUrl && (
                             <a href={storeUrl} target="_blank" rel="noopener noreferrer" className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto">
-                                View on {SOURCE_LABELS[source]} <BsBoxArrowUpRight className="w-3 h-3" />
+                                {t('storePage.viewOn', { store: SOURCE_LABELS[source] })} <BsBoxArrowUpRight className="w-3 h-3" />
                             </a>
                         )}
                     </div>
+                    <GameBadges game={extrasGame} />
                     {community.favError && <p className="text-sm text-red-400 mt-3">{community.favError}</p>}
                 </GameHero>
 
@@ -247,29 +261,29 @@ export default function StoreGamePage() {
                     <div className="contents lg:flex lg:flex-col lg:gap-10 lg:col-span-2 min-w-0">
                         {steam && (steam.players != null || steam.reviews || steam.achievements) && (
                             <div className="order-1 min-w-0 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                {steam.players != null && <Stat icon={BsPeopleFill} label="Playing now" value={formatCount(steam.players)} />}
-                                {steam.reviews && <Stat icon={BsHandThumbsUp} label="Steam reviews" value={`${formatCount(steam.reviews.total)} · ${steam.reviews.percent}% positive`} />}
-                                {steam.achievements ? <Stat icon={BsTrophy} label="Achievements" value={steam.achievements} /> : null}
+                                {steam.players != null && <Stat icon={BsPeopleFill} label={t('storePage.playingNow')} value={formatCount(steam.players, locale)} />}
+                                {steam.reviews && <Stat icon={BsHandThumbsUp} label={t('storePage.steamReviews')} value={t('storePage.positive', { total: formatCount(steam.reviews.total, locale), percent: steam.reviews.percent })} />}
+                                {steam.achievements ? <Stat icon={BsTrophy} label={t('storePage.achievements')} value={steam.achievements} /> : null}
                             </div>
                         )}
 
                         {about && (
                             <section className="order-1 min-w-0">
-                                <h3 className="gh-section-title mb-3">About</h3>
+                                <h3 className="gh-section-title mb-3">{t('game.about')}</h3>
                                 <p className="text-sm sm:text-[15px] leading-7 text-[#c9ccd4] whitespace-pre-line line-clamp-[12]">{about}</p>
                             </section>
                         )}
 
                         {screenshots.length > 0 && (
                             <section className="order-1 min-w-0">
-                                <h3 className="gh-section-title mb-3">Screenshots</h3>
+                                <h3 className="gh-section-title mb-3">{t('storePage.screenshots')}</h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                     {screenshots.map((s, i) => (
                                         <button
                                             key={s.thumb}
                                             type="button"
                                             onClick={() => setShot(s.full)}
-                                            aria-label={`Open screenshot ${i + 1}`}
+                                            aria-label={t('storePage.openScreenshot', { n: i + 1 })}
                                             className="overflow-hidden rounded-lg border border-white/[0.06] hover:border-white/20 transition-colors"
                                         >
                                             <HubImage src={s.thumb} alt="" className="w-full aspect-video" />
@@ -285,15 +299,19 @@ export default function StoreGamePage() {
                             </div>
                         )}
 
+                        <div className="order-1 min-w-0 flex flex-col gap-10 empty:hidden">
+                            <GameMain game={extrasGame} />
+                        </div>
+
                         {steam?.news?.length > 0 && (
                             <section className="order-3 min-w-0">
-                                <h3 className="gh-section-title mb-3">Latest news</h3>
+                                <h3 className="gh-section-title mb-3">{t('storePage.latestNews')}</h3>
                                 <ul className="gh-surface divide-y divide-white/[0.06]">
                                     {steam.news.map(n => (
                                         <li key={n.id}>
                                             <a href={n.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors">
                                                 <span className="text-sm text-[#d4d7de] truncate">{n.title}</span>
-                                                <span className="text-xs text-[#6b7080] shrink-0">{formatDate(n.date)}</span>
+                                                <span className="text-xs text-[#6b7080] shrink-0">{formatDate(n.date, locale)}</span>
                                             </a>
                                         </li>
                                     ))}
@@ -310,33 +328,35 @@ export default function StoreGamePage() {
                                 rating={community.rating}
                                 setRating={community.setRating}
                                 onSubmit={community.submitReview}
+                                community={community}
                                 error={community.reviewError}
                             />
                         </div>
                     </div>
 
-                    <aside className="order-2 lg:order-none min-w-0 lg:sticky lg:top-24">
+                    <aside className="order-2 lg:order-none min-w-0 lg:sticky lg:top-24 flex flex-col gap-4">
+                        <GameAside game={extrasGame} />
                         <div className="gh-surface p-4 sm:p-5">
-                            <h3 className="text-sm font-semibold text-white mb-2">Game details</h3>
+                            <h3 className="text-sm font-semibold text-white mb-2">{t('game.details')}</h3>
                             <DetailList>
-                                {price.price && <DetailRow label={`Price on ${SOURCE_LABELS[source]}`}><Price {...price} /></DetailRow>}
-                                <DetailRow label="Release date">{formatDate(releaseDate)}</DetailRow>
-                                {developers.length > 0 && <DetailRow label="Developer">{developers.join(', ')}</DetailRow>}
-                                {publishers.length > 0 && <DetailRow label="Publisher">{publishers.join(', ')}</DetailRow>}
-                                {ageRating && <DetailRow label="Age rating">{ageRating}</DetailRow>}
-                                {platforms.length > 0 && <DetailRow label="Platforms" wide>{platforms.join(', ')}</DetailRow>}
+                                {price.price && <DetailRow label={t('storePage.priceOn', { store: SOURCE_LABELS[source] })}><Price {...price} /></DetailRow>}
+                                <DetailRow label={t('game.releaseDate')}>{formatDate(releaseDate, locale)}</DetailRow>
+                                {developers.length > 0 && <DetailRow label={t('game.developer')}>{developers.join(', ')}</DetailRow>}
+                                {publishers.length > 0 && <DetailRow label={t('game.publisher')}>{publishers.join(', ')}</DetailRow>}
+                                {ageRating && <DetailRow label={t('game.ageRating')}>{ageRating}</DetailRow>}
+                                {platforms.length > 0 && <DetailRow label={t('game.platforms')} wide>{platforms.join(', ')}</DetailRow>}
                                 {steam?.website && (
-                                    <DetailRow label="Website" wide>
+                                    <DetailRow label={t('storePage.website')} wide>
                                         <a href={steam.website} target="_blank" rel="noopener noreferrer" className="text-[#c4b5fd] hover:text-white break-all">
                                             {steam.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                                         </a>
                                     </DetailRow>
                                 )}
                                 {rawg?.stores?.length > 0 && (
-                                    <DetailRow label="Also available on" wide>{rawg.stores.map(s => s.store.name).join(', ')}</DetailRow>
+                                    <DetailRow label={t('storePage.alsoOn')} wide>{rawg.stores.map(s => s.store.name).join(', ')}</DetailRow>
                                 )}
-                                {features.length > 0 && <DetailRow label="Features" wide><Chips items={features.slice(0, 8)} /></DetailRow>}
-                                {tags.length > 0 && <DetailRow label="Tags" wide><Chips items={tags} /></DetailRow>}
+                                {features.length > 0 && <DetailRow label={t('storePage.features')} wide><Chips items={features.slice(0, 8)} /></DetailRow>}
+                                {tags.length > 0 && <DetailRow label={t('game.tags')} wide><Chips items={tags} /></DetailRow>}
                             </DetailList>
                         </div>
                     </aside>
@@ -345,11 +365,11 @@ export default function StoreGamePage() {
             <Footer />
 
             {shot && (
-                <div className="fixed inset-0 z-[210] bg-black/90 flex items-center justify-center p-4" onClick={() => setShot(null)} role="dialog" aria-label="Screenshot">
+                <div className="fixed inset-0 z-[210] bg-black/90 flex items-center justify-center p-4" onClick={() => setShot(null)} role="dialog" aria-label={t('storePage.screenshot')}>
                     <img
                         src={optimizedSrc(shot, 1920)}
                         onError={e => { if (e.currentTarget.src !== shot) e.currentTarget.src = shot; }}
-                        alt="Screenshot"
+                        alt={t('storePage.screenshot')}
                         decoding="async"
                         className="max-w-full max-h-full rounded-lg"
                     />

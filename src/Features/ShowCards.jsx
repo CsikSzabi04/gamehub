@@ -4,10 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdDeleteForever, MdClose, MdStar, MdCalendarToday, MdGamepad, MdStore, MdRateReview } from "react-icons/md";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useT } from '../i18n/index.jsx';
 
 const SteamInsights = lazy(() => import('../Hub/SteamInsights.jsx'));
 
 export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
+  const { t } = useT();
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
   const [fav, setFav] = useState(false);
@@ -48,7 +50,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
 
   async function addFav() {
     if (!user) {
-      setError("You must log in to add favorites.");
+      setError("cards.loginRequired");
       return;
     }
 
@@ -63,7 +65,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       setFavok([...favok, favData]);
       setFav(true);
     } else {
-      setError("Failed to add to favorites.");
+      setError("cards.addFailed");
     }
   }
 
@@ -79,7 +81,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
       setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));
       setFav(false);
     } else {
-      setError("Failed to delete from favorites.");
+      setError("cards.deleteFailed");
     }
   }
 
@@ -112,7 +114,7 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
             <button
               className="gh-icon-btn absolute top-3 right-3 z-10 !bg-black/60"
               onClick={closeModal}
-              aria-label="Close"
+              aria-label={t("common.close")}
             >
               <MdClose className="w-5 h-5" />
             </button>
@@ -139,18 +141,18 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
                 ) : null}
                 <span className="inline-flex items-center gap-1.5">
                   <MdCalendarToday className="text-[#6b7080]" />
-                  {selectedGame.released || 'TBA'}
+                  {selectedGame.released || t('cards.tba')}
                 </span>
               </div>
 
               <dl className="mt-6 divide-y divide-white/[0.06] border-y border-white/[0.06]">
                 <div className="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-1 sm:gap-4 py-3">
-                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdGamepad /> Platforms</dt>
+                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdGamepad /> {t('cards.platforms')}</dt>
                   <dd className="text-sm text-[#d4d7de]">{platforms || '—'}</dd>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-1 sm:gap-4 py-3">
-                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdStore /> Stores</dt>
-                  <dd className="text-sm text-[#d4d7de]">{stores.length ? stores.join(', ') : 'No stores available'}</dd>
+                  <dt className="gh-eyebrow pt-0.5 flex items-center gap-1.5"><MdStore /> {t('cards.stores')}</dt>
+                  <dd className="text-sm text-[#d4d7de]">{stores.length ? stores.join(', ') : t('cards.noStores')}</dd>
                 </div>
               </dl>
 
@@ -167,24 +169,24 @@ export default function ShowCards({ selectedGame, closeModal, modalVisible }) {
               </Suspense>
 
               {error && (
-                <p className="mt-5 text-sm text-red-400">{error}</p>
+                <p className="mt-5 text-sm text-red-400">{t(error)}</p>
               )}
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 {fav ? (
                   <button onClick={delFav} className="gh-btn gh-btn-secondary flex-1 !h-11">
                     <MdDeleteForever className="w-5 h-5 text-[#f87171]" />
-                    Remove from favorites
+                    {t('cards.removeFavorite')}
                   </button>
                 ) : (
                   <button onClick={addFav} className="gh-btn gh-btn-primary flex-1 !h-11">
                     <IoAddCircleOutline className="w-5 h-5" />
-                    Add to favorites
+                    {t('cards.addFavorite')}
                   </button>
                 )}
                 <Link to={`/allreview/${selectedGame.id}`} className="gh-btn gh-btn-secondary flex-1 !h-11">
                   <MdRateReview className="w-5 h-5" />
-                  Game page & reviews
+                  {t('cards.gamePage')}
                 </Link>
               </div>
             </div>

@@ -266,12 +266,12 @@ describe('StoreGamePage', () => {
         await act(async () => { fireEvent.click(screen.getByRole('button', { name: /In your favorites/ })); });
         expect(fetch.mock.calls.some(([url, opts]) => url.endsWith('/delfav/steam-550') && opts.method === 'DELETE')).toBe(true);
 
-        fireEvent.change(screen.getByLabelText('Write a review'), { target: { value: 'Still great' } });
+        fireEvent.change(screen.getByLabelText('Write a review'), { target: { value: 'Still great after all these years' } });
         fireEvent.click(screen.getByRole('button', { name: '5 stars' }));
         await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Post review' })); });
 
         const reviewCall = fetch.mock.calls.find(([url]) => url.endsWith('/submit-review'));
-        expect(JSON.parse(reviewCall[1].body)).toMatchObject({ gameId: 'steam-550', gameName: 'Left 4 Dead 2', rating: 5, reviewText: 'Still great' });
+        expect(JSON.parse(reviewCall[1].body)).toMatchObject({ gameId: 'steam-550', gameName: 'Left 4 Dead 2', rating: 5, reviewText: 'Still great after all these years' });
     });
 
     test('guests get a login prompt when adding a favorite', async () => {

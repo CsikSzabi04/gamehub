@@ -3,8 +3,10 @@ import { UserContext } from '../Features/UserContext.jsx';
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdDeleteForever, MdClose, MdStore } from "react-icons/md";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useT } from '../i18n/index.jsx';
 
 export default function DiscountedShowCards({ selectedGame, closeModal, modalVisible }) {
+  const { t } = useT();
   const { user } = useContext(UserContext);
   const [error, setError] = useState('');
   const [fav, setFav] = useState(false);
@@ -41,7 +43,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
 
   async function addFav() {
     if (!user) {
-      setError("You must log in to add favorites.");
+      setError("cards.loginRequired");
       return;
     }
 
@@ -62,7 +64,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
       setFavok([...favok, favData]);
       setFav(true);
     } else {
-      setError("Failed to add to favorites.");
+      setError("cards.addFailed");
     }
   }
 
@@ -78,7 +80,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
       setFavok(favok.filter(favItem => favItem.gameId !== selectedGame.id));
       setFav(false);
     } else {
-      setError("Failed to delete from favorites.");
+      setError("cards.deleteFailed");
     }
   }
 
@@ -109,7 +111,7 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
             role="dialog"
             aria-modal="true"
           >
-            <button className="gh-icon-btn absolute top-3 right-3 z-10 !bg-black/60" onClick={closeModal} aria-label="Close">
+            <button className="gh-icon-btn absolute top-3 right-3 z-10 !bg-black/60" onClick={closeModal} aria-label={t("common.close")}>
               <MdClose className="w-5 h-5" />
             </button>
 
@@ -136,22 +138,22 @@ export default function DiscountedShowCards({ selectedGame, closeModal, modalVis
                 <span className="text-[#3a3f4b]">·</span>
                 <span className="inline-flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  {String(selectedGame.Status || "Active").toLowerCase().replace(/^./, c => c.toUpperCase())}
+                  {selectedGame.Status ? String(selectedGame.Status).toLowerCase().replace(/^./, c => c.toUpperCase()) : t("cards.active")}
                 </span>
               </div>
 
-              {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+              {error && <p className="mt-4 text-sm text-red-400">{t(error)}</p>}
 
               <div className="mt-6 pt-5 border-t border-white/[0.06]">
                 {fav ? (
                   <button onClick={delFav} className="gh-btn gh-btn-secondary w-full !h-11">
                     <MdDeleteForever className="w-5 h-5 text-[#f87171]" />
-                    Remove from favorites
+                    {t('cards.removeFavorite')}
                   </button>
                 ) : (
                   <button onClick={addFav} className="gh-btn gh-btn-primary w-full !h-11">
                     <IoAddCircleOutline className="w-5 h-5" />
-                    Add to favorites
+                    {t('cards.addFavorite')}
                   </button>
                 )}
               </div>

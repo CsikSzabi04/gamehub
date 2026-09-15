@@ -3,6 +3,7 @@ import SectionHeader from '../Components/SectionHeader.jsx';
 import StoreCard, { SOURCE_LABELS } from './StoreCard.jsx';
 import { useHub, useHubProviders } from './hubApi.js';
 import useStoreItem from './useStoreItem.jsx';
+import { useT } from '../i18n/index.jsx';
 
 const WIDTHS = {
     landscape: 'w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] xl:w-[19%]',
@@ -10,11 +11,12 @@ const WIDTHS = {
 };
 
 function TabContent({ tab, onItemClick, scrollerRef }) {
+    const { t } = useT();
     const { data, error } = useHub(tab.path, tab.select);
     const variant = tab.variant || 'landscape';
 
     if (error) {
-        return <p className="text-sm text-[#6b7080] py-8 text-center gh-surface">This list is not available right now.</p>;
+        return <p className="text-sm text-[#6b7080] py-8 text-center gh-surface">{t('hub.listUnavailable')}</p>;
     }
 
     const items = data?.slice(0, tab.limit || 30);
@@ -31,24 +33,25 @@ function TabContent({ tab, onItemClick, scrollerRef }) {
                 : items.map(item => (
                     <StoreCard key={`${item.source}-${item.id}`} item={item} variant={variant} onClick={onItemClick} className={`${WIDTHS[variant]} shrink-0 snap-start`} />
                 ))}
-            {items?.length === 0 && <p className="text-sm text-[#6b7080] py-8">Nothing here right now.</p>}
+            {items?.length === 0 && <p className="text-sm text-[#6b7080] py-8">{t('hub.nothingHere')}</p>}
         </div>
     );
 }
 
 /**
  * Horizontally scrolling row of hub items with optional source tabs.
- * tabs: [{ id, label, path, select (module-level fn), variant?, provider? }]
+ * tabs: [{ id, labelKey (i18n key) or label (brand name), path, select (module-level fn), variant?, provider? }]
  * Tabs with a `provider` only show when the backend has that API key.
  */
 export default function HubRow({ title, subtitle, tabs }) {
+    const { t } = useT();
     const providers = useHubProviders();
-    const visibleTabs = useMemo(() => tabs.filter(t => !t.provider || providers?.[t.provider]), [tabs, providers]);
+    const visibleTabs = useMemo(() => tabs.filter(tab => !tab.provider || providers?.[tab.provider]), [tabs, providers]);
     const [activeId, setActiveId] = useState(null);
     const [onItemClick, modal] = useStoreItem();
     const scrollerRef = useRef(null);
 
-    const active = visibleTabs.find(t => t.id === activeId) || visibleTabs[0];
+    const active = visibleTabs.find(tab => tab.id === activeId) || visibleTabs[0];
     if (!active) return null;
 
     const scroll = dir => scrollerRef.current?.scrollBy({ left: dir * scrollerRef.current.clientWidth * 0.9, behavior: 'smooth' });
@@ -57,21 +60,21 @@ export default function HubRow({ title, subtitle, tabs }) {
         <section className="w-full mb-12">
             <SectionHeader
                 title={title}
-                subtitle={subtitle || (active.source && `Live from ${SOURCE_LABELS[active.source] || active.source}`)}
+                subtitle={subtitle || (active.source && t('hub.liveFrom', { source: SOURCE_LABELS[active.source] || active.source }))}
                 onPrev={() => scroll(-1)}
                 onNext={() => scroll(1)}
             />
             {visibleTabs.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-1 mb-4 -mt-1" role="tablist">
-                    {visibleTabs.map(t => (
+                    {visibleTabs.map(tab => (
                         <button
-                            key={t.id}
+                            key={tab.id}
                             role="tab"
-                            aria-selected={t.id === active.id}
-                            onClick={() => setActiveId(t.id)}
-                            className={`shrink-0 h-8 px-3 rounded-lg text-[13px] font-medium border transition-colors ${t.id === active.id ? 'bg-[#eceef2] text-[#0a0b0f] border-transparent' : 'bg-[#111319] text-[#a1a6b3] border-white/[0.06] hover:text-white hover:border-white/[0.14]'}`}
+                            aria-selected={tab.id === active.id}
+                            onClick={() => setActiveId(tab.id)}
+                            className={`shrink-0 h-8 px-3 rounded-lg text-[13px] font-medium border transition-colors ${tab.id === active.id ? 'bg-[#eceef2] text-[#0a0b0f] border-transparent' : 'bg-[#111319] text-[#a1a6b3] border-white/[0.06] hover:text-white hover:border-white/[0.14]'}`}
                         >
-                            {t.label}
+                            {tab.labelKey ? t(tab.labelKey) : tab.label}
                         </button>
                     ))}
                 </div>
