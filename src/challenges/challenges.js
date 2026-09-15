@@ -91,7 +91,7 @@ export const POOL = [
     {
         id: 'collector', icon: BsHeartFill, color: '#e879f9', target: 10, xp: 60,
         measure: ctx => ctx.favorites,
-        cta: '/discover',
+        cta: '/hub',
     },
     {
         id: 'onFire', icon: BsFire, color: '#f97316', target: 7, xp: 100,

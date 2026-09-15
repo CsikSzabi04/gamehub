@@ -238,6 +238,18 @@
     background: var(--primary-dark);
   }
 
+  /* Steam's green "Play" */
+  .gh-btn-play {
+    background: linear-gradient(90deg, #75b022 0%, #588a1b 100%);
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  }
+
+  .gh-btn-play:hover:not(:disabled) {
+    background: linear-gradient(90deg, #8ed629 0%, #6aa81f 100%);
+    color: #fff;
+  }
+
   .gh-btn-light {
     background: #f4f4f6;
     color: #0a0b0f;

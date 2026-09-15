@@ -9,6 +9,8 @@ import ReviewsPanel from '../Components/ReviewsPanel.jsx';
 import { formatDate, DetailRow, DetailList, GameHero, PageState, Spinner } from './AllReview.jsx';
 import { cachedFetch, peekCached } from '../Components/apiCache.js';
 import { useT } from '../i18n/index.jsx';
+import { GameMain, GamePlay } from '../gamepage/GameExtras.jsx';
+import useRawgGameExtras from '../gamepage/useRawgGameExtras.js';
 
 const gameUrl = id => `https://api.rawg.io/api/games/${encodeURIComponent(id)}?key=984255fceb114b05b5e746dc24a8520a`;
 
@@ -80,7 +82,6 @@ export default function SearchReview() {
                 body: JSON.stringify({
                     gameId: game.id,
                     userId: user ? user.uid : "anonymous",
-                    email: user ? user.email : "anonymous@domain.com",
                     reviewText: newReview,
                     rating,
                     gameName: game.name,
@@ -101,11 +102,14 @@ export default function SearchReview() {
         }
     }
 
+    const { extrasGame, requirements } = useRawgGameExtras(game?.id && !game.detail ? game : null, game?.requirements);
+
     if (loading) {
         return <PageState><Spinner /></PageState>;
     }
 
-    if (!game) {
+    // RAWG answers unknown ids with { detail: 'Not found.' }
+    if (!game || game.detail || !game.name) {
         return <PageState><p className="text-[#a1a6b3]">{t(error || 'game.notFound')}</p></PageState>;
     }
 
@@ -128,6 +132,9 @@ export default function SearchReview() {
                         {game.metacritic ? <span>Metacritic {game.metacritic}</span> : null}
                         {game.playtime ? <span>{t('game.avgPlaytime', { hours: game.playtime })}</span> : null}
                     </div>
+                    <div className="mt-5 flex flex-wrap gap-3 empty:hidden">
+                        <GamePlay game={extrasGame} />
+                    </div>
                 </GameHero>
 
                 {/* Phones/tablets: about, requirements, details, reviews. Desktop: details in a sidebar */}
@@ -140,13 +147,19 @@ export default function SearchReview() {
                             </div>
                         )}
 
-                        {game.requirements && (
+                        {requirements && (
                             <div className="order-2 min-w-0">
                                 <SystemRequirements
-                                    minimum={game.requirements.minimum}
-                                    recommended={game.requirements.recommended}
+                                    minimum={requirements.minimum}
+                                    recommended={requirements.recommended}
                                     platform="PC"
                                 />
+                            </div>
+                        )}
+
+                        {extrasGame && (
+                            <div className="order-2 min-w-0 flex flex-col gap-10 empty:hidden">
+                                <GameMain game={extrasGame} />
                             </div>
                         )}
 

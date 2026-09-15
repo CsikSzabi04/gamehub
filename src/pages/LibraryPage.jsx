@@ -15,6 +15,7 @@ import {
     LIBRARY_STATUSES, NOTE_MAX, STATUS_COLORS, computeOverview, computeWrapped, itemHours, pickNextGame,
 } from '../library/libraryApi.js';
 import SteamImport from '../library/SteamImport.jsx';
+import PlayButton from '../library/PlayButton.jsx';
 import WrappedCard from '../library/WrappedCard.jsx';
 
 const PAGE = 48;
@@ -99,7 +100,10 @@ function LibraryCard({ item, onStatus, onRate, onEdit }) {
                         <BsPencil className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                 </div>
-                <StatusSelect value={item.status} onChange={status => onStatus(item, status)} />
+                <div className="flex gap-2">
+                    <StatusSelect value={item.status} onChange={status => onStatus(item, status)} className="flex-1 min-w-0" />
+                    <PlayButton item={item} className="!h-9 !min-h-0 !px-3 shrink-0" />
+                </div>
                 <div className="flex items-center justify-between gap-2">
                     <Stars value={item.rating} onChange={rating => onRate(item, rating)} />
                     <span className="text-xs text-[#a1a6b3] tabular-nums whitespace-nowrap">
@@ -226,6 +230,7 @@ function NextPick({ items, onStatus }) {
                 </span>
             </Link>
             <div className="flex gap-2 shrink-0">
+                <PlayButton item={pick} className="flex-1 sm:flex-none" />
                 <button type="button" onClick={() => onStatus(pick, 'playing')} className="gh-btn gh-btn-primary flex-1 sm:flex-none">
                     <BsController aria-hidden="true" />
                     {t('library.next.start')}

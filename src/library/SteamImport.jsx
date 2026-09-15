@@ -6,6 +6,7 @@ import { UserContext } from '../Features/UserContext.jsx';
 import { useT } from '../i18n/index.jsx';
 import { Field, Modal, Spinner, inputClass } from '../community/ui.jsx';
 import { LIBRARY_STATUSES, fetchSteamOwned, saveSteamId, steamImportItem } from './libraryApi.js';
+import { startSync } from '../achievements/achievementsApi.js';
 
 const PAGE = 100;
 const PLAYING_THRESHOLD = 2; // hours
@@ -73,7 +74,11 @@ export default function SteamImport({ open, onClose, byKey, importItems }) {
             if (user?.uid && data.steamId && data.steamId !== profile?.steamId) {
                 saveSteamId(user.uid, data.steamId)
                     .then(() => setProfile?.(current => (current ? { ...current, steamId: data.steamId } : current)))
+                    // Achievements for the same account sync in the background (a recent sync answers 429, that's fine)
+                    .then(() => startSync(user, 'steam').catch(() => {}))
                     .catch(err => console.error('Could not save Steam ID:', err));
+            } else if (user?.uid && data.steamId) {
+                startSync(user, 'steam').catch(() => {});
             }
         } catch (err) {
             setError(errorCode(err));

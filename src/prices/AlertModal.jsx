@@ -4,7 +4,7 @@ import { BsBellFill, BsCheckCircleFill } from 'react-icons/bs';
 import { Modal, Field, inputClass } from '../community/ui.jsx';
 import EnablePushPrompt from '../notifications/EnablePushPrompt.jsx';
 import { useT } from '../i18n/index.jsx';
-import { buildAlertDoc, formatMoney, removeAlert, roundPrice, saveAlert } from './priceUtils.js';
+import { SALE_DISCOUNTS, buildAlertDoc, formatMoney, removeAlert, roundPrice, saveAlert } from './priceUtils.js';
 
 /**
  * Create / edit / remove the price alert of one game.
@@ -39,13 +39,16 @@ function AlertForm({ onClose, user, game, cc, currency, currentPrice, historical
         if (sameCurrency && alert?.targetPrice) return String(alert.targetPrice);
         return hasCurrent ? String(roundPrice(currentPrice * 0.75)) : '';
     });
+    const [mode, setMode] = useState(alert?.mode === 'sale' ? 'sale' : 'target');
+    const [minDiscount, setMinDiscount] = useState(alert?.mode === 'sale' ? alert.minDiscount || 1 : 1);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [saved, setSaved] = useState(false);
 
     const money = amount => formatMoney(amount, currency, locale);
+    const saleMode = mode === 'sale';
     const value = Number(String(target).replace(',', '.'));
-    const valid = Number.isFinite(value) && value > 0 && value < 1e7;
+    const valid = saleMode || (Number.isFinite(value) && value > 0 && value < 1e7);
 
     const chips = hasCurrent
         ? [25, 50, 75].map(cut => ({ id: `-${cut}`, label: `-${cut}%`, price: roundPrice(currentPrice * (1 - cut / 100)) }))
@@ -63,7 +66,7 @@ function AlertForm({ onClose, user, game, cc, currency, currentPrice, historical
         setBusy(true);
         setError('');
         try {
-            const data = buildAlertDoc({ game, cc, currency, targetPrice: value, lastPrice: hasCurrent ? currentPrice : alert?.lastPrice });
+            const data = buildAlertDoc({ game, cc, currency, targetPrice: value, lastPrice: hasCurrent ? currentPrice : alert?.lastPrice, mode, minDiscount });
             await saveAlert(user, data, !alert);
             setSaved(true);
         } catch (err) {
@@ -93,7 +96,11 @@ function AlertForm({ onClose, user, game, cc, currency, currentPrice, historical
                     <BsCheckCircleFill className="text-emerald-400 w-6 h-6 shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                         <p className="font-semibold text-white">{t('prices.savedTitle')}</p>
-                        <p className="text-sm text-[#a1a6b3] mt-1">{t('prices.savedText', { price: money(roundPrice(value)) })}</p>
+                        <p className="text-sm text-[#a1a6b3] mt-1">
+                            {saleMode
+                                ? t('prices.savedSaleText', { condition: minDiscount > 1 ? t('prices.saleAtLeast', { percent: minDiscount }) : t('prices.anySale') })
+                                : t('prices.savedText', { price: money(roundPrice(value)) })}
+                        </p>
                     </div>
                 </div>
                 <EnablePushPrompt compact />
@@ -104,6 +111,40 @@ function AlertForm({ onClose, user, game, cc, currency, currentPrice, historical
 
     return (
         <form onSubmit={submit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-white/[0.04] p-1" role="radiogroup" aria-label={t('prices.modeLabel')}>
+                {['target', 'sale'].map(key => (
+                    <button
+                        key={key}
+                        type="button"
+                        role="radio"
+                        aria-checked={mode === key}
+                        onClick={() => { setMode(key); setError(''); }}
+                        className={`h-9 rounded-lg text-xs font-semibold transition-colors ${mode === key ? 'bg-white text-[#0a0b0f]' : 'text-[#c9ccd4] hover:bg-white/[0.06]'}`}
+                    >
+                        {t(key === 'sale' ? 'prices.modeSale' : 'prices.modeTarget')}
+                    </button>
+                ))}
+            </div>
+
+            {saleMode ? (
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a8f9c] mb-1.5">{t('prices.minDiscountLabel')}</p>
+                    <div className="flex flex-wrap gap-2">
+                        {SALE_DISCOUNTS.map(percent => (
+                            <button
+                                key={percent}
+                                type="button"
+                                onClick={() => setMinDiscount(percent)}
+                                className={`h-9 px-3 rounded-lg text-xs font-semibold border transition-colors ${minDiscount === percent ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/50 text-[#c4b5fd]' : 'bg-white/[0.04] border-white/[0.08] text-[#c9ccd4] hover:bg-white/[0.08]'}`}
+                            >
+                                {percent > 1 ? t('prices.saleAtLeast', { percent }) : t('prices.anySale')}
+                            </button>
+                        ))}
+                    </div>
+                    {hasCurrent && <p className="text-xs text-[#6b7080] mt-2">{t('prices.currentHint', { price: money(currentPrice) })}</p>}
+                </div>
+            ) : (
+            <>
             <Field label={t('prices.target')} hint={hasCurrent ? t('prices.currentHint', { price: money(currentPrice) }) : undefined}>
                 <div className="relative">
                     <input
@@ -138,6 +179,8 @@ function AlertForm({ onClose, user, game, cc, currency, currentPrice, historical
             )}
 
             {valid && hasCurrent && value >= currentPrice && <p className="text-xs text-amber-300/90">{t('prices.aboveCurrent')}</p>}
+            </>
+            )}
             {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
 
             <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">

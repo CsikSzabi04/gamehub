@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
 // Xbox / PlayStation library import (modal): credential -> preview with checkboxes -> batch write.
-// The credential is sent once to the backend and never stored.
-import { useMemo, useState } from 'react';
+// The credential is sent once for the import. With "sync achievements" checked it is also handed to
+// /platforms/connect, which stores it encrypted for automatic achievement syncs.
+import { useContext, useMemo, useState } from 'react';
+import { UserContext } from '../Features/UserContext.jsx';
+import { connectPlatform } from '../achievements/achievementsApi.js';
 import { BsBoxArrowUpRight, BsCheckCircleFill, BsExclamationTriangle, BsPlaystation, BsXbox } from 'react-icons/bs';
 import { useT } from '../i18n/index.jsx';
 import { Field, Modal, Spinner, inputClass } from '../community/ui.jsx';
@@ -31,8 +34,10 @@ const errorCode = error => error?.data?.code || (error?.status === 401 ? 'invali
 
 export default function PlatformImport({ platform, open, onClose, byKey, importItems }) {
     const { t, locale } = useT();
+    const { user } = useContext(UserContext) || {};
     const config = PLATFORM_IMPORTS[platform];
     const [credential, setCredential] = useState('');
+    const [syncAchievements, setSyncAchievements] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [games, setGames] = useState(null);
@@ -69,6 +74,9 @@ export default function PlatformImport({ platform, open, onClose, byKey, importI
         setError(null);
         setGames(null);
         try {
+            if (syncAchievements && user) {
+                connectPlatform(user, platform, credential.trim(), true).catch(err => console.error(`${platform} achievement sync:`, err));
+            }
             const data = await apiPost(config.endpoint, { [config.field]: credential.trim() });
             const list = Array.isArray(data?.games) ? data.games : [];
             setGames(list);
@@ -150,6 +158,15 @@ export default function PlatformImport({ platform, open, onClose, byKey, importI
                                         </button>
                                     </div>
                                 </Field>
+                                {user && (
+                                    <label className="mt-3 flex items-start gap-3 rounded-xl bg-white/[0.03] border border-white/[0.08] p-3 cursor-pointer">
+                                        <input type="checkbox" checked={syncAchievements} onChange={e => setSyncAchievements(e.target.checked)} className="mt-0.5 accent-[#8b5cf6]" />
+                                        <span className="text-sm text-[#c9ccd4]">
+                                            <span className="block font-semibold text-white">{t('achievements.connect.importSync')}</span>
+                                            <span className="block text-xs text-[#8a8f9c] mt-0.5">{t(`achievements.connect.rememberHint.${platform}`)}</span>
+                                        </span>
+                                    </label>
+                                )}
                             </form>
                         </>
                     )}

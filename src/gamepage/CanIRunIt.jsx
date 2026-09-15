@@ -36,6 +36,15 @@ function candidatesText(list, t) {
     return list.map(c => (c.approx ? `${c.name} (${t('hardware.check.estimated')})` : c.name)).join(' / ');
 }
 
+function specsSummary(specs, t) {
+    return [
+        specs.gpu,
+        specs.cpu,
+        specs.ramGb ? t('hardware.check.gb', { value: specs.ramGb }) : null,
+        specs.os ? t(`hardware.form.osNames.${specs.os}`) : null,
+    ].filter(Boolean).join(' · ');
+}
+
 function RequirementValue({ row, which }) {
     const { t } = useT();
     const value = row[which];
@@ -109,7 +118,7 @@ export default function CanIRunIt({ game }) {
     const usingLocal = !(user && profileSpecs) && hasSpecs(localSpecs);
     const platforms = game?.steam?.platforms || null;
 
-    // Only show the section when the requirements contain something comparable
+    // The section is always shown; a verdict needs requirements that name parts we can compare
     const comparable = useMemo(() => {
         if (!requirements?.minimum && !requirements?.recommended) return false;
         return [requirements.minimum, requirements.recommended].some(html => {
@@ -125,7 +134,10 @@ export default function CanIRunIt({ game }) {
 
     const closeModal = useCallback(() => setOpen(false), []);
 
-    if (!comparable) return null;
+    if (!game) return null;
+    const specsSet = hasSpecs(specs);
+    const hasRequirements = Boolean(requirements?.minimum || requirements?.recommended);
+    const pending = !hasRequirements && Boolean(game.requirementsPending);
 
     const openModal = () => {
         setDraft(specs ? { ...EMPTY_SPECS, ...specs } : EMPTY_SPECS);
@@ -181,7 +193,7 @@ export default function CanIRunIt({ game }) {
         <section>
             <div className="flex items-center justify-between gap-3 mb-3">
                 <h3 className="gh-section-title">{t('hardware.check.title')}</h3>
-                {result && (
+                {specsSet && (
                     <button type="button" onClick={openModal} className="gh-btn gh-btn-secondary !h-9 !px-3 text-xs shrink-0">
                         <BsPencil className="w-3.5 h-3.5" aria-hidden="true" />
                         {t('hardware.check.editSpecs')}
@@ -189,7 +201,38 @@ export default function CanIRunIt({ game }) {
                 )}
             </div>
 
-            {result ? (
+            {pending ? (
+                <div className="gh-surface h-[92px] animate-pulse" aria-busy="true" aria-label={t('hardware.check.loading')} />
+            ) : !comparable ? (
+                <div className="gh-surface p-4 sm:p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="flex gap-3 min-w-0 flex-1">
+                            <span className="w-10 h-10 rounded-xl bg-white/[0.05] text-[#a1a6b3] grid place-items-center shrink-0">
+                                <BsQuestionCircleFill className="w-5 h-5" aria-hidden="true" />
+                            </span>
+                            <div className="min-w-0">
+                                <p className="font-semibold text-white">
+                                    {t(hasRequirements ? 'hardware.check.unreadableTitle' : 'hardware.check.noRequirementsTitle')}
+                                </p>
+                                <p className="text-sm text-[#a1a6b3] mt-0.5">
+                                    {t(hasRequirements ? 'hardware.check.unreadableText' : 'hardware.check.noRequirementsText')}
+                                </p>
+                            </div>
+                        </div>
+                        {!specsSet && (
+                            <button type="button" onClick={openModal} className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto shrink-0">
+                                {t('hardware.check.ctaButton')}
+                            </button>
+                        )}
+                    </div>
+                    {specsSet && (
+                        <p className="mt-3 pt-3 border-t border-white/[0.06] text-xs text-[#8a8f9c] break-words">
+                            <span className="text-[#6b7080]">{t('hardware.check.you')}:</span>{' '}
+                            <span className="text-[#c9ccd4]">{specsSummary(specs, t)}</span>
+                        </p>
+                    )}
+                </div>
+            ) : result ? (
                 <div className="gh-surface p-4 sm:p-5">
                     <div className={`flex gap-3 rounded-xl border p-3 sm:p-4 ${overallMeta.ring}`}>
                         <OverallIcon className={`mt-0.5 w-5 h-5 shrink-0 ${STATUS_META[overallMeta.status].color}`} aria-hidden="true" />

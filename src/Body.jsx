@@ -22,7 +22,6 @@ const UnderMain = lazy(() => import('./Sections/UnderMain.jsx'));
 const DBD_Movies = lazy(() => import('./FeaturesByGame/DBD_Movies.jsx'));
 const GamingNews = lazy(() => import('./Sections/GamingNews.jsx'));
 const Footer = lazy(() => import('./Footer.jsx'));
-const ShowCards = lazy(() => import('./Features/ShowCards.jsx'));
 const SearchFind = lazy(() => import('./Features/SearchFind.jsx'));
 // Live data from the hub APIs (Steam charts, deals, speedruns, game universes)
 const LivePlayers = lazy(() => import('./Hub/LivePlayers.jsx'));
@@ -52,9 +51,6 @@ export default function Body() {
     const { t } = useT();
     const { data: liveGames = EMPTY } = useApi(GAMES_URL, toGames);
     const allGames = useStableGames(liveGames);
-    const [selectedGame, setSelectedGame] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMounted, setModalMounted] = useState(false);
     const [games, setGames] = useState([]);
     const [searchTrue, setSearchTrue] = useState(false);
     const location = useLocation();
@@ -82,16 +78,9 @@ export default function Body() {
         exploration: allGames.filter(game => hasTag(game, "exploration")),
     }), [allGames]);
 
+    // A clicked game opens its game page directly
     function showGameDetails(game) {
-        const requirements = game.platforms?.map(p => p.requirements_en?.minimum).join(", ");
-        setSelectedGame({ ...game, requirements });
-        setModalMounted(true);
-        setModalVisible(true);
-    }
-
-    function closeModal() {
-        setModalVisible(false);
-        setSelectedGame(null);
+        navigate(`/allreview/${game.id}`);
     }
 
     return (
@@ -160,12 +149,6 @@ export default function Body() {
                         <LazySection>
                             <GamingNews />
                         </LazySection>
-
-                        {modalMounted && (
-                            <Suspense fallback={null}>
-                                <ShowCards selectedGame={selectedGame} closeModal={closeModal} modalVisible={modalVisible} />
-                            </Suspense>
-                        )}
                     </div>
                     <LazySection placeholder={false}>
                         <Footer />

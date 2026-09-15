@@ -89,7 +89,7 @@ gamehub-main/
    ├─ Header.jsx, Footer.jsx
    ├─ Components/          GameCard, LazySection, LazyImage, apiCache, useFetchOnVisible,
    │                       SectionHeader, ReviewsPanel, SystemRequirements, profile/*
-   ├─ Features/            Search, SearchFind, ShowCards, Review, AllReview, SearchReview,
+   ├─ Features/            Search, SearchFind, Review, AllReview, SearchReview,
    │                       UserContext, StartUp, Contact ...
    ├─ Sections/            főoldali szekciók (MainSection, FeaturedGames, Free, Discounted,
    │                       Loot, News, GamingNews, ReviewsOpenMain, Discover ...)

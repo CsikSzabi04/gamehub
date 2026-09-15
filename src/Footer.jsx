@@ -6,6 +6,7 @@ import { SiGmail } from "react-icons/si";
 import { CgGames } from "react-icons/cg";
 import { useT } from './i18n/index.jsx';
 import LanguageSwitcher from './Components/LanguageSwitcher.jsx';
+import { openCookieSettings } from './consent/consent.js';
 
 const MAIL_URL = "https://mail.google.com/mail/u/0/?fs=1&to=helpdesk.gamehub@gmail.com&su=Collaboration+Opportunity+/+Egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+Lehet%C5%91s%C3%A9g&body=Dear+Cs%C3%ADk+Szabolcs+Alex,%0A%0AI+would+like+to+discuss+a+collaboration+opportunity+with+you.%0A%0ABest+regards,%0A%0A%5BYour+Name%5D%0A%0A---%0A%0AKedves+Cs%C3%ADk+Szabolcs+Alex,%0A%0ASzeretn%C3%A9k+egy+egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+lehet%C5%91s%C3%A9gr%C5%91l+besz%C3%A9lni+veled.%0A%0A%C3%9Cdv%C3%B6zlettel,%0A%0A%5BNeved%5D&tf=cm";
 
@@ -60,7 +61,7 @@ export default function Footer() {
                     </div>
 
                     <Column title={t('footer.explore')}>
-                        <li><Link to="/discover" className={linkClass}>{t('footer.discover')}</Link></li>
+                        <li><Link to="/hub" className={linkClass}>{t('footer.hub')}</Link></li>
                         <li><Link to="/review" className={linkClass}>{t('footer.reviews')}</Link></li>
                         <li><Link to="/contact" className={linkClass}>{t('footer.contact')}</Link></li>
                     </Column>
@@ -68,6 +69,9 @@ export default function Footer() {
                     <Column title={t('footer.legal')}>
                         <li><Link to="/terms" className={linkClass}>{t('footer.terms')}</Link></li>
                         <li><Link to="/privacy" className={linkClass}>{t('footer.privacy')}</Link></li>
+                        <li><Link to="/cookies" className={linkClass}>{t('footer.cookies')}</Link></li>
+                        <li><Link to="/legal-notice" className={linkClass}>{t('footer.legalNotice')}</Link></li>
+                        <li><button type="button" onClick={openCookieSettings} className={linkClass}>{t('footer.cookieSettings')}</button></li>
                     </Column>
 
                     <Column title={t('footer.madeBy')}>

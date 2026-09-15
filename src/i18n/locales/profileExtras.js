@@ -58,7 +58,7 @@ export default {
         import: {
             load: 'Load games',
             openLink: 'Open',
-            privacyHint: 'Used once to read your game list. GameDataHub never stores it.',
+            privacyHint: 'Used to read your game list. It is only kept (encrypted) if you turn on achievement sync below.',
             statusLabel: 'Add as',
             auto: 'Playing if more than 2 h played, otherwise backlog',
             filter: 'Filter',
@@ -153,7 +153,7 @@ export default {
         import: {
             load: 'Játékok betöltése',
             openLink: 'Megnyitás',
-            privacyHint: 'Csak egyszer használjuk a játéklistád beolvasásához, a GameDataHub nem tárolja.',
+            privacyHint: 'A játéklistád beolvasásához használjuk. Csak akkor tároljuk (titkosítva), ha lent bekapcsolod az achievement-szinkront.',
             statusLabel: 'Hozzáadás mint',
             auto: 'Játszom, ha 2 óránál többet játszottál vele, egyébként backlog',
             filter: 'Szűrés',
@@ -248,7 +248,7 @@ export default {
         import: {
             load: 'Spiele laden',
             openLink: 'Öffnen',
-            privacyHint: 'Wird einmal zum Lesen deiner Spieleliste genutzt. GameDataHub speichert es nicht.',
+            privacyHint: 'Wird zum Lesen deiner Spieleliste genutzt. Nur gespeichert (verschlüsselt), wenn du unten den Erfolge-Sync aktivierst.',
             statusLabel: 'Hinzufügen als',
             auto: 'Spiele ich bei mehr als 2 h Spielzeit, sonst Backlog',
             filter: 'Filtern',

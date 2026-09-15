@@ -26,6 +26,10 @@ service cloud.firestore {
         allow delete: if isUser(uid);
       }
 
+      // Achievements / trophies: written by the backend sync (routes/achievements.js), readable like the library
+      match /achievements/{gameKey} { allow read: if isUser(uid) || isPublicUser(uid); }
+      match /achievementItems/{gameKey} { allow read: if isUser(uid) || isPublicUser(uid); }
+
       match /priceAlerts/{gameKey} { allow read, write: if isUser(uid); }
       match /reminders/{gameKey} { allow read, write: if isUser(uid); }
       match /claimedFree/{freeId} { allow read, write: if isUser(uid); }
@@ -161,5 +165,7 @@ service cloud.firestore {
 
     match /reviews/{document=**} { allow read, write: if false; }
     match /meta/{document=**} { allow read, write: if false; }
+    // Encrypted Xbox / PlayStation keys for achievement auto-sync
+    match /platformSecrets/{document=**} { allow read, write: if false; }
   }
 }

@@ -7,7 +7,7 @@ import { useApi } from '../Components/apiCache.js';
 import { useT } from '../i18n/index.jsx';
 import Sparkline from '../prices/Sparkline.jsx';
 import AlertModal from '../prices/AlertModal.jsx';
-import { PRICE_REGIONS, formatMoney, priceVerdict, regionName, searchPriceUrl, steamPriceUrl, usePriceAlert, usePriceRegion } from '../prices/priceUtils.js';
+import { PRICE_REGIONS, alertReached, alertTargetText, formatMoney, priceVerdict, regionName, searchPriceUrl, steamPriceUrl, usePriceAlert, usePriceRegion } from '../prices/priceUtils.js';
 
 const VERDICT_STYLES = {
     best: 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30',
@@ -133,9 +133,9 @@ export default function PricePanel({ game }) {
                     <BsTagFill className="w-3 h-3 text-[#c4b5fd]" aria-hidden="true" />
                     {alert.active === false
                         ? t('prices.alertPaused')
-                        : current && current.final <= alert.targetPrice && (!alert.currency || alert.currency === currency)
+                        : alertReached(alert, current, currency)
                             ? t('prices.alertTriggered')
-                            : t('prices.alertAt', { price: formatMoney(alert.targetPrice, alert.currency || currency, locale) })}
+                            : t('prices.alertAt', { price: alertTargetText(t, alert, currency, locale) })}
                 </p>
             )}
             {alertButton}

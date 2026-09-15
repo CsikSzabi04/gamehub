@@ -15,7 +15,9 @@ import { optimizedSrc } from '../Components/imageMirror.js';
 import { formatDate, DetailRow, DetailList, GameHero, PageState, Spinner } from './AllReview.jsx';
 import useGameCommunity from './useGameCommunity.js';
 import { useT } from '../i18n/index.jsx';
-import { GameActions, GameBadges, GameAside, GameMain } from '../gamepage/GameExtras.jsx';
+import { GameActions, GameBadges, GameAside, GameMain, GamePlay } from '../gamepage/GameExtras.jsx';
+import { normalizeRequirements, normalizeTitle, sameRelease, titleMatch } from '../gamepage/matching.js';
+import useSteamMatch from '../gamepage/useSteamMatch.js';
 
 const RAWG_KEY = '984255fceb114b05b5e746dc24a8520a';
 const SOURCES = ['steam', 'gog'];
@@ -23,43 +25,13 @@ const SOURCES = ['steam', 'gog'];
 /** Key used for GameDataHub reviews/favorites of store games, e.g. "steam-730". */
 export const storeGameKey = (source, id) => `${source}-${id}`;
 
-export const normalizeTitle = value => (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-
-/** 'exact' | 'close' ("Overwatch 2" vs "Overwatch®") | null ("Nox" vs "Nox Archaist") */
-export function titleMatch(a, b) {
-    const x = normalizeTitle(a);
-    const y = normalizeTitle(b);
-    if (!x || !y) return null;
-    if (x === y) return 'exact';
-    const [short, long] = x.length < y.length ? [x, y] : [y, x];
-    return short.length >= 4 && long.startsWith(short) && short.length / long.length >= 0.7 ? 'close' : null;
-}
-
-function releaseYear(value) {
-    if (!value) return null;
-    const year = new Date(value).getFullYear();
-    return Number.isNaN(year) ? null : year;
-}
-
-/** Different games often share a title (an itch.io "WARDOGS" vs the 2026 Steam one): compare years when both are known. */
-export function sameRelease(a, b) {
-    const x = releaseYear(a);
-    const y = releaseYear(b);
-    return x == null || y == null || Math.abs(x - y) <= 1;
-}
+export { normalizeTitle, titleMatch, sameRelease, normalizeRequirements };
 
 /** Best RAWG search result for a store title (and release date, when known), or null when nothing is close enough. */
 export function pickRawgMatch(results, name, releaseDate) {
     if (!Array.isArray(results)) return null;
     const candidates = results.filter(r => titleMatch(r.name, name) && sameRelease(r.released, releaseDate));
     return candidates.find(r => titleMatch(r.name, name) === 'exact') || candidates[0] || null;
-}
-
-/** Steam writes "OS *:" (footnote marker); the requirement parser expects "OS:". */
-export function normalizeRequirements(requirements) {
-    if (!requirements || (!requirements.minimum && !requirements.recommended)) return null;
-    const fix = text => (typeof text === 'string' ? text.replace(/\bOS\s*\*+\s*:/g, 'OS:') : text);
-    return { minimum: fix(requirements.minimum), recommended: fix(requirements.recommended) };
 }
 
 // Store lists already loaded on the home page / hub: lets a refreshed page find the item without a click
@@ -81,7 +53,6 @@ export function findCachedItem(source, id) {
 }
 
 const toResults = data => (Array.isArray(data?.results) ? data.results : []);
-const toFound = data => (data?.found ? data : null);
 
 const rawgSearchUrl = name =>
     name ? `https://api.rawg.io/api/games?key=${RAWG_KEY}&search=${encodeURIComponent(name)}&search_precise=true&page_size=6` : null;
@@ -140,17 +111,21 @@ export default function StoreGamePage() {
     // Title-based lookups are only trusted once the store's own data (with its release date) has answered
     const storeSettled = Boolean(store || storeError);
 
-    // A GOG game that is also on Steam gets live players, Steam reviews and news
-    const { data: steamFound } = useHub(valid && !isSteam && name ? `/steam/lookup?name=${encodeURIComponent(name)}` : null, toFound);
-    const steamLookup = storeSettled && steamFound && titleMatch(steamFound.name, name) && sameRelease(steamFound.releaseDate, gogGame?.releaseDate)
-        ? steamFound
-        : null;
-    const steam = isSteam ? steamApp : steamLookup;
-
     // RAWG fills in what the stores don't give (and everything while the backend is unreachable)
-    const { data: rawgResults } = useApi(rawgSearchUrl(name), toResults);
+    const { data: rawgResults, error: rawgSearchError } = useApi(rawgSearchUrl(name), toResults);
     const rawgMatch = storeSettled && rawgResults ? pickRawgMatch(rawgResults, name, store?.releaseDate) : null;
-    const { data: rawg } = useApi(rawgGameUrl(rawgMatch?.id));
+    const { data: rawg, error: rawgError } = useApi(rawgGameUrl(rawgMatch?.id));
+    const rawgSettled = Boolean(name) && (rawgSearchError || (storeSettled && rawgResults && (!rawgMatch || rawg !== undefined || rawgError)));
+
+    // A GOG game that is also on Steam gets live players, Steam reviews, news, requirements and facts
+    const steamMatch = useSteamMatch({
+        enabled: valid && !isSteam && storeSettled,
+        rawgId: rawgSearchError ? null : rawgResults && storeSettled ? rawgMatch?.id ?? null : undefined,
+        name,
+        releaseDate: gogGame?.releaseDate,
+    });
+    const steamLookup = isSteam ? null : steamMatch.steam;
+    const steam = isSteam ? steamApp : steamLookup;
 
     const community = useGameCommunity(valid ? storeGameKey(source, id) : null, name);
     const [shot, setShot] = useState(null);
@@ -194,10 +169,11 @@ export default function StoreGamePage() {
     const extrasGame = {
         source, id, gameKey: storeGameKey(source, id), name,
         image: steam?.image || gogGame?.image || item?.image || rawg?.background_image || null,
-        steamAppId: isSteam ? Number(id) : steamLookup?.id ?? null,
+        steamAppId: isSteam ? Number(id) : steamMatch.steamAppId,
         releaseDate: store?.releaseDate || rawg?.released || null,
         comingSoon: Boolean(steamApp?.comingSoon || gogGame?.comingSoon),
         requirements, steam: steam || null,
+        requirementsPending: !requirements && !(storeSettled && rawgSettled && steamMatch.settled),
     };
 
     const heroImage = steamApp?.screenshots?.[0]?.full || gogGame?.image || rawg?.background_image || steam?.image || item?.image;
@@ -234,6 +210,7 @@ export default function StoreGamePage() {
                     </div>
 
                     <div className="mt-5 flex flex-col sm:flex-row flex-wrap gap-3">
+                        <GamePlay game={extrasGame} />
                         {community.isFavorite ? (
                             <button onClick={community.removeFavorite} className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto">
                                 <BsHeartFill className="text-[#f87171]" />

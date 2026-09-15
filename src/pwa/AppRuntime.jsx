@@ -4,8 +4,10 @@
 import { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../Features/UserContext.jsx';
 import { onServiceWorkerMessage, registerServiceWorker } from './registerSW.js';
+import { getConsent, subscribeConsent } from '../consent/consent.js';
 
 const InstallBanner = lazy(() => import('./InstallBanner.jsx'));
+const CookieConsent = lazy(() => import('../consent/CookieConsent.jsx'));
 
 function afterLoad(fn, delay) {
     const run = () => setTimeout(fn, delay);
@@ -16,6 +18,12 @@ function afterLoad(fn, delay) {
 export default function AppRuntime({ navigate }) {
     const { user, profile } = useContext(UserContext) || {};
     const [ready, setReady] = useState(false);
+    // The install banner waits until the cookie choice is made, so the two never overlap
+    const [consentDecided, setConsentDecided] = useState(() => Boolean(getConsent()));
+
+    useEffect(() => subscribeConsent(event => {
+        if (event.type === 'change') setConsentDecided(true);
+    }), []);
 
     useEffect(() => {
         afterLoad(() => {
@@ -50,5 +58,10 @@ export default function AppRuntime({ navigate }) {
         return () => clearTimeout(timer);
     }, [user, profile]);
 
-    return ready ? <Suspense fallback={null}><InstallBanner /></Suspense> : null;
+    return (
+        <Suspense fallback={null}>
+            <CookieConsent navigate={navigate} />
+            {ready && consentDecided && <InstallBanner />}
+        </Suspense>
+    );
 }

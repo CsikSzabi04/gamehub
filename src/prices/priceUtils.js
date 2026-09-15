@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import { API_BASE } from '../lib/api.js';
 import { firestore } from '../lib/firebase.js';
+import { preferenceStorage } from '../consent/consent.js';
 
 /** Steam store regions supported by the backend (/price/steam/:appid?cc=). */
 export const PRICE_REGIONS = ['hu', 'us', 'gb', 'de', 'at', 'fr', 'it', 'es', 'nl', 'pl', 'ro', 'cz', 'sk', 'se', 'dk', 'fi', 'no', 'ch', 'ca', 'au', 'br', 'tr', 'jp'];
@@ -14,25 +15,17 @@ const REGION_KEY = 'gdh-price-cc';
 const DEFAULT_REGION = 'hu';
 
 function readRegion() {
-    try {
-        const stored = localStorage.getItem(REGION_KEY);
-        return PRICE_REGIONS.includes(stored) ? stored : DEFAULT_REGION;
-    } catch {
-        return DEFAULT_REGION;
-    }
+    const stored = preferenceStorage.get(REGION_KEY);
+    return PRICE_REGIONS.includes(stored) ? stored : DEFAULT_REGION;
 }
 
-/** The store region used for prices, remembered in localStorage. */
+/** The store region used for prices, remembered in localStorage (with "preferences" consent). */
 export function usePriceRegion() {
     const [cc, setCcState] = useState(readRegion);
     const setCc = next => {
         if (!PRICE_REGIONS.includes(next)) return;
         setCcState(next);
-        try {
-            localStorage.setItem(REGION_KEY, next);
-        } catch {
-            // storage unavailable
-        }
+        preferenceStorage.set(REGION_KEY, next);
     };
     return [cc, setCc];
 }
@@ -86,9 +79,16 @@ export function priceVerdict(data) {
     return null;
 }
 
-/** Validated Firestore document for a price alert (only the fields the client owns). */
-export function buildAlertDoc({ game, cc, currency, targetPrice, lastPrice }) {
+export const SALE_DISCOUNTS = [1, 25, 50, 75];
+
+/**
+ * Validated Firestore document for a price alert (only the fields the client owns).
+ * mode 'target': notify at targetPrice; mode 'sale': notify when the discount is >= minDiscount (1 = any sale).
+ * Saving by hand detaches an alert created from the Steam wishlist (source: null), so the wishlist sync leaves it alone.
+ */
+export function buildAlertDoc({ game, cc, currency, targetPrice, lastPrice, mode = 'target', minDiscount = 1 }) {
     const image = typeof game.image === 'string' && /^https?:\/\//.test(game.image) && game.image.length <= 500 ? game.image : null;
+    const sale = mode === 'sale';
     return {
         gameKey: String(game.gameKey).slice(0, 60),
         name: String(game.name || '').trim().slice(0, 120),
@@ -96,13 +96,29 @@ export function buildAlertDoc({ game, cc, currency, targetPrice, lastPrice }) {
         steamAppId: Number(game.steamAppId) || null,
         cc,
         currency: currency || null,
-        targetPrice: roundPrice(Number(targetPrice)),
+        mode: sale ? 'sale' : 'target',
+        minDiscount: sale ? Math.min(95, Math.max(1, Math.round(Number(minDiscount) || 1))) : null,
+        targetPrice: sale ? null : roundPrice(Number(targetPrice)),
         active: true,
+        source: null,
         lastPrice: typeof lastPrice === 'number' ? lastPrice : null,
         // a new or changed target starts over
         lastNotifiedPrice: null,
         triggeredAt: null,
     };
+}
+
+/** Is the alert's condition met by a live Steam price ({ final, discount }) in `currency`? */
+export function alertReached(alert, current, currency) {
+    if (!alert || !current) return false;
+    if (alert.mode === 'sale') return (current.discount || 0) >= (alert.minDiscount || 1);
+    return current.final <= alert.targetPrice && (!alert.currency || !currency || alert.currency === currency);
+}
+
+/** "Any sale" / "-50% or more" / "12,50 €" */
+export function alertTargetText(t, alert, currency, locale) {
+    if (alert?.mode === 'sale') return alert.minDiscount > 1 ? t('prices.saleAtLeast', { percent: alert.minDiscount }) : t('prices.anySale');
+    return formatMoney(alert?.targetPrice, alert?.currency || currency, locale);
 }
 
 export async function saveAlert(user, docData, isNew) {

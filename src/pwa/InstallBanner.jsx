@@ -4,19 +4,17 @@ import { BsX } from 'react-icons/bs';
 import { useT } from '../i18n/index.jsx';
 import { useInstall } from './install.js';
 import InstallAppModal from './InstallAppModal.jsx';
+import { preferenceStorage } from '../consent/consent.js';
 
 const VISITS_KEY = 'gdh-visits';
 const DISMISS_KEY = 'gdh-install-dismissed';
 
 function shouldOffer() {
-    try {
-        const visits = Number(localStorage.getItem(VISITS_KEY) || 0) + 1;
-        localStorage.setItem(VISITS_KEY, String(visits));
-        const dismissed = Number(localStorage.getItem(DISMISS_KEY) || 0);
-        return visits >= 2 && Date.now() - dismissed > 30 * 24 * 3600 * 1000;
-    } catch {
-        return false;
-    }
+    // Without "preferences" consent nothing is counted, so the banner is simply not offered
+    const visits = Number(preferenceStorage.get(VISITS_KEY) || 0) + 1;
+    preferenceStorage.set(VISITS_KEY, visits);
+    const dismissed = Number(preferenceStorage.get(DISMISS_KEY) || 0);
+    return visits >= 2 && Date.now() - dismissed > 30 * 24 * 3600 * 1000;
 }
 
 export default function InstallBanner() {
@@ -39,11 +37,7 @@ export default function InstallBanner() {
     }
 
     const dismiss = () => {
-        try {
-            localStorage.setItem(DISMISS_KEY, String(Date.now()));
-        } catch {
-            // storage unavailable
-        }
+        preferenceStorage.set(DISMISS_KEY, Date.now());
         setHidden(true);
     };
 

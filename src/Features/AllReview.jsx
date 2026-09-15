@@ -9,6 +9,8 @@ import { rawgImg, rawgSrcSet } from '../Components/rawgImage.js';
 import ReviewsPanel from '../Components/ReviewsPanel.jsx';
 import { API_BASE, cachedFetch, peekCached } from '../Components/apiCache.js';
 import { useT } from '../i18n/index.jsx';
+import { GameMain, GamePlay } from '../gamepage/GameExtras.jsx';
+import useRawgGameExtras from '../gamepage/useRawgGameExtras.js';
 
 const GAMES_URL = `${API_BASE}/fetch-games`;
 const findGame = (data, id) => (Array.isArray(data?.games) ? data.games.find(g => g.id == id) : undefined);
@@ -251,7 +253,6 @@ function RawgGamePage() {
                 body: JSON.stringify({
                     gameId: game.id,
                     userId: user ? user.uid : "anonymous",
-                    email: user ? user.email : "anonymous@domain.com",
                     reviewText: newReview,
                     rating,
                     gameName: game.name,
@@ -272,6 +273,10 @@ function RawgGamePage() {
         }
     }
 
+    const requirementsPlatform = game?.platforms?.find(p => p.requirements_en?.minimum || p.requirements_en?.recommended);
+    const pcRequirements = game?.platforms?.find(p => p.platform?.slug === 'pc')?.requirements_en || null;
+    const { extrasGame, requirements } = useRawgGameExtras(game, pcRequirements);
+
     if (loading) {
         return <PageState><Spinner /></PageState>;
     }
@@ -280,7 +285,12 @@ function RawgGamePage() {
         return <PageState><p className="text-[#a1a6b3]">{t(error || 'game.notFound')}</p></PageState>;
     }
 
-    const requirementsPlatform = game.platforms?.find(p => p.requirements_en?.minimum || p.requirements_en?.recommended);
+    // PC requirements (Steam's first, then RAWG's); another platform's list only when there is no PC one
+    const shownRequirements = requirements
+        ? { ...requirements, platform: 'PC' }
+        : requirementsPlatform
+            ? { ...requirementsPlatform.requirements_en, platform: requirementsPlatform.platform?.name || 'PC' }
+            : null;
     const genres = game.genres?.map(g => g.name) || [];
 
     return (
@@ -309,6 +319,7 @@ function RawgGamePage() {
                     </div>
 
                     <div className="mt-5 flex flex-wrap gap-3">
+                        <GamePlay game={extrasGame} />
                         {fav ? (
                             <button onClick={delFav} className="gh-btn gh-btn-secondary !h-11 w-full sm:w-auto">
                                 <BsHeartFill className="text-[#f87171]" />
@@ -328,16 +339,19 @@ function RawgGamePage() {
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-10 sm:mt-12 pb-10 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-10 lg:items-start">
                     {/* display:contents below lg lets the aside slot between requirements and reviews via order */}
                     <div className="contents lg:flex lg:flex-col lg:gap-10 lg:col-span-2 min-w-0">
-                    {requirementsPlatform && (
+                    {shownRequirements && (
                         <div className="order-1 min-w-0">
                             <SystemRequirements
-                                minimum={requirementsPlatform.requirements_en?.minimum}
-                                recommended={requirementsPlatform.requirements_en?.recommended}
-                                platform={requirementsPlatform.platform?.name || 'PC'}
+                                minimum={shownRequirements.minimum}
+                                recommended={shownRequirements.recommended}
+                                platform={shownRequirements.platform}
                             />
                         </div>
                     )}
 
+                    <div className="order-1 min-w-0 flex flex-col gap-10 empty:hidden">
+                        <GameMain game={extrasGame} />
+                    </div>
 
                     <div className="order-3 min-w-0">
                         <ReviewsPanel

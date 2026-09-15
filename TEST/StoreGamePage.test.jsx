@@ -10,6 +10,7 @@ import StoreGamePage, {
     storeGameKey, normalizeTitle, titleMatch, sameRelease, pickRawgMatch, normalizeRequirements, findCachedItem,
 } from '../src/Features/StoreGamePage.jsx';
 import AllReview from '../src/Features/AllReview.jsx';
+import { steamAppIdFromStores } from '../src/gamepage/useSteamMatch.js';
 import useStoreItem from '../src/Hub/useStoreItem.jsx';
 import { UserContext } from '../src/Features/UserContext.jsx';
 import { jsonResponse, mockFetch, LocationProbe } from './helpers.jsx';
@@ -337,6 +338,75 @@ describe('useStoreItem', () => {
         renderButton({ id: 'x', name: 'Run', source: 'speedrun', url: 'https://speedrun.com/run' });
         fireEvent.click(screen.getByText('open'));
         expect(open).toHaveBeenCalledWith('https://speedrun.com/run', '_blank', 'noopener,noreferrer');
+    });
+});
+
+describe('steamAppIdFromStores', () => {
+    test('reads the Steam appid from RAWG store links', () => {
+        expect(steamAppIdFromStores({ results: [
+            { store_id: 5, url: 'https://www.gog.com/game/the_witcher_3_wild_hunt' },
+            { store_id: 1, url: 'https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/' },
+        ] })).toBe(292030);
+        expect(steamAppIdFromStores({ results: [{ url: 'https://www.epicgames.com/store/p/x' }] })).toBeNull();
+        expect(steamAppIdFromStores(undefined)).toBeNull();
+    });
+});
+
+describe('RAWG game page extras', () => {
+    beforeEach(() => {
+        localStorage.clear();
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+    afterEach(() => vi.restoreAllMocks());
+
+    // apiCache keeps /fetch-games in memory for the whole file, so both tests share one list
+    const games = [
+        { id: 3328, name: 'The Witcher 3: Wild Hunt', released: '2015-05-18', platforms: [], genres: [] },
+        { id: 9001, name: 'Console Exclusive', platforms: [], genres: [] },
+    ];
+
+    const renderRawg = id => render(
+        <UserContext.Provider value={{ user: null }}>
+            <MemoryRouter initialEntries={[`/allreview/${id}`]}>
+                <Routes>
+                    <Route path="/allreview/:gameId" element={<AllReview />} />
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>
+    );
+
+    test('"Can I run it?" uses the Steam version found through RAWG store links', async () => {
+        const fetch = routeFetch([
+            ['/fetch-games', () => jsonResponse({ games })],
+            ['api.rawg.io/api/games/3328/stores', () => jsonResponse({ results: [{ url: 'https://store.steampowered.com/app/292030/The_Witcher_3/' }] })],
+            ['/hub/steam/app/292030', () => jsonResponse({
+                id: 292030, name: 'The Witcher 3: Wild Hunt', platforms: { windows: true },
+                requirements: { minimum: '<li><strong>OS *:</strong> Windows 10</li><li><strong>Processor:</strong> Intel Core i5-2500K</li><li><strong>Memory:</strong> 6 GB RAM</li><li><strong>Graphics:</strong> NVIDIA GeForce GTX 770</li>', recommended: null },
+            })],
+            ['/get-all-reviews', () => jsonResponse([])],
+        ]);
+
+        renderRawg(3328);
+
+        expect(await screen.findByRole('heading', { name: 'Can I run it?' })).toBeInTheDocument();
+        expect(await screen.findByRole('button', { name: 'Check my PC' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'System Requirements' })).toBeInTheDocument();
+        expect(screen.getByText('6 GB RAM')).toBeInTheDocument();
+        expect(fetch.mock.calls.some(([url]) => url.includes('/hub/steam/lookup'))).toBe(false);
+    });
+
+    test('games without PC requirements still get the section', async () => {
+        routeFetch([
+            ['/fetch-games', () => jsonResponse({ games })],
+            ['api.rawg.io/api/games/9001/stores', () => jsonResponse({ results: [] })],
+            ['/hub/steam/lookup', () => jsonResponse({ found: false })],
+            ['/get-all-reviews', () => jsonResponse([])],
+        ]);
+
+        renderRawg(9001);
+
+        expect(await screen.findByRole('heading', { name: 'Can I run it?' })).toBeInTheDocument();
+        expect(await screen.findByText('No PC requirements published yet')).toBeInTheDocument();
     });
 });
 

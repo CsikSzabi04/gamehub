@@ -16,11 +16,12 @@ import { renderWithRouter } from './helpers.jsx';
 
 const fakeAuth = { name: 'fake-auth' };
 
-function fillForm({ username = 'Neo', email = 'neo@matrix.io', password = 'redpill1', confirm = password } = {}) {
+function fillForm({ username = 'Neo', email = 'neo@matrix.io', password = 'redpill1', confirm = password, accept = true } = {}) {
     fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: username } });
     fireEvent.change(screen.getByPlaceholderText('Email address'), { target: { value: email } });
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: password } });
     fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: confirm } });
+    if (accept) fireEvent.click(screen.getByRole('checkbox'));
 }
 
 const submit = () => act(async () => {
@@ -59,6 +60,17 @@ describe('SignUp page', () => {
         expect(mocks.createUserWithEmailAndPassword).not.toHaveBeenCalled();
     });
 
+    test('requires accepting the Terms and Privacy Policy, which link to the legal pages', async () => {
+        expect(screen.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms');
+        expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+
+        fillForm({ accept: false });
+        await submit();
+
+        expect(screen.getByText('Please accept the Terms of Service and the Privacy Policy to create an account.')).toBeInTheDocument();
+        expect(mocks.createUserWithEmailAndPassword).not.toHaveBeenCalled();
+    });
+
     test('creates the account, stores the username and redirects to login after 2s', async () => {
         vi.useFakeTimers();
         mocks.createUserWithEmailAndPassword.mockResolvedValue({ user: { uid: 'uid-42' } });
@@ -68,7 +80,11 @@ describe('SignUp page', () => {
 
         expect(mocks.createUserWithEmailAndPassword).toHaveBeenCalledWith(fakeAuth, 'neo@matrix.io', 'redpill1');
         expect(mocks.doc).toHaveBeenCalledWith({ name: 'fake-firestore' }, 'users', 'uid-42');
-        expect(mocks.setDoc).toHaveBeenCalledWith({ path: 'users/uid-42' }, { username: 'Neo' });
+        expect(mocks.setDoc).toHaveBeenCalledWith({ path: 'users/uid-42' }, expect.objectContaining({
+            username: 'Neo',
+            acceptedLegalVersion: expect.any(String),
+            acceptedLegalAt: expect.any(String),
+        }));
         expect(screen.getByText('Account created successfully! Redirecting to login...')).toBeInTheDocument();
         expect(screen.getByTestId('location')).toHaveTextContent('/signup');
 

@@ -33,12 +33,12 @@ const STORAGE_KEY = 'gdh-lang';
 
 // Keep this list in sync with the brace pattern in the first glob (globs must be literals)
 const eagerModules = import.meta.glob(
-    './locales/{common,header,nav,footer,home,search,rotate,cards,startup,game,hub,communityUi,notifications,pwa}.js',
+    './locales/{common,header,nav,footer,home,search,rotate,startup,game,hub,communityUi,notifications,pwa}.js',
     { eager: true },
 );
 const lazyModules = import.meta.glob([
     './locales/*.js',
-    '!./locales/{common,header,nav,footer,home,search,rotate,cards,startup,game,hub,communityUi,notifications,pwa}.js',
+    '!./locales/{common,header,nav,footer,home,search,rotate,startup,game,hub,communityUi,notifications,pwa}.js',
 ]);
 
 const nsOf = path => path.match(/\/([^/]+)\.js$/)[1];

@@ -13,6 +13,7 @@ import { firestore, toDate } from '../lib/firebase.js';
 import { apiGet } from '../lib/api.js';
 import { gameHref, parseGameKey, steamHeader } from '../lib/games.js';
 import { postActivity } from '../social/activity.js';
+import { invalidateOwnedSteamGames } from './steamLaunch.js';
 
 export const LIBRARY_STATUSES = ['playing', 'completed', 'backlog', 'dropped', 'wishlist'];
 
@@ -97,6 +98,7 @@ export async function setLibraryStatus(user, profile, gameMeta, status, existing
     if (postPlaying) data.playingPosted = true;
 
     await setDoc(doc(db, 'users', user.uid, 'library', meta.gameKey), data, { merge: true });
+    invalidateOwnedSteamGames(user.uid);
 
     if (postPlaying || postCompleted) {
         postActivity(user, profile, {
@@ -139,6 +141,7 @@ export async function removeLibraryItem(uid, key) {
     if (!uid || !isValidKey(key)) return;
     const { db, doc, deleteDoc } = await firestore();
     await deleteDoc(doc(db, 'users', uid, 'library', key));
+    invalidateOwnedSteamGames(uid);
 }
 
 /**
@@ -177,6 +180,7 @@ export async function importLibraryItems(uid, items, skipKeys = new Set()) {
         }
         await batch.commit();
     }
+    invalidateOwnedSteamGames(uid);
     return clean.length;
 }
 

@@ -5,15 +5,12 @@ import { BsBellFill, BsBoxArrowUp, BsX } from 'react-icons/bs';
 import { useT } from '../i18n/index.jsx';
 import usePush from './usePush.js';
 import InstallAppModal from '../pwa/InstallAppModal.jsx';
+import { preferenceStorage } from '../consent/consent.js';
 
 const DISMISS_KEY = 'gdh-push-prompt-dismissed';
 
 function wasDismissed() {
-    try {
-        return Number(localStorage.getItem(DISMISS_KEY) || 0) > Date.now() - 7 * 24 * 3600 * 1000;
-    } catch {
-        return false;
-    }
+    return Number(preferenceStorage.get(DISMISS_KEY) || 0) > Date.now() - 7 * 24 * 3600 * 1000;
 }
 
 /**
@@ -30,11 +27,7 @@ export default function EnablePushPrompt({ compact = false, force = false }) {
     if (!user || dismissed || subscribed !== false || support === 'unsupported') return null;
 
     const dismiss = () => {
-        try {
-            localStorage.setItem(DISMISS_KEY, String(Date.now()));
-        } catch {
-            // storage unavailable
-        }
+        preferenceStorage.set(DISMISS_KEY, Date.now());
         setDismissed(true);
     };
 

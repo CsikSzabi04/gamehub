@@ -45,7 +45,6 @@ export default function Review() {
                 body: JSON.stringify({
                     gameId: selectedGame?.id || 0,
                     userId: user ? user.uid : "anonymous",
-                    email: user ? user.email : "anonymous@domain.com",
                     reviewText,
                     rating,
                     gameName: selectedGame?.name || "Unknown Game",

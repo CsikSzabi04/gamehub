@@ -28,6 +28,12 @@ export default {
         passwordMismatch: 'Passwords do not match.',
         passwordTooShort: 'Password must be at least 6 characters.',
         createFailed: 'Failed to create an account.',
+        acceptPrefix: 'I have read and accept the ',
+        acceptTerms: 'Terms of Service',
+        acceptMiddle: ' and the ',
+        acceptPrivacy: 'Privacy Policy',
+        acceptSuffix: ', and I am at least 16 years old.',
+        acceptRequired: 'Please accept the Terms of Service and the Privacy Policy to create an account.',
 
         // Keyed by the Firebase error code without the "auth/" prefix
         firebaseErrors: {
@@ -69,6 +75,12 @@ export default {
         passwordMismatch: 'A két jelszó nem egyezik.',
         passwordTooShort: 'A jelszónak legalább 6 karakterből kell állnia.',
         createFailed: 'Nem sikerült létrehozni a fiókot.',
+        acceptPrefix: 'Elolvastam és elfogadom az ',
+        acceptTerms: 'Általános Szerződési Feltételeket',
+        acceptMiddle: ' és az ',
+        acceptPrivacy: 'Adatkezelési tájékoztatót',
+        acceptSuffix: ', valamint elmúltam 16 éves.',
+        acceptRequired: 'A regisztrációhoz fogadd el az Általános Szerződési Feltételeket és az Adatkezelési tájékoztatót.',
 
         firebaseErrors: {
             'email-already-in-use': 'Ez az e-mail-cím már foglalt.',
@@ -109,6 +121,12 @@ export default {
         passwordMismatch: 'Die Passwörter stimmen nicht überein.',
         passwordTooShort: 'Das Passwort muss mindestens 6 Zeichen lang sein.',
         createFailed: 'Das Konto konnte nicht erstellt werden.',
+        acceptPrefix: 'Ich habe die ',
+        acceptTerms: 'Nutzungsbedingungen',
+        acceptMiddle: ' und die ',
+        acceptPrivacy: 'Datenschutzerklärung',
+        acceptSuffix: ' gelesen und akzeptiere sie. Ich bin mindestens 16 Jahre alt.',
+        acceptRequired: 'Bitte akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung, um ein Konto zu erstellen.',
 
         firebaseErrors: {
             'email-already-in-use': 'Diese E-Mail-Adresse wird bereits verwendet.',

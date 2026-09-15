@@ -196,7 +196,6 @@ function AgeRating({ facts }) {
 
 export default function GameFacts({ game }) {
     const { t } = useT();
-    const { user } = useContext(UserContext) || {};
     const appid = game?.steamAppId;
     const { data: facts } = useApi(appid ? `${API_BASE}/hub/steam/facts/${appid}` : null);
     const [votes, setVotes] = useVotes(game?.gameKey);
@@ -253,7 +252,8 @@ export default function GameFacts({ game }) {
     const ageRow = hasFacts ? <AgeRating facts={facts} /> : null;
     const hasAge = hasFacts && (Object.keys(facts.ratings || {}).length > 0 || facts.requiredAge > 0 || facts.contentDescriptors?.length > 0);
     const factsVisible = rows.length > 0 || hasAge || accessibility.length > 0 || modes.length > 0;
-    const votesVisible = Array.isArray(votes) && (votes.length > 0 || Boolean(user));
+    // Votes are shown on every game (guests see the results and a login link), so the section never disappears
+    const votesVisible = Array.isArray(votes);
 
     if (!game?.gameKey || (!factsVisible && !votesVisible)) return null;
 

@@ -1,6 +1,6 @@
 import './App.css';
 import './body.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import Body from './Body.jsx'
 import AppRuntime from './pwa/AppRuntime.jsx'
 import { loadNamespaces } from './i18n/index.jsx'
@@ -23,20 +23,23 @@ const pageWithAuth = (load, namespaces = []) => () =>
 // The logged-in user is provided by UserContext (see main.jsx).
 const router = createBrowserRouter([
   { path: "/", element: <Body /> },
-  { path: "/terms", lazy: page(() => import('./TermsAndPrivacy/Terms.jsx'), ['legal']) },
+  { path: "/terms", lazy: page(() => import('./TermsAndPrivacy/Terms.jsx'), ['legal', 'legalCommon']) },
+  { path: "/cookies", lazy: page(() => import('./TermsAndPrivacy/CookiePolicy.jsx'), ['cookies', 'legalCommon']) },
+  { path: "/legal-notice", lazy: page(() => import('./TermsAndPrivacy/LegalNotice.jsx'), ['legalNotice', 'legalCommon']) },
   { path: "/movies", lazy: page(() => import('./FeaturesByGame/Movies/Movie.jsx'), ['movies']) },
   { path: "/dbd", lazy: page(() => import('./FeaturesByGame/DBD/DbdApp.jsx'), ['dbd']) },
-  { path: "/hub", lazy: page(() => import('./Hub/HubPage.jsx')) },
+  { path: "/hub", lazy: page(() => import('./Hub/HubPage.jsx'), ['discover']) },
   { path: "/hub/:id", lazy: page(() => import('./Hub/UniversePage.jsx')) },
-  { path: "/game/:source/:id", lazy: page(() => import('./Features/StoreGamePage.jsx'), ['storePage', 'calendar', 'gameInfo', 'hardware', 'library', 'prices', 'reviewsPlus', 'subscriptions']) },
+  { path: "/game/:source/:id", lazy: page(() => import('./Features/StoreGamePage.jsx'), ['storePage', 'calendar', 'gameInfo', 'hardware', 'library', 'prices', 'reviewsPlus', 'subscriptions', 'achievements', 'profileExtras']) },
   { path: "/review", lazy: page(() => import('./Features/Review.jsx'), ['reviews']) },
-  { path: "/allreview/:gameId", lazy: page(() => import('./Features/AllReview.jsx'), ['reviewsPlus']) },
-  { path: "/searchreview/:gameId", lazy: page(() => import('./Features/SearchReview.jsx'), ['reviewsPlus']) },
+  { path: "/allreview/:gameId", lazy: page(() => import('./Features/AllReview.jsx'), ['reviewsPlus', 'gameInfo', 'hardware', 'library', 'achievements', 'profileExtras']) },
+  { path: "/searchreview/:gameId", lazy: page(() => import('./Features/SearchReview.jsx'), ['reviewsPlus', 'gameInfo', 'hardware', 'library', 'achievements', 'profileExtras']) },
   { path: "/reviews/:gameId", lazy: page(() => import('./Features/ReviewsOpen.jsx')) },
-  { path: "/privacy", lazy: page(() => import('./TermsAndPrivacy/Privacy.jsx'), ['legal']) },
-  { path: "/profile", lazy: page(() => import('./pages/Profile.jsx'), ['profile', 'profileExtras', 'social', 'hardware', 'library']) },
+  { path: "/privacy", lazy: page(() => import('./TermsAndPrivacy/Privacy.jsx'), ['privacy', 'legalCommon']) },
+  { path: "/profile", lazy: page(() => import('./pages/Profile.jsx'), ['profile', 'profileExtras', 'social', 'hardware', 'library', 'achievements']) },
   { path: "/login", lazy: pageWithAuth(() => import('./pages/Login.jsx'), ['auth']) },
-  { path: "/discover", lazy: page(() => import('./Sections/Dicvover.jsx'), ['discover']) },
+  // Discover is part of the Hub now; keep old links working
+  { path: "/discover", element: <Navigate to={{ pathname: '/hub', hash: '#discover' }} replace /> },
   { path: "/contact", lazy: page(() => import('./Features/Contact.jsx'), ['contact']) },
   { path: "/signup", lazy: pageWithAuth(() => import('./pages/SignUp.jsx'), ['auth']) },
   // Community features
@@ -44,6 +47,8 @@ const router = createBrowserRouter([
   { path: "/notifications", lazy: page(() => import('./pages/NotificationsPage.jsx')) },
   { path: "/alerts", lazy: page(() => import('./pages/AlertsPage.jsx'), ['prices']) },
   { path: "/library", lazy: page(() => import('./pages/LibraryPage.jsx'), ['library']) },
+  { path: "/achievements", lazy: page(() => import('./pages/AchievementsPage.jsx'), ['achievements', 'profile', 'profileExtras', 'library', 'steam']) },
+  { path: "/wishlist", lazy: page(() => import('./pages/WishlistPage.jsx'), ['steam', 'prices', 'library']) },
   { path: "/lfg", lazy: page(() => import('./pages/LfgPage.jsx'), ['lfg']) },
   { path: "/calendar", lazy: page(() => import('./pages/CalendarPage.jsx'), ['calendar']) },
   { path: "/free-games", lazy: page(() => import('./pages/FreeGamesPage.jsx'), ['calendar', 'freeGames']) },
@@ -64,7 +69,7 @@ const router = createBrowserRouter([
 function warmChunks() {
   const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
   setTimeout(() => idle(() => {
-    import('./Sections/Dicvover.jsx');
+    import('./Hub/HubPage.jsx');
     import('./Features/Review.jsx');
     import('./pages/Login.jsx');
   }), 2000);

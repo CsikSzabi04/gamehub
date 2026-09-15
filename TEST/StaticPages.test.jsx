@@ -9,7 +9,7 @@ describe('Footer', () => {
         renderWithRouter(<Footer />);
 
         const expected = {
-            'Discover': '/discover',
+            'Game Hub': '/hub',
             'Contact': '/contact',
             'Terms of Service': '/terms',
             'Privacy Policy': '/privacy',

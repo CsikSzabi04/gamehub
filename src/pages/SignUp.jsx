@@ -8,6 +8,7 @@ import { FaEnvelope, FaLock, FaUser, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Header from '../Header.jsx';
 import { useT } from '../i18n/index.jsx';
+import { LEGAL_VERSION } from '../legal/operator.js';
 
 export default function Register({ auth }) {
   const { t } = useT();
@@ -15,6 +16,7 @@ export default function Register({ auth }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [accepted, setAccepted] = useState(false);
   // { key } for translated messages, { text } for a raw message we have no translation for
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -33,11 +35,21 @@ export default function Register({ auth }) {
       return;
     }
 
+    if (!accepted) {
+      setError({ key: 'auth.acceptRequired' });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setSuccess(true);
-      await setDoc(doc(firestore, "users", userCredential.user.uid), { username: localUsername });
+      // Keep a record of which Terms/Privacy version was accepted and when (GDPR accountability)
+      await setDoc(doc(firestore, "users", userCredential.user.uid), {
+        username: localUsername,
+        acceptedLegalVersion: LEGAL_VERSION,
+        acceptedLegalAt: new Date().toISOString(),
+      });
       setError(null);
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
@@ -164,6 +176,24 @@ export default function Register({ auth }) {
                     className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all"
                   />
                 </div>
+
+                {/* Terms & Privacy acceptance (required) */}
+                <label className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={accepted}
+                    onChange={(e) => setAccepted(e.target.checked)}
+                    className="mt-1 h-4 w-4 flex-shrink-0 accent-violet-500"
+                  />
+                  <span>
+                    {t('auth.acceptPrefix')}
+                    <Link to="/terms" target="_blank" className="text-violet-400 hover:text-violet-300 underline">{t('auth.acceptTerms')}</Link>
+                    {t('auth.acceptMiddle')}
+                    <Link to="/privacy" target="_blank" className="text-violet-400 hover:text-violet-300 underline">{t('auth.acceptPrivacy')}</Link>
+                    {t('auth.acceptSuffix')}
+                  </span>
+                </label>
 
                 {/* Error/Success Message */}
                 {success && (

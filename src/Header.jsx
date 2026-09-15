@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useState, useContext, useRef } from '
 import { Link, NavLink } from 'react-router-dom';
 import { UserContext } from './Features/UserContext.jsx';
 import { CgGames } from "react-icons/cg";
-import { BsShop, BsCompass, BsChatSquareText, BsStarFill, BsStar, BsX, BsList, BsTrash3, BsBoxArrowUpRight, BsSearch, BsGrid, BsPeople, BsDownload, BsChevronDown } from "react-icons/bs";
+import { BsShop, BsChatSquareText, BsStarFill, BsStar, BsX, BsList, BsTrash3, BsBoxArrowUpRight, BsSearch, BsGrid, BsPeople, BsDownload, BsChevronDown } from "react-icons/bs";
 import { AnimatePresence, motion } from 'framer-motion';
 import Search from './Features/Search.jsx';
 import { cachedFetch } from './Components/apiCache.js';
@@ -244,10 +244,6 @@ export default function Header({ setGames, setSearchTrue, games }) {
                                 <BsShop />
                                 <span className="hidden lg:inline">{t('header.stores')}</span>
                             </button>
-                            <NavLink to="/discover" className={({ isActive }) => `${navItemClass} ${isActive ? navActive : navIdle}`} title={t('header.discover')}>
-                                <BsCompass />
-                                <span className="hidden lg:inline">{t('header.discover')}</span>
-                            </NavLink>
                             <NavLink to="/hub" className={({ isActive }) => `${navItemClass} ${isActive ? navActive : navIdle}`} title={t('header.hub')}>
                                 <BsGrid />
                                 <span className="hidden lg:inline">{t('header.hub')}</span>
@@ -326,9 +322,6 @@ export default function Header({ setGames, setSearchTrue, games }) {
                             <button className="flex items-center gap-3 w-full px-3 py-3 rounded-lg text-[#c9ccd4] hover:bg-white/[0.05]" onClick={openStores}>
                                 <BsShop className="text-[#6b7080]" /> {t('header.stores')}
                             </button>
-                            <Link to="/discover" className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#c9ccd4] hover:bg-white/[0.05]">
-                                <BsCompass className="text-[#6b7080]" /> {t('header.discover')}
-                            </Link>
                             <Link to="/hub" className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#c9ccd4] hover:bg-white/[0.05]">
                                 <BsGrid className="text-[#6b7080]" /> {t('header.hub')}
                             </Link>

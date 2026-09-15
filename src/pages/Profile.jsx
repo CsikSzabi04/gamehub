@@ -19,7 +19,11 @@ import EditProfileModal from '../Components/profile/EditProfileModal.jsx';
 import ProfileQuickLinks from '../Components/profile/ProfileQuickLinks.jsx';
 import MyPcCard from '../Components/profile/MyPcCard.jsx';
 import PlatformConnections from '../Components/profile/PlatformConnections.jsx';
+import GamerProgressCard from '../Components/profile/GamerProgressCard.jsx';
 import { challengeBadgesXp } from '../challenges/challenges.js';
+import { useLibrary } from '../library/useLibrary.js';
+import { useAchievementOverview } from '../achievements/achievementsApi.js';
+import { GAMER_XP_RULES, evaluateGamerBadges, gamerStats, gamerXp } from '../achievements/gamerProgress.js';
 import LanguageSwitcher from '../Components/LanguageSwitcher.jsx';
 import { translate, useT } from '../i18n/index.jsx';
 import {
@@ -275,6 +279,9 @@ export default function Profile({ setUser }) {
     const [games, setGames] = useState([]);
     const [activityLoading, setActivityLoading] = useState(true);
     const [reviewSort, setReviewSort] = useState('newest');
+    const { items: libraryItems, loading: libraryLoading } = useLibrary();
+    // Live: the backend keeps updating these while an achievement sync runs
+    const { stats: liveAchievementStats, sync: liveSync, loading: overviewLoading } = useAchievementOverview(user?.uid);
 
     useEffect(() => {
         if (authReady && !user) navigate('/login');
@@ -311,27 +318,36 @@ export default function Profile({ setUser }) {
     const derived = useMemo(() => {
         if (!user || !profile) return null;
         const memberDays = Math.max(0, Math.floor((Date.now() - new Date(user.metadata.creationTime)) / 86400000));
-        const level = getLevelInfo(computeXp({ profile, reviews, favorites, memberDays }) + challengeBadgesXp(profile));
+        const gamer = gamerStats({
+            ...profile,
+            achievementStats: liveAchievementStats || profile.achievementStats,
+            platformSync: overviewLoading ? profile.platformSync : liveSync,
+        }, libraryItems);
+        const level = getLevelInfo(computeXp({ profile, reviews, favorites, memberDays }) + challengeBadgesXp(profile) + gamerXp(gamer));
 
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const streakAlive = [dateKey(new Date()), dateKey(yesterday)].includes(profile.lastActiveDate);
 
         const ratings = reviews.map(r => Number(r.rating) || 0).filter(Boolean);
-        const badges = evaluateBadges({
-            reviews: reviews.length,
-            favorites: favorites.length,
-            longestReview: Math.max(0, ...reviews.map(r => (r.review || '').length)),
-            fiveStars: ratings.filter(r => r === 5).length,
-            bestStreak: profile.bestStreak || 0,
-            activeDays: profile.activeDays || 0,
-            styled: (profile.avatar ? 1 : 0) + (profile.banner ? 1 : 0),
-            memberDays,
-            level: level.level,
-        });
+        const badges = [
+            ...evaluateBadges({
+                reviews: reviews.length,
+                favorites: favorites.length,
+                longestReview: Math.max(0, ...reviews.map(r => (r.review || '').length)),
+                fiveStars: ratings.filter(r => r === 5).length,
+                bestStreak: profile.bestStreak || 0,
+                activeDays: profile.activeDays || 0,
+                styled: (profile.avatar ? 1 : 0) + (profile.banner ? 1 : 0),
+                memberDays,
+                level: level.level,
+            }),
+            ...evaluateGamerBadges(gamer),
+        ];
 
         return {
             level,
+            gamer,
             memberDays,
             streak: streakAlive ? profile.streak || 0 : 0,
             avgRating: ratings.length ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '–',
@@ -345,12 +361,13 @@ export default function Profile({ setUser }) {
                 { key: 'genres', done: Boolean(profile.genres?.length) },
             ],
         };
-    }, [user, profile, reviews, favorites]);
+    }, [user, profile, reviews, favorites, libraryItems, liveAchievementStats, liveSync, overviewLoading]);
 
     // Celebrate a level up once activity (and so the real XP) has loaded
     const currentLevel = derived?.level.level;
+    const progressLoading = activityLoading || libraryLoading || overviewLoading;
     useEffect(() => {
-        if (!currentLevel || activityLoading || !user) return;
+        if (!currentLevel || progressLoading || !user) return;
         const key = `gdh-level-${user.uid}`;
         try {
             const seen = Number(localStorage.getItem(key)) || 0;
@@ -361,19 +378,19 @@ export default function Profile({ setUser }) {
         } catch {
             // storage unavailable, skip the celebration
         }
-    }, [currentLevel, activityLoading, user]); // eslint-disable-line react-hooks/exhaustive-deps -- t only formats the toast
+    }, [currentLevel, progressLoading, user]); // eslint-disable-line react-hooks/exhaustive-deps -- t only formats the toast
 
     // Public data for the leaderboard / public profile (/u/:username): XP, level and a lowercase handle
     const syncXp = derived?.level.xp;
     useEffect(() => {
-        if (activityLoading || !user || !profile || syncXp == null) return;
+        if (progressLoading || !user || !profile || syncXp == null) return;
         const usernameLower = (profile.username || '').trim().toLowerCase();
         if (profile.xp === syncXp && profile.level === currentLevel && profile.usernameLower === usernameLower) return;
         const fields = { xp: syncXp, level: currentLevel, usernameLower };
         setDoc(doc(firestore, 'users', user.uid), fields, { merge: true })
             .then(() => setProfile(prev => ({ ...prev, ...fields })))
             .catch(error => console.error('Could not sync XP:', error));
-    }, [activityLoading, user, profile, syncXp, currentLevel, setProfile]);
+    }, [progressLoading, user, profile, syncXp, currentLevel, setProfile]);
 
     const sortedReviews = useMemo(() => {
         const list = [...reviews];
@@ -687,6 +704,8 @@ export default function Profile({ setUser }) {
                                             )}
                                         </Card>
 
+                                        <GamerProgressCard Card={Card} SectionTitle={SectionTitle} accent={accent} gamer={derived.gamer} stats={liveAchievementStats || profile.achievementStats} />
+
                                         <MyPcCard Card={Card} SectionTitle={SectionTitle} accent={accent} gradient={gradient} />
 
                                         <PlatformConnections Card={Card} SectionTitle={SectionTitle} accent={accent} />
@@ -726,7 +745,7 @@ export default function Profile({ setUser }) {
                                     <Card className="p-6">
                                         <SectionTitle accent={accent}>{t('profile.favoriteGames')}</SectionTitle>
                                         {activityLoading ? <SkeletonGrid /> : favorites.length === 0 ? (
-                                            <EmptyState icon={FaHeart} title={t('profile.noFavorites')} text={t('profile.noFavoritesHint')} cta={<CtaLink to="/discover" gradient={gradient}>{t('profile.discoverGames')}</CtaLink>} />
+                                            <EmptyState icon={FaHeart} title={t('profile.noFavorites')} text={t('profile.noFavoritesHint')} cta={<CtaLink to="/hub" gradient={gradient}>{t('profile.discoverGames')}</CtaLink>} />
                                         ) : (
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                 {favorites.map((f, i) => <FavoriteTile key={i} fav={f} image={imageFor(f.gameId, f.background_image)} />)}
@@ -824,7 +843,7 @@ export default function Profile({ setUser }) {
                         <Card className="p-6">
                             <SectionTitle accent={accent}>{t('profile.howToEarnXp')}</SectionTitle>
                             <ul className="space-y-3">
-                                {XP_RULES.map(rule => (
+                                {[...XP_RULES, ...GAMER_XP_RULES].map(rule => (
                                     <li key={rule.key} className="flex items-center justify-between gap-3 text-sm">
                                         <span className="text-gray-300">{t(`profile.xpRules.${rule.key}`)}</span>
                                         <span className="shrink-0 text-xs font-black px-2 py-1 rounded-lg" style={{ background: `${accent.from}22`, color: accent.from }}>+{rule.xp}</span>
@@ -858,7 +877,7 @@ export default function Profile({ setUser }) {
                                 <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map(i => <div key={i} className="aspect-[4/3] rounded-xl bg-white/[0.04] animate-pulse" />)}</div>
                             ) : favorites.length === 0 ? (
                                 <p className="text-sm text-gray-500">
-                                    {t('profile.noFavorites')} <Link to="/discover" className="text-violet-300 hover:text-white">{t('profile.discoverGames')}</Link>
+                                    {t('profile.noFavorites')} <Link to="/hub" className="text-violet-300 hover:text-white">{t('profile.discoverGames')}</Link>
                                 </p>
                             ) : (
                                 <div className="grid grid-cols-3 gap-2">

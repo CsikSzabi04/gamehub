@@ -1,6 +1,6 @@
 // Community feature links (header menu, mobile menu, /community page)
 import {
-    BsCollection, BsPeople, BsCalendarEvent, BsGift, BsTag, BsXbox, BsActivity, BsRss, BsTrophy, BsFlag, BsListOl, BsTools, BsBell,
+    BsCollection, BsPeople, BsCalendarEvent, BsGift, BsTag, BsXbox, BsActivity, BsRss, BsTrophy, BsFlag, BsListOl, BsTools, BsBell, BsAward, BsHeart,
 } from 'react-icons/bs';
 
 export const COMMUNITY_GROUPS = [
@@ -8,6 +8,7 @@ export const COMMUNITY_GROUPS = [
         id: 'play',
         links: [
             { to: '/library', key: 'library', icon: BsCollection },
+            { to: '/achievements', key: 'achievements', icon: BsAward },
             { to: '/lfg', key: 'lfg', icon: BsPeople },
             { to: '/calendar', key: 'calendar', icon: BsCalendarEvent },
         ],
@@ -16,6 +17,7 @@ export const COMMUNITY_GROUPS = [
         id: 'save',
         links: [
             { to: '/free-games', key: 'freeGames', icon: BsGift },
+            { to: '/wishlist', key: 'wishlist', icon: BsHeart },
             { to: '/alerts', key: 'alerts', icon: BsTag },
             { to: '/subscriptions', key: 'subscriptions', icon: BsXbox },
             { to: '/status', key: 'status', icon: BsActivity },

@@ -8,6 +8,8 @@ export default {
         groups: { play: 'Play', save: 'Save & stay informed', community: 'Community' },
         links: {
             library: 'My library',
+            achievements: 'Achievements',
+            wishlist: 'Steam wishlist',
             lfg: 'Find teammates',
             calendar: 'Release calendar',
             freeGames: 'Free games',
@@ -23,6 +25,8 @@ export default {
         },
         hints: {
             library: 'Backlog, playing, completed – import from Steam',
+            achievements: 'Steam, Xbox & PlayStation achievements, levels, badges',
+            wishlist: 'Live prices and sale alerts for your whole wishlist',
             lfg: 'Groups for ranked, casual and co-op',
             calendar: 'Upcoming releases with reminders',
             freeGames: 'Free-to-keep games with countdowns',
@@ -45,6 +49,8 @@ export default {
         groups: { play: 'Játék', save: 'Spórolás és infók', community: 'Közösség' },
         links: {
             library: 'Játékkönyvtáram',
+            achievements: 'Achievementek',
+            wishlist: 'Steam wishlist',
             lfg: 'Csapattárs-kereső',
             calendar: 'Megjelenési naptár',
             freeGames: 'Ingyenes játékok',
@@ -60,6 +66,8 @@ export default {
         },
         hints: {
             library: 'Backlog, játszom, kijátszottam – Steam importtal',
+            achievements: 'Steam, Xbox és PlayStation achievementek, szintek, badge-ek',
+            wishlist: 'Élő árak és akció-értesítés a teljes wishlistedre',
             lfg: 'Csapatok ranked, casual és co-op játékhoz',
             calendar: 'Közelgő megjelenések emlékeztetővel',
             freeGames: 'Ingyen megtartható játékok visszaszámlálóval',
@@ -82,6 +90,8 @@ export default {
         groups: { play: 'Spielen', save: 'Sparen & informiert bleiben', community: 'Community' },
         links: {
             library: 'Meine Bibliothek',
+            achievements: 'Erfolge',
+            wishlist: 'Steam-Wunschliste',
             lfg: 'Mitspieler finden',
             calendar: 'Release-Kalender',
             freeGames: 'Gratisspiele',
@@ -97,6 +107,8 @@ export default {
         },
         hints: {
             library: 'Backlog, spiele ich, durchgespielt – Import aus Steam',
+            achievements: 'Steam-, Xbox- & PlayStation-Erfolge, Level, Abzeichen',
+            wishlist: 'Live-Preise und Angebotsalarme für deine ganze Wunschliste',
             lfg: 'Gruppen für Ranked, Casual und Koop',
             calendar: 'Kommende Releases mit Erinnerungen',
             freeGames: 'Spiele zum Behalten mit Countdown',

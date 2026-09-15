@@ -1,6 +1,7 @@
 // LFG (looking for group) options, limits and small pure helpers.
 import { useEffect, useState } from 'react';
 import { toDate } from '../lib/firebase.js';
+import { preferenceStorage } from '../consent/consent.js';
 
 export const OTHER_GAME = 'other';
 export const PLATFORMS = ['pc', 'playstation', 'xbox', 'switch', 'mobile', 'crossplay'];
@@ -107,20 +108,13 @@ export function sameGame(a, b) {
 }
 
 // Last contact the user typed (Discord tag etc.) – kept on this device only, to prefill forms.
+// Remembered across visits only with "preferences" consent (see src/consent/consent.js).
 const CONTACT_KEY = 'gdh-lfg-contact';
 export function rememberedContact() {
-    try {
-        return localStorage.getItem(CONTACT_KEY) || '';
-    } catch {
-        return '';
-    }
+    return preferenceStorage.get(CONTACT_KEY) || '';
 }
 export function rememberContact(value) {
-    try {
-        if (value) localStorage.setItem(CONTACT_KEY, clip(value, LIMITS.contact));
-    } catch {
-        // storage unavailable
-    }
+    if (value) preferenceStorage.set(CONTACT_KEY, clip(value, LIMITS.contact));
 }
 
 /** Validates the create-post form. Returns { errors: {field: i18nKey}, data } */

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BsBellFill, BsPauseFill, BsPencilFill, BsPlayFill, BsTrash3Fill } from 'react-icons/bs';
+import { BsBellFill, BsPauseFill, BsPencilFill, BsPlayFill, BsSteam, BsTrash3Fill } from 'react-icons/bs';
 import { PageShell, RequireLogin, Spinner, EmptyState } from '../community/ui.jsx';
 import { UserContext } from '../Features/UserContext.jsx';
 import EnablePushPrompt from '../notifications/EnablePushPrompt.jsx';
@@ -10,7 +10,7 @@ import { useT } from '../i18n/index.jsx';
 import { toDate } from '../lib/firebase.js';
 import { gameHref, steamHeader } from '../lib/games.js';
 import AlertModal from '../prices/AlertModal.jsx';
-import { formatMoney, removeAlert, steamPriceUrl, updateAlert, usePriceAlerts } from '../prices/priceUtils.js';
+import { alertReached, alertTargetText, formatMoney, removeAlert, steamPriceUrl, updateAlert, usePriceAlerts } from '../prices/priceUtils.js';
 
 export default function AlertsPage() {
     const { t } = useT();
@@ -32,6 +32,14 @@ function AlertsList() {
     return (
         <div className="space-y-5">
             <EnablePushPrompt />
+
+            <Link to="/wishlist" className="gh-surface flex items-center gap-3 p-4 hover:bg-white/[0.03] transition-colors">
+                <BsSteam className="h-5 w-5 shrink-0 text-[#c7d5e0]" aria-hidden="true" />
+                <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-white">{t('prices.wishlistCta')}</span>
+                    <span className="block text-xs text-[#8a8f9c]">{t('prices.wishlistCtaText')}</span>
+                </span>
+            </Link>
 
             {loading && <Spinner />}
             {!loading && error && <p className="gh-surface p-4 text-sm text-red-400">{t('prices.loadError')}</p>}
@@ -87,8 +95,11 @@ function AlertCard({ alert, user, onEdit }) {
     const lowest = live?.itad?.lowest && live.itad.lowest.currency === currency ? live.itad.lowest.amount : null;
     const money = amount => formatMoney(amount, alert.currency || currency, locale);
     const paused = alert.active === false;
+    const saleMode = alert.mode === 'sale';
     const reference = nowPrice ?? alert.lastPrice;
-    const triggered = !paused && typeof reference === 'number' && reference <= alert.targetPrice;
+    const triggered = !paused && (saleMode
+        ? alertReached(alert, { final: reference, discount: live?.current?.discount ?? alert.lastDiscount ?? 0 }, currency)
+        : typeof reference === 'number' && reference <= alert.targetPrice);
     const checked = toDate(alert.lastCheckedAt);
     const href = gameHref(alert.gameKey || alert.id);
     const image = alert.image || (alert.steamAppId ? steamHeader(alert.steamAppId) : null);
@@ -121,9 +132,14 @@ function AlertCard({ alert, user, onEdit }) {
                         <p className="font-semibold text-white leading-snug line-clamp-2">{alert.name}</p>
                         <span className={`shrink-0 inline-flex items-center h-6 px-2 rounded-full border text-[11px] font-semibold ${status.className}`}>{status.label}</span>
                     </div>
-                    {live?.current?.discount > 0 && (
-                        <span className="mt-1.5 inline-flex items-center h-5 px-1.5 rounded bg-emerald-500 text-[#0a0b0f] text-[11px] font-extrabold">-{live.current.discount}%</span>
-                    )}
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        {live?.current?.discount > 0 && (
+                            <span className="inline-flex items-center h-5 px-1.5 rounded bg-emerald-500 text-[#0a0b0f] text-[11px] font-extrabold">-{live.current.discount}%</span>
+                        )}
+                        {alert.source === 'wishlist' && (
+                            <span className="inline-flex items-center h-5 px-1.5 rounded border border-white/[0.1] text-[10px] font-semibold text-[#a1a6b3]">{t('prices.fromWishlist')}</span>
+                        )}
+                    </div>
                     {checked && (
                         <p className="text-[11px] text-[#6b7080] mt-1.5">
                             {t('prices.checkedAt', { date: checked.toLocaleString(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) })}
@@ -133,7 +149,7 @@ function AlertCard({ alert, user, onEdit }) {
             </Link>
 
             <dl className="grid grid-cols-3 gap-2 px-3 sm:px-4 pb-3 text-center">
-                <Stat label={t('prices.targetLabel')} value={money(alert.targetPrice)} accent="text-[#c4b5fd]" />
+                <Stat label={t('prices.targetLabel')} value={saleMode ? alertTargetText(t, alert, currency, locale) : money(alert.targetPrice)} accent="text-[#c4b5fd]" />
                 <Stat label={t('prices.lastKnown')} value={typeof alert.lastPrice === 'number' ? money(alert.lastPrice) : '–'} />
                 <Stat label={t('prices.nowLabel')} value={nowPrice != null ? formatMoney(nowPrice, currency, locale) : '–'} accent={triggered ? 'text-emerald-300' : 'text-white'} />
             </dl>
