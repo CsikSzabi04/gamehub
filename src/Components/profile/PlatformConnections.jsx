@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 // "Game platforms" on the own profile: import libraries where the platform allows it
-// (Steam, Xbox, PlayStation), otherwise save the account name and add games manually.
+// (Steam, Xbox, PlayStation) and save the account name.
 // Connected platforms can be disconnected (optionally removing the games imported from them).
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSteam, FaXbox, FaPlaystation, FaCheckCircle } from 'react-icons/fa';
-import { SiEpicgames, SiEa, SiRiotgames, SiRockstargames } from 'react-icons/si';
 import { deleteField, doc, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import { UserContext } from '../../Features/UserContext.jsx';
@@ -15,20 +14,15 @@ import { syncLibraryStats } from '../../library/libraryApi.js';
 import { Modal } from '../../community/Modal.jsx';
 import SteamImport from '../../library/SteamImport.jsx';
 import PlatformImport from '../../library/PlatformImport.jsx';
-import QuickAddGame from '../../library/QuickAddGame.jsx';
 
 const PLATFORMS = [
-    { id: 'steam', icon: FaSteam, color: '#c7d5e0', mode: 'import' },
-    { id: 'epic', icon: SiEpicgames, color: '#e5e7eb', mode: 'manual' },
-    { id: 'xbox', icon: FaXbox, color: '#22c55e', mode: 'import' },
-    { id: 'psn', icon: FaPlaystation, color: '#3b82f6', mode: 'import' },
-    { id: 'ea', icon: SiEa, color: '#f97316', mode: 'manual' },
-    { id: 'riot', icon: SiRiotgames, color: '#ef4444', mode: 'manual' },
-    { id: 'rockstar', icon: SiRockstargames, color: '#fbbf24', mode: 'manual' },
+    { id: 'steam', icon: FaSteam, color: '#c7d5e0' },
+    { id: 'xbox', icon: FaXbox, color: '#22c55e' },
+    { id: 'psn', icon: FaPlaystation, color: '#3b82f6' },
 ];
 
-/** Library items that came from a platform (imports use source, manual adds use platform). */
-const itemsFor = (items, id) => items.filter(item => (id === 'steam' || id === 'xbox' || id === 'psn' ? item.source === id : item.platform === id));
+/** Library items imported from a platform. */
+const itemsFor = (items, id) => items.filter(item => item.source === id);
 
 export default function PlatformConnections({ Card, SectionTitle, accent }) {
     const { t } = useT();
@@ -96,7 +90,7 @@ export default function PlatformConnections({ Card, SectionTitle, accent }) {
             <p className="text-sm text-gray-400 -mt-2 mb-4">{t('profileExtras.platformsHint')}</p>
 
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {PLATFORMS.map(({ id, icon: Icon, color, mode }) => {
+                {PLATFORMS.map(({ id, icon: Icon, color }) => {
                     const count = itemsFor(items, id).length;
                     const account = accountLabel(id);
                     const connected = Boolean(account) || count > 0;
@@ -110,7 +104,7 @@ export default function PlatformConnections({ Card, SectionTitle, accent }) {
                                         {connected && <FaCheckCircle className="w-3 h-3 text-emerald-400" aria-label={t('profileExtras.connected')} />}
                                     </p>
                                     <p className="text-[11px] text-gray-500 truncate">
-                                        {count > 0 ? t('profileExtras.gamesCount', { count }) : t(`profileExtras.modes.${mode}`)}
+                                        {count > 0 ? t('profileExtras.gamesCount', { count }) : t('profileExtras.modes.import')}
                                         {account ? ` · ${account}` : ''}
                                     </p>
                                 </div>
@@ -118,9 +112,7 @@ export default function PlatformConnections({ Card, SectionTitle, accent }) {
                                     onClick={() => setOpen(id)}
                                     className="shrink-0 px-3 py-2 rounded-xl text-xs font-bold text-white bg-white/[0.06] hover:bg-white/[0.12] border border-white/10"
                                 >
-                                    {connected
-                                        ? (mode === 'import' ? t('profileExtras.syncButton') : t('profileExtras.addButton'))
-                                        : (mode === 'import' ? t('profileExtras.importButton') : t('profileExtras.addButton'))}
+                                    {connected ? t('profileExtras.syncButton') : t('profileExtras.importButton')}
                                 </button>
                             </div>
 
@@ -156,9 +148,6 @@ export default function PlatformConnections({ Card, SectionTitle, accent }) {
             <SteamImport open={open === 'steam'} onClose={() => setOpen(null)} byKey={byKey} importItems={importItems} />
             {(open === 'xbox' || open === 'psn') && (
                 <PlatformImport platform={open} open onClose={() => setOpen(null)} byKey={byKey} importItems={importItems} />
-            )}
-            {['epic', 'ea', 'riot', 'rockstar'].includes(open) && (
-                <QuickAddGame platform={open} open onClose={() => setOpen(null)} byKey={byKey} importItems={importItems} />
             )}
 
             <Modal
