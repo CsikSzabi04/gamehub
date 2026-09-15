@@ -16,8 +16,13 @@ service cloud.firestore {
 
     /* ---------- Private user data ---------- */
 
+    // Fields only the backend writes (achievement sync, wishlist alerts): clients can't create or change them
+    function backendOwned() { return ['achievementStats', 'platformSync', 'wishlistAlerts']; }
+
     match /users/{uid} {
-      allow read, write: if isUser(uid);
+      allow read, delete: if isUser(uid);
+      allow create: if isUser(uid) && !incoming().keys().hasAny(backendOwned());
+      allow update: if isUser(uid) && !incoming().diff(resource.data).affectedKeys().hasAny(backendOwned());
 
       // Game library: visible to others while the profile is public
       match /library/{gameKey} {
@@ -167,5 +172,8 @@ service cloud.firestore {
     match /meta/{document=**} { allow read, write: if false; }
     // Encrypted Xbox / PlayStation keys for achievement auto-sync
     match /platformSecrets/{document=**} { allow read, write: if false; }
+    // Error monitoring and cached API snapshots (lib/monitor.js, lib/persistentCache.js)
+    match /errorLogs/{document=**} { allow read, write: if false; }
+    match /cacheSnapshots/{document=**} { allow read, write: if false; }
   }
 }

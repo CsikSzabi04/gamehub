@@ -107,7 +107,7 @@ export default {
                             "**Security and operation:** protection against abuse and attacks, rate limiting, server logs, caching",
                             "IP address and request data (such as time and requested address)",
                             "Art. 6(1)(f)",
-                            "Our server keeps IP addresses in memory only for rate limiting and does not store them; hosting providers keep logs according to their own retention (typically up to 30 days)",
+                            "Our server keeps IP addresses in memory only for rate limiting and does not store them; hosting providers keep logs according to their own retention (typically up to 30 days). Error reports (error message, technical stack trace, page address, browser type, without IP address or account) are kept for up to 90 days to find and fix bugs",
                             "Your device",
                         ],
                         [
@@ -291,7 +291,7 @@ export default {
                 id: "account-deletion",
                 title: "14. Deleting your account",
                 paragraphs: [
-                    "Self-service account deletion is not available yet. To delete your account, send a request to {email} from the email address linked to your account.",
+                    "**Self-service:** signed in, open Profile → Account. **Download my data** gives you a copy of everything we store about you in a machine-readable (JSON) file (Art. 15 and 20 GDPR). **Delete my account** permanently deletes your account and all related data (profile, library, alerts, reviews, posts, follows, synced achievements and stored platform keys) after you confirm your password (Art. 17 GDPR). You can also send either request to {email} from the email address linked to your account.",
                     "We delete your account and personal data **within 30 days**: your sign-in account, profile, public profile, library, alerts, reminders, notifications and push subscriptions. Your reviews are deleted or anonymised, and your other contributions are deleted. Copies in hosting providers’ server logs expire according to their retention. We only keep data where the law requires it.",
                     "In the meantime, you can switch your profile to private, delete individual content and turn off notifications at any time.",
                 ],
@@ -447,7 +447,7 @@ export default {
                             "**Biztonság és üzemeltetés:** visszaélések és támadások elleni védelem, kéréskorlátozás (rate limiting), szervernaplók, gyorsítótárazás",
                             "IP-cím és a kérés adatai (például időpont és a lekért cím)",
                             "6. cikk (1) f)",
-                            "Szerverünk az IP-címet csak a kéréskorlátozáshoz, a memóriában tartja, nem tárolja; a tárhelyszolgáltatók saját megőrzési idejük szerint (jellemzően legfeljebb 30 napig) őrzik a naplókat",
+                            "Szerverünk az IP-címet csak a kéréskorlátozáshoz, a memóriában tartja, nem tárolja; a tárhelyszolgáltatók saját megőrzési idejük szerint (jellemzően legfeljebb 30 napig) őrzik a naplókat. A hibajelentéseket (hibaüzenet, technikai hívási lánc, oldalcím, böngésző típusa, IP-cím és fiók nélkül) legfeljebb 90 napig őrizzük a hibák felderítéséhez és javításához",
                             "Az érintett eszköze",
                         ],
                         [
@@ -631,7 +631,7 @@ export default {
                 id: "account-deletion",
                 title: "14. A fiók törlése",
                 paragraphs: [
-                    "A fiók önálló törlésére jelenleg nincs lehetőség az oldalon. Fiókja törlését a fiókjához tartozó e-mail-címről, a {email} címre küldött kérelemmel kérheti.",
+                    "**Önkiszolgáló lehetőségek:** bejelentkezve a Profil → Fiók fülön az **Adataim letöltése** gombbal géppel olvasható (JSON) másolatot kaphat minden rólunk tárolt adatáról (GDPR 15. és 20. cikk). A **Fiókom törlése** gombbal jelszava megerősítése után véglegesen törölheti fiókját és minden kapcsolódó adatát (profil, könyvtár, árfigyelők, értékelések, hirdetések, követések, szinkronizált achievementek és tárolt platformkulcsok) (GDPR 17. cikk). Mindkét kérelmet elküldheti a fiókjához tartozó e-mail-címről a {email} címre is.",
                     "Fiókját és személyes adatait **30 napon belül** töröljük: a bejelentkezési fiókot, a profilt, a nyilvános profilt, a könyvtárat, az árfigyelőket, az emlékeztetőket, az értesítéseket és a push-feliratkozásokat. Értékeléseit töröljük vagy anonimizáljuk, egyéb hozzájárulásait töröljük. A tárhelyszolgáltatók szervernaplóiban lévő másolatok azok megőrzési ideje szerint szűnnek meg. Adatot csak akkor őrzünk meg, ha jogszabály előírja.",
                     "Addig is bármikor privátra állíthatja profilját, törölheti egyes tartalmait, és kikapcsolhatja az értesítéseket.",
                 ],
@@ -787,7 +787,7 @@ export default {
                             "**Sicherheit und Betrieb:** Schutz vor Missbrauch und Angriffen, Anfragebegrenzung (Rate Limiting), Serverprotokolle, Caching",
                             "IP-Adresse und Anfragedaten (z. B. Zeitpunkt und aufgerufene Adresse)",
                             "Art. 6 Abs. 1 lit. f",
-                            "Unser Server hält IP-Adressen nur für die Anfragebegrenzung im Arbeitsspeicher und speichert sie nicht; Hosting-Anbieter speichern Protokolle nach ihren eigenen Fristen (in der Regel bis zu 30 Tage)",
+                            "Unser Server hält IP-Adressen nur für die Anfragebegrenzung im Arbeitsspeicher und speichert sie nicht; Hosting-Anbieter speichern Protokolle nach ihren eigenen Fristen (in der Regel bis zu 30 Tage). Fehlerberichte (Fehlermeldung, technischer Stacktrace, Seitenadresse, Browsertyp, ohne IP-Adresse oder Konto) werden bis zu 90 Tage aufbewahrt, um Fehler zu finden und zu beheben",
                             "Ihr Gerät",
                         ],
                         [
@@ -971,7 +971,7 @@ export default {
                 id: "account-deletion",
                 title: "14. Löschung Ihres Kontos",
                 paragraphs: [
-                    "Eine Selbstlöschung des Kontos ist derzeit noch nicht möglich. Um Ihr Konto zu löschen, senden Sie bitte eine Anfrage an {email} von der mit Ihrem Konto verknüpften E-Mail-Adresse.",
+                    "**Selbstbedienung:** Angemeldet unter Profil → Konto erhalten Sie mit **Meine Daten herunterladen** eine maschinenlesbare (JSON) Kopie aller über Sie gespeicherten Daten (Art. 15 und 20 DSGVO). Mit **Mein Konto löschen** löschen Sie nach Bestätigung Ihres Passworts Ihr Konto und alle zugehörigen Daten endgültig (Profil, Bibliothek, Alarme, Rezensionen, Beiträge, Follows, synchronisierte Erfolge und gespeicherte Plattformschlüssel) (Art. 17 DSGVO). Beide Anfragen können Sie auch von der mit Ihrem Konto verknüpften E-Mail-Adresse an {email} senden.",
                     "Wir löschen Ihr Konto und Ihre personenbezogenen Daten **innerhalb von 30 Tagen**: Anmeldekonto, Profil, öffentliches Profil, Bibliothek, Alarme, Erinnerungen, Benachrichtigungen und Push-Abonnements. Ihre Rezensionen werden gelöscht oder anonymisiert, Ihre sonstigen Beiträge werden gelöscht. Kopien in den Serverprotokollen der Hosting-Anbieter entfallen nach deren Speicherfristen. Wir bewahren Daten nur auf, soweit dies gesetzlich vorgeschrieben ist.",
                     "Bis dahin können Sie Ihr Profil jederzeit auf privat stellen, einzelne Inhalte löschen und Benachrichtigungen deaktivieren.",
                 ],

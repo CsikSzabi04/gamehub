@@ -36,7 +36,7 @@ const router = createBrowserRouter([
   { path: "/searchreview/:gameId", lazy: page(() => import('./Features/SearchReview.jsx'), ['reviewsPlus', 'gameInfo', 'hardware', 'library', 'achievements', 'profileExtras']) },
   { path: "/reviews/:gameId", lazy: page(() => import('./Features/ReviewsOpen.jsx')) },
   { path: "/privacy", lazy: page(() => import('./TermsAndPrivacy/Privacy.jsx'), ['privacy', 'legalCommon']) },
-  { path: "/profile", lazy: page(() => import('./pages/Profile.jsx'), ['profile', 'profileExtras', 'social', 'hardware', 'library', 'achievements']) },
+  { path: "/profile", lazy: page(() => import('./pages/Profile.jsx'), ['profile', 'profileExtras', 'social', 'hardware', 'library', 'achievements', 'account']) },
   { path: "/login", lazy: pageWithAuth(() => import('./pages/Login.jsx'), ['auth']) },
   // Discover is part of the Hub now; keep old links working
   { path: "/discover", element: <Navigate to={{ pathname: '/hub', hash: '#discover' }} replace /> },

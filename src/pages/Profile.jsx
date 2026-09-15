@@ -20,6 +20,7 @@ import ProfileQuickLinks from '../Components/profile/ProfileQuickLinks.jsx';
 import MyPcCard from '../Components/profile/MyPcCard.jsx';
 import PlatformConnections from '../Components/profile/PlatformConnections.jsx';
 import GamerProgressCard from '../Components/profile/GamerProgressCard.jsx';
+import AccountDataCard from '../account/AccountDataCard.jsx';
 import { challengeBadgesXp } from '../challenges/challenges.js';
 import { useLibrary } from '../library/useLibrary.js';
 import { useAchievementOverview } from '../achievements/achievementsApi.js';
@@ -781,6 +782,7 @@ export default function Profile({ setUser }) {
                                         <AccountRow icon={FaKey} label={t('profile.password')} value="••••••••">
                                             <button onClick={handlePasswordReset} className="text-xs font-semibold text-gray-300 hover:text-white">{t('profile.sendReset')}</button>
                                         </AccountRow>
+                                        <AccountDataCard />
                                         <motion.button
                                             whileHover={{ scale: 1.01 }}
                                             whileTap={{ scale: 0.99 }}

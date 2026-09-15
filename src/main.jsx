@@ -3,6 +3,9 @@ import { UserProvider } from "./Features/UserContext.jsx";
 import { LanguageProvider } from "./i18n/index.jsx";
 import './index.css';
 import App from "./App.jsx"
+import { installErrorReporting } from './lib/errorReporting.js';
+
+installErrorReporting();
 
 const idle = (cb, timeout = 2000) =>
   window.requestIdleCallback ? window.requestIdleCallback(cb, { timeout }) : setTimeout(cb, 1);

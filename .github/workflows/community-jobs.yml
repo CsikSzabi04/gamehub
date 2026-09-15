@@ -1,5 +1,7 @@
-# Runs the backend's notification jobs (price alerts, free games, release reminders, Game Pass, outages)
-# on a schedule, so they also run while the free Render instance is asleep.
+# Runs the backend's notification jobs (price alerts, free games, release reminders, Game Pass, outages,
+# achievement sync, wishlist alerts) on a schedule, so they also run while the free Render instance is asleep,
+# and checks the backend's health. A failed health check fails the workflow, and GitHub e-mails the repo owner
+# (Settings > Notifications > Actions: "Send notifications for failed workflows only").
 #
 # Setup (GitHub repo > Settings > Secrets and variables > Actions):
 #   BACKEND_URL   https://gamehub-backend-zekj.onrender.com
@@ -23,3 +25,16 @@ jobs:
           curl -fsS --max-time 300 -X POST \
             -H "x-cron-key: ${{ secrets.CRON_SECRET }}" \
             "${{ secrets.BACKEND_URL }}/cron/run"
+      - name: Deep health check (Firestore, keys, jobs)
+        run: |
+          status=$(curl -sS -o health.json -w '%{http_code}' --max-time 60 \
+            -H "x-cron-key: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.BACKEND_URL }}/health/deep")
+          cat health.json; echo
+          if [ "$status" != "200" ]; then
+            echo "::error title=Backend unhealthy::/health/deep answered $status (see the JSON above)"
+            exit 1
+          fi
+          if grep -q '"stale"' health.json; then
+            echo "::warning title=Stale jobs::some background jobs have not run for a long time"
+          fi
