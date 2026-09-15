@@ -22,7 +22,7 @@ export default function Review() {
         async function fetchGames() {
             const response = await fetch('https://gamehub-backend-zekj.onrender.com/fetch-games');
             const data = await response.json();
-            setAllGames(data.games);
+            setAllGames(Array.isArray(data?.games) ? data.games : []);
         }
         fetchGames();
     }, []);
@@ -30,7 +30,7 @@ export default function Review() {
     const fetchReviews = async () => {
         const response = await fetch("https://gamehub-backend-zekj.onrender.com/get-all-reviews");
         const reviewsData = await response.json();
-        setReviews(reviewsData);
+        setReviews(Array.isArray(reviewsData) ? reviewsData : []);
     };
 
     async function handleReviewSubmit() {
@@ -72,7 +72,7 @@ export default function Review() {
     }
 
     const filteredGames = allGames.filter(game => 
-        game.name.toLowerCase().includes(searchTerm.toLowerCase())
+        String(game?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     useEffect(() => {
