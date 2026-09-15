@@ -39,6 +39,8 @@ service cloud.firestore {
       match /reminders/{gameKey} { allow read, write: if isUser(uid); }
       match /claimedFree/{freeId} { allow read, write: if isUser(uid); }
       match /push/{subscriptionId} { allow read, write: if isUser(uid); }
+      // "Not interested" on /for-you recommendations
+      match /recoFeedback/{appid} { allow read, write: if isUser(uid); }
 
       // Created by the backend only; the owner can mark read / delete
       match /notifications/{id} {
@@ -64,7 +66,20 @@ service cloud.firestore {
 
     match /publicBanners/{uid} {
       allow read: if true;
-      allow write: if isUser(uid) && str(incoming().banner, 900000);
+      allow create, update: if isUser(uid) && str(incoming().banner, 900000);
+      // request.resource is null on delete, so delete needs its own rule (profile set to private / banner removed)
+      allow delete: if isUser(uid);
+    }
+
+    // Gamer stats + per-game achievement counts and hours for comparisons (src/social/gamerIndex.js).
+    // Written by the owner's browser; readable only while the profile is public.
+    match /publicGames/{uid} {
+      allow read: if isUser(uid) || isPublicUser(uid);
+      allow create, update: if isUser(uid)
+        && incoming().v is int
+        && incoming().games is list && incoming().games.size() <= 3000
+        && incoming().stats is map;
+      allow delete: if isUser(uid);
     }
 
     match /follows/{followId} {

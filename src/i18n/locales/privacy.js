@@ -70,7 +70,7 @@ export default {
                         ],
                         [
                             "**Public profile and community features:** public profile page, leaderboard, activity feed and follows",
-                            "Username, avatar thumbnail, banner, bio, currently played game, platforms, genres, XP and level, streaks, library statistics, badges, social handles, gaming accounts, follows, activity entries",
+                            "Username, avatar thumbnail, banner, bio, currently played game, platforms, genres, XP and level, streaks, library statistics, badges, social handles, gaming accounts, follows, activity entries; gaming stats for comparisons with other players (achievement counts per game, imported playtime per game, rarest and recent unlocks)",
                             "Art. 6(1)(b); you can switch your profile to private at any time",
                             "Published only while your profile is public; kept until your account is deleted",
                             "You; activity entries are generated from your actions",
@@ -410,7 +410,7 @@ export default {
                         ],
                         [
                             "**Nyilvános profil és közösségi funkciók:** nyilvános profiloldal, ranglista, aktivitási hírfolyam, követések",
-                            "Felhasználónév, kis profilkép, borítókép, bemutatkozás, éppen játszott játék, platformok, műfajok, XP és szint, sorozatok, könyvtárstatisztika, jelvények, közösségi azonosítók, játékfiókok, követések, aktivitási bejegyzések",
+                            "Felhasználónév, kis profilkép, borítókép, bemutatkozás, éppen játszott játék, platformok, műfajok, XP és szint, sorozatok, könyvtárstatisztika, jelvények, közösségi azonosítók, játékfiókok, követések, aktivitási bejegyzések; játékstatisztikák a más játékosokkal való összehasonlításhoz (achievementek száma és importált játékidő játékonként, legritkább és legutóbbi achievementek)",
                             "6. cikk (1) b); a profil bármikor privátra állítható",
                             "Csak addig nyilvános, amíg a profil nyilvános; a fiók törléséig őrizzük",
                             "Az érintett; az aktivitási bejegyzések a műveletei alapján jönnek létre",
@@ -750,7 +750,7 @@ export default {
                         ],
                         [
                             "**Öffentliches Profil und Community-Funktionen:** öffentliche Profilseite, Rangliste, Aktivitäts-Feed und Folgen",
-                            "Benutzername, Profilbild-Miniatur, Banner, Bio, aktuell gespieltes Spiel, Plattformen, Genres, XP und Level, Serien, Bibliotheksstatistiken, Abzeichen, Social-Media-Namen, Spielekonten, Folgen, Aktivitätseinträge",
+                            "Benutzername, Profilbild-Miniatur, Banner, Bio, aktuell gespieltes Spiel, Plattformen, Genres, XP und Level, Serien, Bibliotheksstatistiken, Abzeichen, Social-Media-Namen, Spielekonten, Folgen, Aktivitätseinträge; Spielstatistiken für Vergleiche mit anderen Spielern (Erfolge und importierte Spielzeit pro Spiel, seltenste und neueste Erfolge)",
                             "Art. 6 Abs. 1 lit. b; Sie können Ihr Profil jederzeit auf privat stellen",
                             "Nur veröffentlicht, solange Ihr Profil öffentlich ist; gespeichert bis zur Löschung des Kontos",
                             "Sie; Aktivitätseinträge entstehen aus Ihren Aktionen",
