@@ -49,6 +49,7 @@ const router = createBrowserRouter([
   { path: "/library", lazy: page(() => import('./pages/LibraryPage.jsx'), ['library']) },
   { path: "/achievements", lazy: page(() => import('./pages/AchievementsPage.jsx'), ['achievements', 'profile', 'profileExtras', 'library', 'steam']) },
   { path: "/wishlist", lazy: page(() => import('./pages/WishlistPage.jsx'), ['steam', 'prices', 'library']) },
+  { path: "/for-you", lazy: page(() => import('./pages/ForYouPage.jsx'), ['forYou', 'prices']) },
   { path: "/lfg", lazy: page(() => import('./pages/LfgPage.jsx'), ['lfg']) },
   { path: "/calendar", lazy: page(() => import('./pages/CalendarPage.jsx'), ['calendar']) },
   { path: "/free-games", lazy: page(() => import('./pages/FreeGamesPage.jsx'), ['calendar', 'freeGames']) },

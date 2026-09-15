@@ -551,14 +551,24 @@ export default function Profile({ setUser }) {
                                     <p className="text-gray-500 text-sm mt-1">@{profile.username.toLowerCase().replace(/\s+/g, '')}</p>
                                 </div>
 
-                                <motion.button
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={() => setEditing(true)}
-                                    className="self-start md:self-auto md:mb-3 flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors"
-                                >
-                                    <FaPen className="w-3 h-3" /> {t('profile.editProfile')}
-                                </motion.button>
+                                <div className="self-start md:self-auto md:mb-3 flex flex-wrap items-center gap-2">
+                                    <motion.button
+                                        whileHover={{ scale: 1.03 }}
+                                        whileTap={{ scale: 0.97 }}
+                                        onClick={() => setEditing(true)}
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors"
+                                    >
+                                        <FaPen className="w-3 h-3" /> {t('profile.editProfile')}
+                                    </motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.03 }}
+                                        whileTap={{ scale: 0.97 }}
+                                        onClick={handleLogout}
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-xs font-black uppercase tracking-[0.15em] text-red-400 transition-colors"
+                                    >
+                                        <FaSignOutAlt className="w-3 h-3" /> {t('profile.logout')}
+                                    </motion.button>
+                                </div>
                             </div>
 
                             {profile.bio && <p className="text-gray-300 mt-5 max-w-2xl leading-relaxed break-words">{profile.bio}</p>}

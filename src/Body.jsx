@@ -30,6 +30,8 @@ const ComingSoon = lazy(() => import('./Hub/ComingSoon.jsx'));
 const CommunityTrends = lazy(() => import('./Hub/CommunityTrends.jsx'));
 const SpeedrunFeed = lazy(() => import('./Hub/SpeedrunFeed.jsx'));
 const UniverseStrip = lazy(() => import('./Hub/UniverseStrip.jsx'));
+// Personal recommendations (last picks saved on the profile)
+const ForYouTeaser = lazy(() => import('./recommendations/ForYouTeaser.jsx'));
 
 const GAMES_URL = `${API_BASE}/fetch-games`;
 const toGames = data => (Array.isArray(data?.games) ? data.games : []);
@@ -92,6 +94,9 @@ export default function Body() {
                         <MainSection allGames={allGames} showGameDetails={showGameDetails} />
                         <FeaturedGames allGames={allGames} showGameDetails={showGameDetails} />
 
+                        <LazySection placeholder={false}>
+                            <ForYouTeaser />
+                        </LazySection>
                         <LazySection>
                             <LivePlayers />
                         </LazySection>

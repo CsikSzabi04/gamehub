@@ -1,5 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { FaSignOutAlt } from "react-icons/fa";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
@@ -7,6 +8,7 @@ import { CgGames } from "react-icons/cg";
 import { useT } from './i18n/index.jsx';
 import LanguageSwitcher from './Components/LanguageSwitcher.jsx';
 import { openCookieSettings } from './consent/consent.js';
+import { UserContext } from './Features/UserContext.jsx';
 
 const MAIL_URL = "https://mail.google.com/mail/u/0/?fs=1&to=helpdesk.gamehub@gmail.com&su=Collaboration+Opportunity+/+Egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+Lehet%C5%91s%C3%A9g&body=Dear+Cs%C3%ADk+Szabolcs+Alex,%0A%0AI+would+like+to+discuss+a+collaboration+opportunity+with+you.%0A%0ABest+regards,%0A%0A%5BYour+Name%5D%0A%0A---%0A%0AKedves+Cs%C3%ADk+Szabolcs+Alex,%0A%0ASzeretn%C3%A9k+egy+egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9si+lehet%C5%91s%C3%A9gr%C5%91l+besz%C3%A9lni+veled.%0A%0A%C3%9Cdv%C3%B6zlettel,%0A%0A%5BNeved%5D&tf=cm";
 
@@ -28,8 +30,41 @@ function Column({ title, children }) {
     );
 }
 
+// Firebase Auth is loaded on click, so the footer chunk stays small
+function LogoutButton() {
+    const { t } = useT();
+    const navigate = useNavigate();
+    const [busy, setBusy] = useState(false);
+    const [failed, setFailed] = useState(false);
+
+    async function logout() {
+        setBusy(true);
+        setFailed(false);
+        try {
+            const [{ signOut }, { auth }] = await Promise.all([import('firebase/auth'), import('../firebaseAuth.js')]);
+            await signOut(auth);
+            navigate('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+            setFailed(true);
+        } finally {
+            setBusy(false);
+        }
+    }
+
+    return (
+        <li>
+            <button type="button" onClick={logout} disabled={busy} className="inline-flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors disabled:opacity-60">
+                <FaSignOutAlt size={13} aria-hidden="true" /> {t('footer.logout')}
+            </button>
+            {failed && <p className="text-xs text-[#fcd34d] mt-1">{t('footer.logoutFailed')}</p>}
+        </li>
+    );
+}
+
 export default function Footer() {
     const { t } = useT();
+    const { user } = useContext(UserContext) || {};
     return (
         <footer>
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-10 sm:py-12">
@@ -64,6 +99,7 @@ export default function Footer() {
                         <li><Link to="/hub" className={linkClass}>{t('footer.hub')}</Link></li>
                         <li><Link to="/review" className={linkClass}>{t('footer.reviews')}</Link></li>
                         <li><Link to="/contact" className={linkClass}>{t('footer.contact')}</Link></li>
+                        {user && <LogoutButton />}
                     </Column>
 
                     <Column title={t('footer.legal')}>

@@ -1,12 +1,13 @@
 // Community feature links (header menu, mobile menu, /community page)
 import {
-    BsCollection, BsPeople, BsCalendarEvent, BsGift, BsTag, BsXbox, BsActivity, BsRss, BsTrophy, BsFlag, BsListOl, BsTools, BsBell, BsAward, BsHeart,
+    BsCollection, BsPeople, BsCalendarEvent, BsGift, BsTag, BsXbox, BsActivity, BsRss, BsTrophy, BsFlag, BsListOl, BsTools, BsBell, BsAward, BsHeart, BsStars,
 } from 'react-icons/bs';
 
 export const COMMUNITY_GROUPS = [
     {
         id: 'play',
         links: [
+            { to: '/for-you', key: 'forYou', icon: BsStars },
             { to: '/library', key: 'library', icon: BsCollection },
             { to: '/achievements', key: 'achievements', icon: BsAward },
             { to: '/lfg', key: 'lfg', icon: BsPeople },

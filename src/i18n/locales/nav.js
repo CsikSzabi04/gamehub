@@ -7,6 +7,7 @@ export default {
         communitySubtitle: 'Track your games, save money, find teammates and never miss a release.',
         groups: { play: 'Play', save: 'Save & stay informed', community: 'Community' },
         links: {
+            forYou: 'For you',
             library: 'My library',
             achievements: 'Achievements',
             wishlist: 'Steam wishlist',
@@ -24,6 +25,7 @@ export default {
             notifications: 'Notifications',
         },
         hints: {
+            forYou: 'Games picked from your playtime, ratings and wishlist',
             library: 'Backlog, playing, completed – import from Steam',
             achievements: 'Steam, Xbox & PlayStation achievements, levels, badges',
             wishlist: 'Live prices and sale alerts for your whole wishlist',
@@ -48,6 +50,7 @@ export default {
         communitySubtitle: 'Kövesd a játékaidat, spórolj, találj csapattársat, és ne maradj le egy megjelenésről sem.',
         groups: { play: 'Játék', save: 'Spórolás és infók', community: 'Közösség' },
         links: {
+            forYou: 'Neked ajánljuk',
             library: 'Játékkönyvtáram',
             achievements: 'Achievementek',
             wishlist: 'Steam wishlist',
@@ -65,6 +68,7 @@ export default {
             notifications: 'Értesítések',
         },
         hints: {
+            forYou: 'Játékidő, értékelések és wishlist alapján válogatva',
             library: 'Backlog, játszom, kijátszottam – Steam importtal',
             achievements: 'Steam, Xbox és PlayStation achievementek, szintek, badge-ek',
             wishlist: 'Élő árak és akció-értesítés a teljes wishlistedre',
@@ -89,6 +93,7 @@ export default {
         communitySubtitle: 'Behalte deine Spiele im Blick, spare Geld, finde Mitspieler und verpasse keinen Release.',
         groups: { play: 'Spielen', save: 'Sparen & informiert bleiben', community: 'Community' },
         links: {
+            forYou: 'Für dich',
             library: 'Meine Bibliothek',
             achievements: 'Erfolge',
             wishlist: 'Steam-Wunschliste',
@@ -106,6 +111,7 @@ export default {
             notifications: 'Benachrichtigungen',
         },
         hints: {
+            forYou: 'Ausgewählt nach Spielzeit, Bewertungen und Wunschliste',
             library: 'Backlog, spiele ich, durchgespielt – Import aus Steam',
             achievements: 'Steam-, Xbox- & PlayStation-Erfolge, Level, Abzeichen',
             wishlist: 'Live-Preise und Angebotsalarme für deine ganze Wunschliste',
